@@ -7,7 +7,9 @@ import { StageScreen } from './StageScreen'
 import {
   advanceStageTextStep,
   areStageChoicesEnabled,
+  createStageInteractionState,
   getDetectorDisabledReason,
+  stageInteractionReducer,
 } from './stageScreenState'
 
 describe('StageScreen', () => {
@@ -77,5 +79,51 @@ describe('StageScreen', () => {
   it('locks choices during detector animation and restores them after', () => {
     expect(areStageChoicesEnabled('choice', true)).toBe(false)
     expect(areStageChoicesEnabled('choice', false)).toBe(true)
+  })
+
+  it('locks every choice after the first selection and ignores duplicates', () => {
+    const initialState = createStageInteractionState()
+    const firstSelection = {
+      choiceId: 'A',
+      isCorrect: true,
+      resultText: '첫 번째 판정',
+    }
+    const selectedState = stageInteractionReducer(initialState, {
+      type: 'SELECT_CHOICE',
+      selection: firstSelection,
+    })
+    const duplicateState = stageInteractionReducer(selectedState, {
+      type: 'SELECT_CHOICE',
+      selection: {
+        choiceId: 'B',
+        isCorrect: false,
+        resultText: '중복 판정',
+      },
+    })
+
+    expect(selectedState.selection).toEqual(firstSelection)
+    expect(duplicateState).toBe(selectedState)
+    expect(areStageChoicesEnabled('choice', false, true)).toBe(false)
+  })
+
+  it('starts a fade transition only after a selection exists', () => {
+    const initialState = createStageInteractionState()
+    const unchangedState = stageInteractionReducer(initialState, {
+      type: 'BEGIN_TRANSITION',
+    })
+    const selectedState = stageInteractionReducer(initialState, {
+      type: 'SELECT_CHOICE',
+      selection: {
+        choiceId: 'B',
+        isCorrect: false,
+        resultText: '실패 서술',
+      },
+    })
+    const exitingState = stageInteractionReducer(selectedState, {
+      type: 'BEGIN_TRANSITION',
+    })
+
+    expect(unchangedState).toBe(initialState)
+    expect(exitingState.exiting).toBe(true)
   })
 })

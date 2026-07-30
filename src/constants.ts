@@ -9,6 +9,7 @@ export const WRONG_CHOICE_HEART_COST: number = 1
 export const TRUE_END_KEY_FRAGMENT_THRESHOLD: number = 3
 export const TOTAL_STAGES: number = 5
 export const TEXT_TYPING_INTERVAL_MS: number = 36
+export const STAGE_TRANSITION_MS: number = 420
 export const DETECTOR_TRUTH_SYMBOL = '.....'
 export const DETECTOR_LIE_SYMBOL = '.|.|.|.'
 
@@ -52,6 +53,10 @@ export const UI_STRINGS = {
   detectorAlreadyUsed: '이 스테이지에서는 이미 탐지기를 사용했습니다.',
   detectorNoUses: '남은 탐지기 사용 횟수가 없습니다.',
   detectorLowHearts: '하트가 2개 이상일 때만 사용할 수 있습니다.',
+  stageInteractionLocked: '판정이 끝날 때까지 입력할 수 없습니다.',
+  choiceCorrect: '올바른 선택',
+  choiceWrong: '잘못된 선택',
+  stageTransitioning: '다음 장면으로 이동 중',
   detectorResultLabel: '탐지 결과',
   detectorScanning: '음성 파형 분석 중',
   detectorSignalLocked: '신호 분석 완료',

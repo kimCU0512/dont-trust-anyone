@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { UI_STRINGS } from '../constants'
+import { useEffect, useReducer, useRef, useState } from 'react'
+import { STAGE_TRANSITION_MS, UI_STRINGS } from '../constants'
 import { toDisplayParagraphs, toDisplayText } from '../data/contentText'
 import story from '../data/story.json'
 import type { DetectorResult as DetectorResultType, StageId } from '../types'
@@ -9,7 +9,9 @@ import { TextBox } from './TextBox'
 import {
   advanceStageTextStep,
   areStageChoicesEnabled,
+  createStageInteractionState,
   getDetectorDisabledReason,
+  stageInteractionReducer,
 } from './stageScreenState'
 import type { StageTextStep } from './stageScreenState'
 
@@ -50,11 +52,19 @@ export function StageScreen({
   const [detectorAnimationResult, setDetectorAnimationResult] =
     useState<DetectorResultType | null>(null)
   const [detectorAnimating, setDetectorAnimating] = useState(false)
+  const [interaction, dispatchInteraction] = useReducer(
+    stageInteractionReducer,
+    undefined,
+    createStageInteractionState,
+  )
+  const transitionTimerRef = useRef<number | null>(null)
   const narration = toDisplayParagraphs(stage.narration)
   const voiceText = `“${toDisplayText(voiceLine.text)}”`
+  const inputLocked = interaction.selection !== null
   const choicesEnabled = areStageChoicesEnabled(
     textStep,
     detectorAnimating,
+    inputLocked,
   )
   const detectorDisabledReason = getDetectorDisabledReason({
     textStep,
@@ -64,6 +74,15 @@ export function StageScreen({
   })
   const detectorEnabled =
     choicesEnabled && detectorAvailable && detectorDisabledReason === null
+
+  useEffect(
+    () => () => {
+      if (transitionTimerRef.current !== null) {
+        window.clearTimeout(transitionTimerRef.current)
+      }
+    },
+    [],
+  )
 
   const advanceText = () => {
     setTextStep((currentStep) => advanceStageTextStep(currentStep))
@@ -94,8 +113,36 @@ export function StageScreen({
     }
   }
 
+  const handleSelectChoice = (choice: (typeof stage.choices)[number]) => {
+    dispatchInteraction({
+      type: 'SELECT_CHOICE',
+      selection: {
+        choiceId: choice.id,
+        isCorrect: choice.isCorrect,
+        resultText: toDisplayText(
+          choice.isCorrect ? stage.resultText.correct : stage.resultText.wrong,
+        ),
+      },
+    })
+  }
+
+  const handleResultComplete = () => {
+    if (!interaction.selection || transitionTimerRef.current !== null) {
+      return
+    }
+
+    dispatchInteraction({ type: 'BEGIN_TRANSITION' })
+    transitionTimerRef.current = window.setTimeout(() => {
+      onSelectChoice(interaction.selection?.choiceId ?? '')
+    }, STAGE_TRANSITION_MS)
+  }
+
   return (
-    <section className="screen screen--stage" data-screen="P-10">
+    <section
+      className={`screen screen--stage${interaction.exiting ? ' stage-screen--exiting' : ''}`}
+      data-screen="P-10"
+      aria-busy={inputLocked}
+    >
       <Hud
         hearts={hearts}
         keyFragments={keyFragments}
@@ -130,6 +177,24 @@ export function StageScreen({
       </figure>
 
       <div className="stage-dialogue">
+        {interaction.selection ? (
+          <div
+            className={`stage-result stage-result--${interaction.selection.isCorrect ? 'correct' : 'wrong'}`}
+          >
+            <p className="stage-result__verdict">
+              {interaction.selection.isCorrect
+                ? UI_STRINGS.choiceCorrect
+                : UI_STRINGS.choiceWrong}
+            </p>
+            <TextBox
+              key={`stage-${stageId}-result-${interaction.selection.choiceId}`}
+              paragraphs={[interaction.selection.resultText]}
+              speaker="system"
+              onComplete={handleResultComplete}
+            />
+          </div>
+        ) : (
+          <>
         {textStep === 'narration' && (
           <TextBox
             key={`stage-${stageId}-narration`}
@@ -169,6 +234,8 @@ export function StageScreen({
             onComplete={() => setDetectorAnimating(false)}
           />
         )}
+          </>
+        )}
       </div>
 
       <div className="stage-controls">
@@ -179,7 +246,7 @@ export function StageScreen({
               type="button"
               disabled={!choicesEnabled}
               key={choice.id}
-              onClick={() => onSelectChoice(choice.id)}
+              onClick={() => handleSelectChoice(choice)}
             >
               <span>{choice.id}</span>
               {toDisplayText(choice.text)}
@@ -190,7 +257,11 @@ export function StageScreen({
           className="stage-detector"
           type="button"
           disabled={!detectorEnabled}
-          title={detectorDisabledReason ?? undefined}
+          title={
+            inputLocked
+              ? UI_STRINGS.stageInteractionLocked
+              : (detectorDisabledReason ?? undefined)
+          }
           onClick={handleUseDetector}
         >
           <span className="stage-detector__signal" aria-hidden="true">
@@ -202,6 +273,11 @@ export function StageScreen({
           </span>
         </button>
       </div>
+      {interaction.exiting && (
+        <p className="stage-transition-lock" role="status">
+          {UI_STRINGS.stageTransitioning}
+        </p>
+      )}
     </section>
   )
 }

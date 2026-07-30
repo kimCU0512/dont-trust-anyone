@@ -950,3 +950,58 @@ button {
     box-shadow: 0 0 3px #c94038;
   }
 }
+
+.screen--stage {
+  animation: stage-fade-in 420ms ease-out both;
+}
+
+.screen--stage.stage-screen--exiting {
+  pointer-events: none;
+  animation: stage-fade-out 420ms ease-in both;
+}
+
+.stage-result {
+  position: relative;
+  width: 100%;
+}
+
+.stage-result__verdict {
+  position: absolute;
+  z-index: 1;
+  top: 14px;
+  right: 20px;
+  margin: 0;
+  color: #8b8b85;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.stage-result--correct .stage-result__verdict {
+  color: #a9b7a0;
+}
+
+.stage-result--wrong .stage-result__verdict {
+  color: #d9584f;
+}
+
+.stage-transition-lock {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+@keyframes stage-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes stage-fade-out {
+  to {
+    opacity: 0;
+    transform: scale(0.992);
+  }
+}
