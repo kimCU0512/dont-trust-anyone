@@ -19,31 +19,38 @@ export function ResetScreen({ onRestart }: ResetScreenProps) {
 
   return (
     <section className="screen screen--reset" data-screen="P-20">
-      <header className="conclusion-heading">
-        <p className="screen__code">P-20 / RESET</p>
-        <h1 className="screen__heading">{UI_STRINGS.resetHeading}</h1>
-        <p>{UI_STRINGS.resetSubheading}</p>
-      </header>
-
-      <ConclusionArtwork
-        imageUrl={reset.imageUrl}
-        alt={UI_STRINGS.resetImageAlt}
-        variant="reset"
-      />
-
-      <div className="conclusion-copy">
-        <TextBox
-          paragraphs={toDisplayParagraphs(reset.text)}
-          speaker="system"
-          onComplete={() => setFlow(completeConclusionText)}
+      <div className="conclusion-stage">
+        <ConclusionArtwork
+          imageUrl={reset.imageUrl}
+          alt={UI_STRINGS.resetImageAlt}
+          variant="reset"
         />
-      </div>
+        <header className="conclusion-heading">
+          <p className="screen__code">P-20 / RESET</p>
+          <h1 className="screen__heading">{UI_STRINGS.resetHeading}</h1>
+          <p>{UI_STRINGS.resetSubheading}</p>
+        </header>
 
-      {flow.textComplete && (
-        <button className="screen__action" type="button" onClick={onRestart}>
-          {UI_STRINGS.restart}
-        </button>
-      )}
+        <div className="conclusion-overlay">
+          <div className="conclusion-copy">
+            <TextBox
+              paragraphs={toDisplayParagraphs(reset.text)}
+              speaker="system"
+              onComplete={() => setFlow(completeConclusionText)}
+            />
+          </div>
+
+          {flow.textComplete && (
+            <button
+              className="screen__action"
+              type="button"
+              onClick={onRestart}
+            >
+              {UI_STRINGS.restart}
+            </button>
+          )}
+        </div>
+      </div>
     </section>
   )
 }

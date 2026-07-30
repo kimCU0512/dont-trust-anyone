@@ -8,10 +8,7 @@ import { resolveAssetUrl } from '../assets/assetUrl'
 import { toDisplayParagraphs } from '../data/contentText'
 import story from '../data/story.json'
 import { TextBox } from './TextBox'
-import {
-  advanceIntroStep,
-  canEnterFirstStage,
-} from './introFlow'
+import { advanceIntroStep, canEnterFirstStage } from './introFlow'
 import type { IntroStep } from './introFlow'
 
 interface IntroScreenProps {
@@ -61,56 +58,57 @@ export function IntroScreen({ onContinue }: IntroScreenProps) {
           <span>LOCKED</span>
           <h1>{UI_STRINGS.introHeading}</h1>
         </div>
-      </div>
+        <div className="intro-overlay">
+          {isTutorialVisible && (
+            <aside className="intro-tutorial" aria-label="탐지기 기호 범례">
+              <div className="intro-tutorial__heading">
+                <span>02.</span>
+                {UI_STRINGS.introTutorialHeading}
+              </div>
+              <div className="intro-tutorial__signals">
+                <div>
+                  <strong>{DETECTOR_TRUTH_SYMBOL}</strong>
+                  <span>{UI_STRINGS.introTutorialTruth}</span>
+                </div>
+                <div>
+                  <strong>{DETECTOR_LIE_SYMBOL}</strong>
+                  <span>{UI_STRINGS.introTutorialLie}</span>
+                </div>
+              </div>
+            </aside>
+          )}
 
-      {isTutorialVisible && (
-        <aside className="intro-tutorial" aria-label="탐지기 기호 범례">
-          <div className="intro-tutorial__heading">
-            <span>02.</span>
-            {UI_STRINGS.introTutorialHeading}
-          </div>
-          <div className="intro-tutorial__signals">
-            <div>
-              <strong>{DETECTOR_TRUTH_SYMBOL}</strong>
-              <span>{UI_STRINGS.introTutorialTruth}</span>
+          {step === 'narration' && (
+            <TextBox
+              key="intro-narration"
+              paragraphs={narration}
+              onComplete={advance}
+            />
+          )}
+
+          {step === 'tutorial' && (
+            <TextBox
+              key="intro-tutorial"
+              paragraphs={tutorial}
+              speaker="system"
+              onComplete={advance}
+            />
+          )}
+
+          {isReady && (
+            <div className="intro-ready">
+              <p>{UI_STRINGS.introReady}</p>
+              <button
+                className="screen__action"
+                type="button"
+                onClick={onContinue}
+              >
+                {UI_STRINGS.enterStageOne}
+              </button>
             </div>
-            <div>
-              <strong>{DETECTOR_LIE_SYMBOL}</strong>
-              <span>{UI_STRINGS.introTutorialLie}</span>
-            </div>
-          </div>
-        </aside>
-      )}
-
-      {step === 'narration' && (
-        <TextBox
-          key="intro-narration"
-          paragraphs={narration}
-          onComplete={advance}
-        />
-      )}
-
-      {step === 'tutorial' && (
-        <TextBox
-          key="intro-tutorial"
-          paragraphs={tutorial}
-          speaker="system"
-          onComplete={advance}
-        />
-      )}
-
-      {isReady && (
-        <div className="intro-ready">
-          <p>{UI_STRINGS.introReady}</p>
-          <button
-            className="screen__action"
-            type="button"
-            onClick={onContinue}
-          >
-            {UI_STRINGS.enterStageOne}
-          </button>
+          )}
         </div>
-      )}
+      </div>
     </section>
   )
 }

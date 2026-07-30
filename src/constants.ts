@@ -3,8 +3,8 @@ export const MAX_HEARTS: number = 3
 export const INITIAL_KEY_FRAGMENTS: number = 0
 export const MAX_KEY_FRAGMENTS: number = 5
 export const INITIAL_DETECTOR_USES: number = 2
-export const MIN_HEARTS_FOR_DETECTOR: number = 2
-export const DETECTOR_HEART_COST: number = 1
+export const MIN_HEARTS_FOR_DETECTOR: number = 1
+export const DETECTOR_HEART_COST: number = 0
 export const WRONG_CHOICE_HEART_COST: number = 1
 export const TRUE_END_KEY_FRAGMENT_THRESHOLD: number = 5
 export const TOTAL_STAGES: number = 5
@@ -64,11 +64,11 @@ export const UI_STRINGS = {
   evidenceIndex: '발견한 증거 목록',
   evidenceVerified: '직접 확인한 기억',
   detectorAction: '판별 도구 사용',
-  detectorCost: '하트 1 · 탐지기 1 소모',
+  detectorCost: '탐지기 1회 소모',
   detectorWaitForVoice: '목소리 대사가 끝난 뒤 사용할 수 있습니다.',
   detectorAlreadyUsed: '이 스테이지에서는 이미 탐지기를 사용했습니다.',
   detectorNoUses: '남은 탐지기 사용 횟수가 없습니다.',
-  detectorLowHearts: '하트가 2개 이상일 때만 사용할 수 있습니다.',
+  detectorLowHearts: '의식을 잃은 상태에서는 사용할 수 없습니다.',
   stageInteractionLocked: '판정이 끝날 때까지 입력할 수 없습니다.',
   choiceCorrect: '올바른 선택',
   choiceWrong: '잘못된 선택',

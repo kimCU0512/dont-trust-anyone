@@ -77,7 +77,7 @@ describe('useGameState reducer', () => {
       { type: 'COMPLETE_INTRO' },
     )
 
-    expect(result.currentVoiceLineId).toBe('s1-v4')
+    expect(result.currentVoiceLineId).toBe('s1-v6')
   })
 
   it('adds a key fragment and advances after a correct choice', () => {
@@ -194,7 +194,7 @@ describe('useGameState reducer', () => {
     expect(result).toEqual({
       ...createInitialGameState(),
       gamePhase: 'stage',
-      currentVoiceLineId: 's1-v4',
+      currentVoiceLineId: 's1-v6',
     })
   })
 
@@ -208,7 +208,7 @@ describe('useGameState reducer', () => {
     expect(result).toEqual(createInitialGameState())
   })
 
-  it('uses the detector by spending one heart and one use', () => {
+  it('uses the detector by spending one use without removing a heart', () => {
     const reducer = createGameReducer(storyData)
     const result = reducer(stageState(), { type: 'USE_DETECTOR' })
 
@@ -237,12 +237,15 @@ describe('useGameState reducer', () => {
     expect(getDetectorResult(stageState(), storyData)).toBeNull()
   })
 
-  it('disables the detector when only one heart remains', () => {
+  it('keeps the detector available while one heart remains', () => {
     const reducer = createGameReducer(storyData)
     const state = stageState({ hearts: 1 })
 
-    expect(canUseDetector(state)).toBe(false)
-    expect(reducer(state, { type: 'USE_DETECTOR' })).toBe(state)
+    expect(canUseDetector(state)).toBe(true)
+    expect(reducer(state, { type: 'USE_DETECTOR' })).toMatchObject({
+      hearts: 1,
+      detectorUses: INITIAL_DETECTOR_USES - 1,
+    })
   })
 
   it('disables the detector when no uses remain', () => {

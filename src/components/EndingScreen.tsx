@@ -14,10 +14,7 @@ interface EndingScreenProps {
   onReturnToTitle: () => void
 }
 
-export function EndingScreen({
-  ending,
-  onReturnToTitle,
-}: EndingScreenProps) {
+export function EndingScreen({ ending, onReturnToTitle }: EndingScreenProps) {
   const isTrueEnding = ending === 'true'
   const endingContent = story.endings[ending]
   const [flow, setFlow] = useState(createConclusionFlowState)
@@ -27,52 +24,55 @@ export function EndingScreen({
       className={`screen screen--ending screen--ending-${ending}`}
       data-screen={isTrueEnding ? 'P-30' : 'P-31'}
     >
-      <header className="conclusion-heading">
-        <p className="screen__code">
-          {isTrueEnding ? 'P-30 / ESCAPED' : 'P-31 / CAPTURED'}
-        </p>
-        <h1 className="screen__heading">{endingContent.label}</h1>
-        <p>
-          {isTrueEnding
-            ? UI_STRINGS.trueEndingSubheading
-            : UI_STRINGS.badEndingSubheading}
-        </p>
-      </header>
-
-      <ConclusionArtwork
-        imageUrl={endingContent.imageUrl}
-        alt={
-          isTrueEnding
-            ? UI_STRINGS.trueEndingImageAlt
-            : UI_STRINGS.badEndingImageAlt
-        }
-        variant={ending}
-      />
-
-      <div className="conclusion-copy">
-        <TextBox
-          paragraphs={toDisplayParagraphs(endingContent.text)}
-          speaker="system"
-          onComplete={() => setFlow(completeConclusionText)}
+      <div className="conclusion-stage">
+        <ConclusionArtwork
+          imageUrl={endingContent.imageUrl}
+          alt={
+            isTrueEnding
+              ? UI_STRINGS.trueEndingImageAlt
+              : UI_STRINGS.badEndingImageAlt
+          }
+          variant={ending}
         />
+        <header className="conclusion-heading">
+          <p className="screen__code">
+            {isTrueEnding ? 'P-30 / ESCAPED' : 'P-31 / CAPTURED'}
+          </p>
+          <h1 className="screen__heading">{endingContent.label}</h1>
+          <p>
+            {isTrueEnding
+              ? UI_STRINGS.trueEndingSubheading
+              : UI_STRINGS.badEndingSubheading}
+          </p>
+        </header>
+
+        <div className="conclusion-overlay">
+          <div className="conclusion-copy">
+            <TextBox
+              paragraphs={toDisplayParagraphs(endingContent.text)}
+              speaker="system"
+              onComplete={() => setFlow(completeConclusionText)}
+            />
+          </div>
+
+          {!isTrueEnding && 'hint' in endingContent && (
+            <p className="ending-hint">
+              <span>{UI_STRINGS.endingHint}</span>
+              {toDisplayText(endingContent.hint)}
+            </p>
+          )}
+
+          {flow.textComplete && (
+            <button
+              className="screen__action"
+              type="button"
+              onClick={onReturnToTitle}
+            >
+              {UI_STRINGS.playAgain}
+            </button>
+          )}
+        </div>
       </div>
-
-      {!isTrueEnding && 'hint' in endingContent && (
-        <p className="ending-hint">
-          <span>{UI_STRINGS.endingHint}</span>
-          {toDisplayText(endingContent.hint)}
-        </p>
-      )}
-
-      {flow.textComplete && (
-        <button
-          className="screen__action"
-          type="button"
-          onClick={onReturnToTitle}
-        >
-          {UI_STRINGS.playAgain}
-        </button>
-      )}
     </section>
   )
 }

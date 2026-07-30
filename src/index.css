@@ -347,8 +347,64 @@ button {
   min-height: 100dvh;
   justify-content: flex-start;
   gap: 14px;
-  padding: 32px 44px;
+  padding: 14px 18px;
   animation: conclusion-screen-in 700ms ease-out both;
+}
+
+.conclusion-stage {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+  border: 1px solid rgb(220 220 210 / 15%);
+}
+
+.conclusion-stage > .conclusion-artwork {
+  width: 100%;
+  max-height: none;
+  height: 100%;
+  aspect-ratio: auto;
+  border: 0;
+}
+
+.conclusion-stage > .conclusion-heading {
+  position: absolute;
+  z-index: 4;
+  top: clamp(24px, 5vh, 58px);
+  left: clamp(24px, 5vw, 72px);
+  justify-items: start;
+  text-align: left;
+}
+
+.conclusion-overlay {
+  position: absolute;
+  z-index: 4;
+  right: clamp(18px, 4vw, 58px);
+  bottom: clamp(18px, 4vh, 42px);
+  left: clamp(18px, 4vw, 58px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+
+.conclusion-overlay .conclusion-copy {
+  width: 100%;
+}
+
+.conclusion-overlay .text-box {
+  width: 100%;
+  max-width: none;
+  background: rgb(5 6 6 / 88%);
+  backdrop-filter: blur(8px);
+}
+
+.conclusion-overlay .ending-hint {
+  grid-column: 1 / -1;
+  width: 100%;
+  padding: 10px 12px;
+  background: rgb(0 0 0 / 52%);
 }
 
 .conclusion-heading {
@@ -818,10 +874,32 @@ button {
   animation: page-visual-in 640ms 80ms ease-out both;
 }
 
-.screen--intro > .text-box,
-.screen--intro .intro-tutorial,
-.screen--intro .intro-ready {
-  width: min(100%, 900px);
+.intro-overlay {
+  position: absolute;
+  z-index: 3;
+  right: clamp(18px, 3vw, 46px);
+  bottom: clamp(18px, 3vh, 34px);
+  left: clamp(18px, 3vw, 46px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.42fr);
+  gap: 12px;
+  align-items: end;
+}
+
+.intro-overlay > .text-box {
+  width: 100%;
+  max-width: none;
+  min-height: 174px;
+  grid-row: 1 / span 2;
+  border-color: rgb(225 225 214 / 24%);
+  background: rgb(5 6 6 / 88%);
+  backdrop-filter: blur(8px);
+  animation: page-panel-in 420ms 180ms ease-out both;
+}
+
+.intro-overlay .intro-tutorial,
+.intro-overlay .intro-ready {
+  width: 100%;
   animation: page-panel-in 420ms 180ms ease-out both;
 }
 
@@ -896,7 +974,7 @@ button {
 .intro-scene__caption {
   position: absolute;
   left: 20px;
-  bottom: 17px;
+  top: 20px;
   z-index: 1;
   text-align: left;
 }
@@ -1628,13 +1706,13 @@ button {
   animation-delay: 140ms;
 }
 
-.screen--intro > .text-box,
+.intro-overlay > .text-box,
 .conclusion-copy .text-box {
   min-height: 174px;
   padding: 22px 24px 18px;
 }
 
-.screen--intro > .text-box .text-box__body,
+.intro-overlay > .text-box .text-box__body,
 .conclusion-copy .text-box__body {
   font-size: clamp(1.08rem, 1.65vw, 1.35rem);
   line-height: 1.75;
@@ -2150,11 +2228,24 @@ button {
 
   .intro-scene__caption {
     left: 14px;
-    bottom: 13px;
+    top: 14px;
   }
 
   .intro-scene__caption h1 {
     font-size: 1.3rem;
+  }
+
+  .intro-overlay {
+    right: 8px;
+    bottom: 10px;
+    left: 8px;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .intro-overlay > .text-box {
+    min-height: 176px;
+    grid-row: auto;
   }
 
   .intro-tutorial {
@@ -2488,6 +2579,22 @@ button {
     min-height: 100dvh;
     gap: 13px;
     padding: 58px 14px 24px;
+  }
+
+  .conclusion-stage {
+    min-height: calc(100dvh - 82px);
+  }
+
+  .conclusion-stage > .conclusion-heading {
+    top: 20px;
+    left: 18px;
+  }
+
+  .conclusion-overlay {
+    right: 10px;
+    bottom: 12px;
+    left: 10px;
+    grid-template-columns: 1fr;
   }
 
   .conclusion-heading .screen__heading {

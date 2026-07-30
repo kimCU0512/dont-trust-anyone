@@ -87,7 +87,7 @@ describe('StageScreen', () => {
     expect(
       getDetectorDisabledReason({
         textStep: 'choice',
-        hearts: 1,
+        hearts: 0,
         detectorUses: 1,
         detectorUsedThisStage: false,
       }),
