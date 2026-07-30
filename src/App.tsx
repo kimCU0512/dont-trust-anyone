@@ -10,6 +10,8 @@ interface GameScreenProps {
   state: GameState
   onStart: () => void
   onContinueIntro: () => void
+  detectorAvailable: boolean
+  onUseDetector: () => void
   onSelectChoice: (choiceId: string) => void
   onRestart: () => void
   onReturnToTitle: () => void
@@ -19,6 +21,8 @@ export function GameScreen({
   state,
   onStart,
   onContinueIntro,
+  detectorAvailable,
+  onUseDetector,
   onSelectChoice,
   onRestart,
   onReturnToTitle,
@@ -31,10 +35,15 @@ export function GameScreen({
     case 'stage':
       return (
         <StageScreen
+          key={state.stageId}
           stageId={state.stageId}
           hearts={state.hearts}
           keyFragments={state.keyFragments}
           detectorUses={state.detectorUses}
+          currentVoiceLineId={state.currentVoiceLineId}
+          detectorUsedThisStage={state.detectorUsedThisStage}
+          detectorAvailable={detectorAvailable}
+          onUseDetector={onUseDetector}
           onSelectChoice={onSelectChoice}
         />
       )
@@ -54,6 +63,8 @@ function App() {
     state,
     startGame,
     completeIntro,
+    canUseDetector,
+    useDetector,
     selectChoice,
     restartGame,
     returnToTitle,
@@ -65,6 +76,8 @@ function App() {
         state={state}
         onStart={startGame}
         onContinueIntro={completeIntro}
+        detectorAvailable={canUseDetector}
+        onUseDetector={useDetector}
         onSelectChoice={selectChoice}
         onRestart={restartGame}
         onReturnToTitle={returnToTitle}

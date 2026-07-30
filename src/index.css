@@ -528,7 +528,9 @@ button {
 
 .screen--stage {
   justify-content: flex-start;
-  padding-top: 28px;
+  gap: 12px;
+  min-height: min(760px, calc(100vh - 24px));
+  padding: 20px;
 }
 
 .hud {
@@ -594,4 +596,248 @@ button {
   filter: none;
   font-family: monospace;
   font-size: 1.25rem;
+}
+
+.stage-heading {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  text-align: left;
+}
+
+.stage-heading h1 {
+  margin: 4px 0 0;
+  color: #dfdfd9;
+  font-family: Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.stage-heading h1 span {
+  color: #c94038;
+}
+
+.stage-heading__track {
+  color: #686863;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.stage-scene {
+  position: relative;
+  width: 100%;
+  height: 210px;
+  margin: 0;
+  border: 1px solid rgb(210 210 202 / 20%);
+  overflow: hidden;
+  background: #111;
+}
+
+.stage-scene__fallback,
+.stage-scene img,
+.stage-scene__shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.stage-scene img {
+  object-fit: cover;
+  filter: grayscale(0.4) contrast(1.08) brightness(0.72);
+}
+
+.stage-scene__fallback {
+  background:
+    linear-gradient(110deg, rgb(214 201 172 / 15%), transparent 35%),
+    linear-gradient(#3a3933, #171715);
+}
+
+.stage-scene__architecture {
+  position: absolute;
+  inset: 17% 12% 0;
+  border: 1px solid rgb(216 211 196 / 15%);
+  background:
+    repeating-linear-gradient(90deg, transparent 0 16%, rgb(5 5 5 / 45%) 16% 19%),
+    linear-gradient(180deg, #292924, #111);
+}
+
+.stage-scene--2 .stage-scene__fallback {
+  background:
+    linear-gradient(90deg, rgb(215 183 128 / 14%), transparent 38%),
+    linear-gradient(#37352f, #171614);
+}
+
+.stage-scene--2 .stage-scene__architecture {
+  inset: 14% 16% 34%;
+  background: #15221c;
+}
+
+.stage-scene--3 .stage-scene__fallback {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 22px, rgb(181 197 193 / 7%) 23px),
+    repeating-linear-gradient(90deg, #282e2c 0 31px, #171b1a 32px);
+}
+
+.stage-scene--3 .stage-scene__architecture {
+  inset: 20% 47% 0 8%;
+  background: repeating-linear-gradient(90deg, #222b29 0 24%, #111 25%);
+}
+
+.stage-scene--4 .stage-scene__fallback {
+  background:
+    radial-gradient(circle at 70% 30%, rgb(220 188 133 / 26%), transparent 28%),
+    linear-gradient(#3b3932, #191816);
+}
+
+.stage-scene--4 .stage-scene__architecture {
+  inset: 30% 12% 0 54%;
+  background: #29251f;
+}
+
+.stage-scene--5 .stage-scene__fallback {
+  background:
+    radial-gradient(circle at 77% 22%, rgb(173 38 30 / 28%), transparent 8%),
+    linear-gradient(100deg, #141a17, #050706 72%);
+}
+
+.stage-scene--5 .stage-scene__architecture {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 17%, rgb(0 0 0 / 48%) 17% 20%),
+    #101512;
+}
+
+.stage-scene__shade {
+  background: linear-gradient(180deg, transparent 36%, rgb(0 0 0 / 72%));
+}
+
+.stage-scene figcaption {
+  position: absolute;
+  left: 15px;
+  bottom: 12px;
+  z-index: 1;
+  display: grid;
+  gap: 2px;
+  color: #deded8;
+  font-family: Georgia, serif;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.stage-scene figcaption span {
+  color: #c94038;
+  font-family: sans-serif;
+  font-size: 0.5rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.stage-dialogue {
+  width: 100%;
+}
+
+.stage-dialogue .text-box {
+  width: 100%;
+  min-height: 150px;
+  box-sizing: border-box;
+}
+
+.stage-dialogue__complete {
+  cursor: default;
+}
+
+.stage-dialogue__complete:hover {
+  border-color: rgb(211 211 202 / 22%);
+}
+
+.stage-controls {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.55fr 0.8fr;
+  gap: 10px;
+}
+
+.stage-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.stage-choice,
+.stage-detector {
+  min-height: 58px;
+  border: 1px solid rgb(210 210 202 / 26%);
+  color: #d9d9d3;
+  background: #0b0b0a;
+  cursor: pointer;
+}
+
+.stage-choice {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.stage-choice span {
+  color: #c94038;
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+}
+
+.stage-detector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.stage-detector__signal {
+  color: #c94038;
+  font-family: monospace;
+  font-size: 1.45rem;
+}
+
+.stage-detector strong,
+.stage-detector small {
+  display: block;
+}
+
+.stage-detector strong {
+  font-size: 0.68rem;
+}
+
+.stage-detector small {
+  margin-top: 4px;
+  color: #777771;
+  font-size: 0.52rem;
+}
+
+.stage-choice:hover:not(:disabled),
+.stage-detector:hover:not(:disabled) {
+  border-color: #c94038;
+  background: #15110f;
+}
+
+.stage-choice:focus-visible,
+.stage-detector:focus-visible {
+  outline: 2px solid #c94038;
+  outline-offset: 2px;
+}
+
+.stage-choice:disabled,
+.stage-detector:disabled {
+  color: #5c5c57;
+  border-color: rgb(210 210 202 / 10%);
+  background: #080808;
+  cursor: not-allowed;
+  opacity: 0.62;
 }
