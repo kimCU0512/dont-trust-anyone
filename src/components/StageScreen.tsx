@@ -368,16 +368,6 @@ export function StageScreen({
                     />
                   )}
 
-                  {textStep === 'choice' &&
-                    detectorAnimationResult !== null && (
-                      <DetectorResult
-                        key={detectorAnimationResult}
-                        result={detectorAnimationResult}
-                        onComplete={() => {
-                          setDetectorAnimating(false)
-                        }}
-                      />
-                    )}
                 </>
               )}
             </div>
@@ -397,7 +387,34 @@ export function StageScreen({
           <div
             className={`stage-controls${decisionReady ? ' stage-controls--decision' : ' stage-controls--investigation'}`}
           >
-            {decisionReady ? (
+            {decisionReady && detectorAnimationResult !== null ? (
+              <div className="stage-detector-panel">
+                <DetectorResult
+                  key={detectorAnimationResult}
+                  result={detectorAnimationResult}
+                  onComplete={() => {
+                    setDetectorAnimating(false)
+                  }}
+                />
+                <button
+                  className="stage-detector stage-detector--result-open"
+                  type="button"
+                  aria-expanded="true"
+                  onClick={handleUseDetector}
+                >
+                  <span
+                    className="stage-detector__signal"
+                    aria-hidden="true"
+                  >
+                    ×
+                  </span>
+                  <span>
+                    <strong>{UI_STRINGS.detectorClose}</strong>
+                    <small>{UI_STRINGS.detectorSignalLocked}</small>
+                  </span>
+                </button>
+              </div>
+            ) : decisionReady ? (
               <div className="stage-choices">
                 <p className="stage-decision__label">
                   EVIDENCE COMPLETE / 목소리를 판단하라
@@ -415,35 +432,29 @@ export function StageScreen({
                   </button>
                 ))}
                 <button
-                  className={`stage-detector${detectorAnimationResult !== null ? ' stage-detector--result-open' : ''}`}
+                  className="stage-detector"
                   type="button"
-                  disabled={
-                    detectorAnimationResult === null && !detectorEnabled
-                  }
+                  disabled={!detectorEnabled}
                   title={
                     inputLocked
                       ? UI_STRINGS.stageInteractionLocked
                       : (detectorDisabledReason ?? undefined)
                   }
-                  aria-expanded={detectorAnimationResult !== null}
+                  aria-expanded="false"
                   onClick={handleUseDetector}
                 >
                   <span
                     className="stage-detector__signal"
                     aria-hidden="true"
                   >
-                    {detectorAnimationResult !== null ? '×' : '⌁'}
+                    ⌁
                   </span>
                   <span>
                     <strong>
-                      {detectorAnimationResult !== null
-                        ? UI_STRINGS.detectorClose
-                        : UI_STRINGS.detectorAction}
+                      {UI_STRINGS.detectorAction}
                     </strong>
                     <small>
-                      {detectorAnimationResult !== null
-                        ? UI_STRINGS.detectorSignalLocked
-                        : UI_STRINGS.detectorCost}
+                      {UI_STRINGS.detectorCost}
                     </small>
                   </span>
                 </button>
