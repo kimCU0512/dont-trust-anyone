@@ -15,7 +15,7 @@
   - 완료 기준: SPEC 스키마의 모든 필드 반영, tsc 통과
 - [x] T-04 `src/data/story.json` 작성 — 5스테이지 플레이스홀더 데이터 (스테이지별 서술문 2문단, 목소리 대사 2개(진위 플래그·contradictsStage 포함), 선택지 A/B, 인트로/튜토리얼/엔딩 2종 텍스트)
   - 완료 기준: CLAUDE.md 6-3·6-4 기본값 반영, TODO_CONTENT 플래그 포함
-- [ ] T-05 스토리 데이터 검증 함수 `src/data/validateStory.ts` + 단위 테스트 — 필수 필드, 정답 선택지 1개 존재, 스테이지 5개, isLie/contradictsStage 정합성 검사
+- [x] T-05 스토리 데이터 검증 함수 `src/data/validateStory.ts` + 단위 테스트 — 필수 필드, 정답 선택지 1개 존재, 스테이지 5개, isLie/contradictsStage 정합성 검사
   - 완료 기준: 현재 story.json이 검증 통과, 잘못된 데이터 케이스 테스트 3개 이상
 
 ## Phase 2 — 상태 머신
