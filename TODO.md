@@ -11,7 +11,7 @@
 
 ## Phase 1 — 데이터 & 타입
 
-- [ ] T-03 `src/types.ts` 작성 — GameState, Stage, VoiceLine, Choice, StoryData 타입 (SPEC 3-4, 3-5 준수)
+- [x] T-03 `src/types.ts` 작성 — GameState, Stage, VoiceLine, Choice, StoryData 타입 (SPEC 3-4, 3-5 준수)
   - 완료 기준: SPEC 스키마의 모든 필드 반영, tsc 통과
 - [ ] T-04 `src/data/story.json` 작성 — 5스테이지 플레이스홀더 데이터 (스테이지별 서술문 2문단, 목소리 대사 2개(진위 플래그·contradictsStage 포함), 선택지 A/B, 인트로/튜토리얼/엔딩 2종 텍스트)
   - 완료 기준: CLAUDE.md 6-3·6-4 기본값 반영, TODO_CONTENT 플래그 포함
