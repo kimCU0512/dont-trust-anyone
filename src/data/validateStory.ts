@@ -151,7 +151,6 @@ function validateStage(value: unknown, index: number): Stage {
     bgmTrack: requireString(stage.bgmTrack, `${path}.bgmTrack`),
     narration,
     intrusionText: requireString(stage.intrusionText, `${path}.intrusionText`),
-    intrusionHint: requireString(stage.intrusionHint, `${path}.intrusionHint`),
     voiceLines,
     objects,
     choices,

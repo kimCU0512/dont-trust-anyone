@@ -86,7 +86,6 @@ export function StageScreen({
     createStageInteractionState,
   )
   const transitionTimerRef = useRef<number | null>(null)
-  const intrusionTimerRef = useRef<number | null>(null)
   const selectionRevealTimerRef = useRef<number | null>(null)
   const narration = toDisplayParagraphs(stage.narration)
   const voiceText = `“${toDisplayText(voiceLine.text)}”`
@@ -99,7 +98,10 @@ export function StageScreen({
   )
   const investigationComplete =
     discoveredObjectIds.length === stage.objects.length
-  const decisionReady = investigationComplete && activeObjectId === null
+  const decisionReady =
+    investigationComplete &&
+    activeObjectId === null &&
+    interaction.selection === null
   const choicesEnabled = baseChoicesEnabled && decisionReady
   const activeObject = stage.objects.find(
     (object) => object.id === activeObjectId,
@@ -120,9 +122,6 @@ export function StageScreen({
     () => () => {
       if (transitionTimerRef.current !== null) {
         window.clearTimeout(transitionTimerRef.current)
-      }
-      if (intrusionTimerRef.current !== null) {
-        window.clearTimeout(intrusionTimerRef.current)
       }
       if (selectionRevealTimerRef.current !== null) {
         window.clearTimeout(selectionRevealTimerRef.current)
@@ -215,10 +214,6 @@ export function StageScreen({
 
     setIntrusionSeen(true)
     setSceneIntruding(true)
-    intrusionTimerRef.current = window.setTimeout(() => {
-      setSceneIntruding(false)
-      intrusionTimerRef.current = null
-    }, 2600)
   }
 
   const handleResultComplete = () => {
@@ -365,41 +360,29 @@ export function StageScreen({
                   )}
 
                   {textStep === 'choice' &&
-                    detectorAnimationResult === null && (
-                      <div
-                        className="text-box text-box--voice stage-dialogue__complete"
-                        aria-label={UI_STRINGS.textBoxVoice}
-                      >
-                        <span className="text-box__header">
-                          <span className="text-box__speaker">
-                            {UI_STRINGS.textBoxVoice}
-                          </span>
-                          <span>{UI_STRINGS.stageVoiceReady}</span>
-                        </span>
-                        <span className="text-box__body">{voiceText}</span>
-                      </div>
-                    )}
-
-                  {textStep === 'choice' &&
                     detectorAnimationResult !== null && (
                       <DetectorResult
                         key={detectorAnimationResult}
                         result={detectorAnimationResult}
-                        onComplete={() => setDetectorAnimating(false)}
+                        onComplete={() => {
+                          setDetectorAnimating(false)
+                          setDetectorAnimationResult(null)
+                        }}
                       />
                     )}
                 </>
               )}
             </div>
             {sceneIntruding && (
-              <div className="stage-intrusion" role="status">
+              <button
+                type="button"
+                className="stage-intrusion"
+                aria-label="기억 침식 닫기"
+                onClick={() => setSceneIntruding(false)}
+              >
                 <span>{UI_STRINGS.intrusionLabel}</span>
                 <p>{stage.intrusionText}</p>
-                <small>
-                  <strong>기억 잔상 / 판별 단서</strong>
-                  {stage.intrusionHint}
-                </small>
-              </div>
+              </button>
             )}
           </figure>
 
@@ -427,8 +410,7 @@ export function StageScreen({
             ) : (
               <p className="stage-investigation-status">
                 <span>현장 대조 중</span>
-                단서 {discoveredObjectIds.length} / {stage.objects.length} ·
-                모두 조사하면 선택지가 열린다
+                기록 {discoveredObjectIds.length} / {stage.objects.length}
               </p>
             )}
             <button
@@ -467,11 +449,11 @@ export function StageScreen({
         </div>
       </div>
       {interaction.selection && !selectionRevealReady && (
-        <div className="choice-commit-veil" role="status" aria-live="assertive">
-          <span>CHOICE LOCKED</span>
-          <strong>{interaction.selection.choiceId}</strong>
-          <p>기억이 선택을 기록하는 중</p>
-        </div>
+        <div
+          className="choice-commit-veil"
+          role="status"
+          aria-label="선택 처리 중"
+        />
       )}
       {interaction.exiting && (
         <p className="stage-transition-lock" role="status">

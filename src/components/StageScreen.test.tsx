@@ -38,7 +38,7 @@ describe('StageScreen', () => {
     expect(html).toContain(stage.name)
     expect(html).toContain(stage.imageUrl)
     expect(html).not.toContain(toDisplayText(stage.choices[0].text))
-    expect(html).toContain('모두 조사하면 선택지가 열린다')
+    expect(html).toContain('현장 대조 중')
     expect(html).toContain('data-resource="hearts"')
     expect(html).toContain('disabled=""')
     expect(html).toContain(UI_STRINGS.detectorWaitForVoice)
