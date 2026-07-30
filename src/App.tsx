@@ -32,6 +32,9 @@ export function GameScreen({
       return (
         <StageScreen
           stageId={state.stageId}
+          hearts={state.hearts}
+          keyFragments={state.keyFragments}
+          detectorUses={state.detectorUses}
           onSelectChoice={onSelectChoice}
         />
       )

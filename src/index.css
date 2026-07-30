@@ -525,3 +525,73 @@ button {
   font-size: 0.7rem;
   letter-spacing: 0.12em;
 }
+
+.screen--stage {
+  justify-content: flex-start;
+  padding-top: 28px;
+}
+
+.hud {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr 1fr;
+  border: 1px solid rgb(210 210 202 / 18%);
+  background: rgb(6 6 6 / 86%);
+}
+
+.hud__resource {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.hud__resource + .hud__resource {
+  border-left: 1px solid rgb(210 210 202 / 18%);
+}
+
+.hud__label {
+  margin-right: auto;
+  color: #797973;
+  font-size: 0.57rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.hud__resource strong {
+  color: #e2e2dc;
+  font-family: Georgia, serif;
+  font-size: 1.08rem;
+  font-weight: 500;
+}
+
+.hud__maximum {
+  color: #5f5f5a;
+  font-size: 0.62rem;
+}
+
+.hud__hearts {
+  display: flex;
+  gap: 2px;
+  color: #595954;
+  font-size: 0.82rem;
+}
+
+.hud__heart--filled {
+  color: #c94038;
+  text-shadow: 0 0 10px rgb(201 64 56 / 28%);
+}
+
+.hud__icon {
+  filter: grayscale(1);
+  font-size: 0.88rem;
+}
+
+.hud__icon--detector {
+  color: #c94038;
+  filter: none;
+  font-family: monospace;
+  font-size: 1.25rem;
+}
