@@ -11,11 +11,14 @@ describe('BgmControl', () => {
     const html = renderToStaticMarkup(
       <BgmControl
         isEnabled={isEnabled}
+        volume={0.45}
         onToggle={() => undefined}
+        onVolumeChange={() => undefined}
       />,
     )
 
     expect(html).toContain(`aria-pressed="${isEnabled}"`)
     expect(html).toContain(`>${label}</button>`)
+    expect(html).toContain('value="45"')
   })
 })

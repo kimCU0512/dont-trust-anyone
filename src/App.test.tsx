@@ -27,6 +27,10 @@ describe('GameScreen', () => {
           onContinueIntro={() => undefined}
           detectorAvailable={false}
           evidenceEntries={[]}
+          bgmEnabled
+          bgmVolume={0.45}
+          onToggleBgm={() => undefined}
+          onBgmVolumeChange={() => undefined}
           onUseDetector={() => null}
           onSelectChoice={() => undefined}
           onDiscoverEvidence={() => undefined}

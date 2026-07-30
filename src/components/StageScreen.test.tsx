@@ -25,6 +25,10 @@ describe('StageScreen', () => {
         detectorUsedThisStage={false}
         detectorAvailable
         evidenceEntries={[]}
+        bgmEnabled
+        bgmVolume={0.45}
+        onToggleBgm={() => undefined}
+        onBgmVolumeChange={() => undefined}
         onUseDetector={() => null}
         onSelectChoice={() => undefined}
         onDiscoverEvidence={() => undefined}
@@ -33,7 +37,8 @@ describe('StageScreen', () => {
 
     expect(html).toContain(stage.name)
     expect(html).toContain(stage.imageUrl)
-    expect(html).toContain(toDisplayText(stage.choices[0].text))
+    expect(html).not.toContain(toDisplayText(stage.choices[0].text))
+    expect(html).toContain('모두 조사하면 선택지가 열린다')
     expect(html).toContain('data-resource="hearts"')
     expect(html).toContain('disabled=""')
     expect(html).toContain(UI_STRINGS.detectorWaitForVoice)
@@ -50,6 +55,10 @@ describe('StageScreen', () => {
         detectorUsedThisStage={false}
         detectorAvailable
         evidenceEntries={[]}
+        bgmEnabled
+        bgmVolume={0.45}
+        onToggleBgm={() => undefined}
+        onBgmVolumeChange={() => undefined}
         onUseDetector={() => null}
         onSelectChoice={() => undefined}
         onDiscoverEvidence={() => undefined}

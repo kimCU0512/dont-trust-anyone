@@ -656,6 +656,34 @@ button {
   cursor: pointer;
 }
 
+.game-audio-control__volume {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  grid-template-columns: auto minmax(54px, 1fr) 24px;
+  align-items: center;
+  gap: 6px;
+  color: #747a75;
+  font-family: monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.04em;
+}
+
+.game-audio-control__volume input {
+  width: 100%;
+  accent-color: #a43d36;
+  cursor: pointer;
+}
+
+.game-audio-control__volume input:disabled {
+  opacity: 0.35;
+}
+
+.game-audio-control__volume output {
+  color: #a9aaa3;
+  text-align: right;
+}
+
 .title-content {
   flex: 1;
   display: flex;
@@ -1007,6 +1035,7 @@ button {
 }
 
 .stage-playfield {
+  position: relative;
   min-width: 0;
   min-height: 0;
   display: grid;
@@ -1017,6 +1046,24 @@ button {
 .stage-playfield .stage-scene {
   height: auto;
   min-height: 0;
+}
+
+.stage-side-panel {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 8px;
+}
+
+.stage-side-panel .game-audio-control {
+  position: static;
+  width: 100%;
+  min-height: 44px;
+  justify-content: flex-start;
+  padding: 7px 10px;
+  border: 1px solid rgb(203 190 150 / 20%);
+  background: rgb(5 6 5 / 88%);
 }
 
 .hud {
@@ -1243,7 +1290,7 @@ button {
 .stage-dialogue {
   position: absolute;
   right: 14px;
-  bottom: 14px;
+  bottom: clamp(24px, 4vh, 44px);
   left: 14px;
   z-index: 4;
   width: 100%;
@@ -1252,12 +1299,18 @@ button {
 
 .stage-dialogue .text-box {
   width: 100%;
-  min-height: 144px;
+  min-height: 174px;
+  padding: 22px 24px 18px;
   box-sizing: border-box;
   border-color: rgb(225 225 214 / 24%);
   background: rgb(5 6 6 / 88%);
   box-shadow: 0 12px 35px rgb(0 0 0 / 36%);
   backdrop-filter: blur(7px);
+}
+
+.stage-dialogue .text-box__body {
+  font-size: clamp(1.08rem, 1.65vw, 1.35rem);
+  line-height: 1.75;
 }
 
 .stage-dialogue__complete {
@@ -1266,6 +1319,14 @@ button {
 
 .stage-dialogue__complete:hover {
   border-color: rgb(211 211 202 / 22%);
+}
+
+.stage-playfield--decision .stage-dialogue {
+  opacity: 0.42;
+  filter: blur(1px);
+  transition:
+    opacity 180ms ease,
+    filter 180ms ease;
 }
 
 .stage-hotspots {
@@ -1466,6 +1527,66 @@ button {
   display: grid;
   grid-template-columns: 1.55fr 0.8fr;
   gap: 10px;
+}
+
+.stage-controls--investigation {
+  grid-template-columns: 1fr minmax(210px, 0.42fr);
+}
+
+.stage-investigation-status {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid rgb(210 210 202 / 14%);
+  color: #777771;
+  background: rgb(6 7 6 / 82%);
+  font-size: 0.68rem;
+}
+
+.stage-investigation-status span {
+  color: #b99943;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.stage-controls--decision {
+  position: absolute;
+  z-index: 11;
+  top: 50%;
+  left: 50%;
+  width: min(680px, calc(100% - 48px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 190px;
+  padding: 18px;
+  border: 1px solid rgb(201 64 56 / 58%);
+  background: rgb(4 5 4 / 94%);
+  box-shadow:
+    0 0 0 100vmax rgb(0 0 0 / 38%),
+    0 24px 80px rgb(0 0 0 / 84%);
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(10px);
+  animation: conclusion-action-in 220ms ease-out both;
+}
+
+.stage-controls--decision .stage-choices {
+  grid-template-columns: 1fr;
+}
+
+.stage-decision__label {
+  grid-column: 1 / -1;
+  margin: 0 0 3px;
+  color: #c94038;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.stage-controls--decision .stage-choice {
+  min-height: 70px;
+  font-size: 0.82rem;
 }
 
 .stage-choices {
@@ -1981,6 +2102,10 @@ button {
     height: 100%;
   }
 
+  .stage-side-panel {
+    display: contents;
+  }
+
   .evidence-mobile-toggle {
     position: absolute;
     z-index: 12;
@@ -1995,6 +2120,27 @@ button {
     color: #c8c2b0;
     background: rgb(6 7 6 / 91%);
     font-size: 0.62rem;
+  }
+
+  .stage-side-panel .game-audio-control {
+    position: absolute;
+    z-index: 12;
+    top: max(10px, env(safe-area-inset-top));
+    left: 112px;
+    right: 76px;
+    width: auto;
+    min-height: 36px;
+    padding: 4px 7px;
+  }
+
+  .stage-side-panel .game-audio-control__label {
+    display: none;
+  }
+
+  .stage-side-panel .game-audio-control button {
+    min-width: 38px;
+    min-height: 28px;
+    padding: 4px 6px;
   }
 
   .evidence-mobile-toggle > span {
@@ -2120,7 +2266,7 @@ button {
 
   .stage-dialogue {
     right: 8px;
-    bottom: 8px;
+    bottom: 24px;
     left: 8px;
   }
 
@@ -2175,6 +2321,29 @@ button {
 
   .stage-controls {
     grid-template-columns: 1fr;
+  }
+
+  .stage-controls--decision {
+    top: 48%;
+    width: calc(100% - 20px);
+    padding: 12px;
+  }
+
+  .stage-controls--decision .stage-choices {
+    grid-template-columns: 1fr;
+  }
+
+  .stage-controls--decision .stage-detector {
+    min-height: 52px;
+  }
+
+  .stage-controls--investigation {
+    gap: 7px;
+  }
+
+  .stage-investigation-status {
+    min-height: 48px;
+    font-size: 0.6rem;
   }
 
   .stage-choices {

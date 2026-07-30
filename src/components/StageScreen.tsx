@@ -9,6 +9,7 @@ import type {
   StageId,
 } from '../types'
 import { DetectorResult } from './DetectorResult'
+import { BgmControl } from './BgmControl'
 import { EvidenceJournal } from './EvidenceJournal'
 import { Hud } from './Hud'
 import { TextBox } from './TextBox'
@@ -30,6 +31,10 @@ interface StageScreenProps {
   detectorUsedThisStage: boolean
   detectorAvailable: boolean
   evidenceEntries: EvidenceEntry[]
+  bgmEnabled: boolean
+  bgmVolume: number
+  onToggleBgm: () => void
+  onBgmVolumeChange: (volume: number) => void
   onUseDetector: () => DetectorResultType | null
   onSelectChoice: (choiceId: string) => void
   onDiscoverEvidence: (entry: EvidenceEntry) => void
@@ -44,6 +49,10 @@ export function StageScreen({
   detectorUsedThisStage,
   detectorAvailable,
   evidenceEntries,
+  bgmEnabled,
+  bgmVolume,
+  onToggleBgm,
+  onBgmVolumeChange,
   onUseDetector,
   onSelectChoice,
   onDiscoverEvidence,
@@ -84,7 +93,10 @@ export function StageScreen({
     detectorAnimating,
     interactionLocked,
   )
-  const choicesEnabled = baseChoicesEnabled && activeObjectId === null
+  const investigationComplete =
+    discoveredObjectIds.length === stage.objects.length
+  const decisionReady = investigationComplete && activeObjectId === null
+  const choicesEnabled = baseChoicesEnabled && decisionReady
   const activeObject = stage.objects.find(
     (object) => object.id === activeObjectId,
   )
@@ -95,7 +107,10 @@ export function StageScreen({
     detectorUsedThisStage,
   })
   const detectorEnabled =
-    choicesEnabled && detectorAvailable && detectorDisabledReason === null
+    baseChoicesEnabled &&
+    activeObjectId === null &&
+    detectorAvailable &&
+    detectorDisabledReason === null
 
   useEffect(
     () => () => {
@@ -218,7 +233,9 @@ export function StageScreen({
       />
 
       <div className="stage-workspace">
-        <div className="stage-playfield">
+        <div
+          className={`stage-playfield${decisionReady ? ' stage-playfield--decision' : ''}`}
+        >
           <header className="stage-heading">
             <div>
               <p className="screen__code">P-10 / STAGE 0{stageId}</p>
@@ -370,21 +387,34 @@ export function StageScreen({
             )}
           </figure>
 
-          <div className="stage-controls">
-            <div className="stage-choices">
-              {stage.choices.map((choice) => (
-                <button
-                  className="stage-choice"
-                  type="button"
-                  disabled={!choicesEnabled}
-                  key={choice.id}
-                  onClick={() => handleSelectChoice(choice)}
-                >
-                  <span>{choice.id}</span>
-                  {toDisplayText(choice.text)}
-                </button>
-              ))}
-            </div>
+          <div
+            className={`stage-controls${decisionReady ? ' stage-controls--decision' : ' stage-controls--investigation'}`}
+          >
+            {decisionReady ? (
+              <div className="stage-choices">
+                <p className="stage-decision__label">
+                  EVIDENCE COMPLETE / 목소리를 판단하라
+                </p>
+                {stage.choices.map((choice) => (
+                  <button
+                    className="stage-choice"
+                    type="button"
+                    disabled={!choicesEnabled}
+                    key={choice.id}
+                    onClick={() => handleSelectChoice(choice)}
+                  >
+                    <span>{choice.id}</span>
+                    {toDisplayText(choice.text)}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className="stage-investigation-status">
+                <span>현장 대조 중</span>
+                단서 {discoveredObjectIds.length} / {stage.objects.length} ·
+                모두 조사하면 선택지가 열린다
+              </p>
+            )}
             <button
               className="stage-detector"
               type="button"
@@ -406,11 +436,19 @@ export function StageScreen({
             </button>
           </div>
         </div>
-        <EvidenceJournal
-          entries={evidenceEntries}
-          currentVoiceText={voiceText}
-          currentStageId={stageId}
-        />
+        <div className="stage-side-panel">
+          <BgmControl
+            isEnabled={bgmEnabled}
+            volume={bgmVolume}
+            onToggle={onToggleBgm}
+            onVolumeChange={onBgmVolumeChange}
+          />
+          <EvidenceJournal
+            entries={evidenceEntries}
+            currentVoiceText={voiceText}
+            currentStageId={stageId}
+          />
+        </div>
       </div>
       {interaction.exiting && (
         <p className="stage-transition-lock" role="status">

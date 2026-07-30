@@ -22,6 +22,10 @@ interface GameScreenProps {
   onUseDetector: () => DetectorResult | null
   onSelectChoice: (choiceId: string) => void
   evidenceEntries: EvidenceEntry[]
+  bgmEnabled: boolean
+  bgmVolume: number
+  onToggleBgm: () => void
+  onBgmVolumeChange: (volume: number) => void
   onDiscoverEvidence: (entry: EvidenceEntry) => void
   onRestart: () => void
   onReturnToTitle: () => void
@@ -35,6 +39,10 @@ export function GameScreen({
   onUseDetector,
   onSelectChoice,
   evidenceEntries,
+  bgmEnabled,
+  bgmVolume,
+  onToggleBgm,
+  onBgmVolumeChange,
   onDiscoverEvidence,
   onRestart,
   onReturnToTitle,
@@ -56,6 +64,10 @@ export function GameScreen({
           detectorUsedThisStage={state.detectorUsedThisStage}
           detectorAvailable={detectorAvailable}
           evidenceEntries={evidenceEntries}
+          bgmEnabled={bgmEnabled}
+          bgmVolume={bgmVolume}
+          onToggleBgm={onToggleBgm}
+          onBgmVolumeChange={onBgmVolumeChange}
           onUseDetector={onUseDetector}
           onSelectChoice={onSelectChoice}
           onDiscoverEvidence={onDiscoverEvidence}
@@ -104,13 +116,24 @@ function App() {
 
   return (
     <main className="game" aria-label="게임 화면">
-      <BgmControl isEnabled={bgm.isEnabled} onToggle={bgm.toggle} />
+      {state.gamePhase !== 'stage' && (
+        <BgmControl
+          isEnabled={bgm.isEnabled}
+          volume={bgm.volume}
+          onToggle={bgm.toggle}
+          onVolumeChange={bgm.setVolume}
+        />
+      )}
       <GameScreen
         state={state}
         onStart={startGameWithBgm}
         onContinueIntro={completeIntro}
         detectorAvailable={canUseDetector}
         evidenceEntries={evidenceEntries}
+        bgmEnabled={bgm.isEnabled}
+        bgmVolume={bgm.volume}
+        onToggleBgm={bgm.toggle}
+        onBgmVolumeChange={bgm.setVolume}
         onUseDetector={useDetector}
         onSelectChoice={selectChoice}
         onDiscoverEvidence={(entry) =>

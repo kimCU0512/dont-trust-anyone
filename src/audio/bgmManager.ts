@@ -39,6 +39,7 @@ export class BgmManager {
   private currentSceneKey = ''
   private unlocked = false
   private enabled = true
+  private volume = BGM_VOLUME
   private fadeTimer: ReturnType<typeof setInterval> | null = null
   private fadeGeneration = 0
 
@@ -86,24 +87,16 @@ export class BgmManager {
       const currentAudio = this.audio
 
       this.fadeTo(0, () => {
-        if (
-          this.enabled &&
-          this.unlocked &&
-          this.desiredTrackId === trackId
-        ) {
+        if (this.enabled && this.unlocked && this.desiredTrackId === trackId) {
           this.safePlay(currentAudio)
-          this.fadeTo(BGM_VOLUME)
+          this.fadeTo(this.volume)
         }
       })
       return
     }
 
     this.stopWithFade(() => {
-      if (
-        this.enabled &&
-        this.unlocked &&
-        this.desiredTrackId === trackId
-      ) {
+      if (this.enabled && this.unlocked && this.desiredTrackId === trackId) {
         this.startTrack(trackId)
       }
     })
@@ -127,11 +120,19 @@ export class BgmManager {
 
     if (this.audio && this.currentTrackId === this.desiredTrackId) {
       this.safePlay(this.audio)
-      this.fadeTo(BGM_VOLUME)
+      this.fadeTo(this.volume)
       return
     }
 
     this.startTrack(this.desiredTrackId)
+  }
+
+  setVolume(volume: number): void {
+    this.volume = Math.min(1, Math.max(0, volume))
+
+    if (this.audio && this.enabled) {
+      this.audio.volume = this.volume
+    }
   }
 
   dispose(): void {
@@ -152,7 +153,7 @@ export class BgmManager {
     this.audio = audio
     this.currentTrackId = trackId
     this.safePlay(audio)
-    this.fadeTo(BGM_VOLUME)
+    this.fadeTo(this.volume)
   }
 
   private stopWithFade(onComplete?: () => void): void {
@@ -198,8 +199,7 @@ export class BgmManager {
         1,
         (Date.now() - startedAt) / this.fadeDurationMs,
       )
-      audio.volume =
-        startVolume + (targetVolume - startVolume) * progress
+      audio.volume = startVolume + (targetVolume - startVolume) * progress
 
       if (progress === 1) {
         this.cancelFade()
