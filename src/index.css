@@ -841,3 +841,112 @@ button {
   cursor: not-allowed;
   opacity: 0.62;
 }
+
+.detector-result {
+  width: 100%;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 18px 22px;
+  border: 1px solid rgb(201 64 56 / 34%);
+  background:
+    repeating-linear-gradient(0deg, transparent 0 17px, rgb(201 64 56 / 3%) 18px),
+    #070707;
+}
+
+.detector-result__header {
+  display: flex;
+  justify-content: space-between;
+  color: #85857f;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.detector-result__status-light {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #c94038;
+  box-shadow: 0 0 9px #c94038;
+  animation: detector-light-pulse 0.65s ease-in-out infinite alternate;
+}
+
+.detector-result__display {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #dfdfd8;
+  font-family: 'Courier New', monospace;
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.detector-result__display span {
+  display: inline-block;
+  animation: detector-character-in 0.18s ease-out both;
+}
+
+.detector-result--lie .detector-result__display {
+  color: #d9584f;
+}
+
+.detector-result--lie .detector-result__bar {
+  animation:
+    detector-character-in 0.12s ease-out both,
+    detector-lie-shake 0.19s steps(2) infinite;
+}
+
+.detector-result__meter {
+  height: 2px;
+  background: #292925;
+  overflow: hidden;
+}
+
+.detector-result__meter span {
+  display: block;
+  height: 100%;
+  background: #c94038;
+  box-shadow: 0 0 8px rgb(201 64 56 / 70%);
+  transition: width 0.1s linear;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes detector-character-in {
+  from {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+@keyframes detector-lie-shake {
+  0% {
+    transform: translate(-1px, 1px);
+  }
+
+  100% {
+    transform: translate(2px, -1px);
+  }
+}
+
+@keyframes detector-light-pulse {
+  to {
+    opacity: 0.35;
+    box-shadow: 0 0 3px #c94038;
+  }
+}

@@ -1,5 +1,9 @@
 import { useState } from 'react'
-import { UI_STRINGS } from '../constants'
+import {
+  DETECTOR_LIE_SYMBOL,
+  DETECTOR_TRUTH_SYMBOL,
+  UI_STRINGS,
+} from '../constants'
 import { toDisplayParagraphs } from '../data/contentText'
 import story from '../data/story.json'
 import { TextBox } from './TextBox'
@@ -66,11 +70,11 @@ export function IntroScreen({ onContinue }: IntroScreenProps) {
           </div>
           <div className="intro-tutorial__signals">
             <div>
-              <strong>.....</strong>
+              <strong>{DETECTOR_TRUTH_SYMBOL}</strong>
               <span>{UI_STRINGS.introTutorialTruth}</span>
             </div>
             <div>
-              <strong>.|.|.|.</strong>
+              <strong>{DETECTOR_LIE_SYMBOL}</strong>
               <span>{UI_STRINGS.introTutorialLie}</span>
             </div>
           </div>

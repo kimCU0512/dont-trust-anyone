@@ -20,6 +20,13 @@ export function advanceStageTextStep(step: StageTextStep): StageTextStep {
   }
 }
 
+export function areStageChoicesEnabled(
+  textStep: StageTextStep,
+  detectorAnimating: boolean,
+): boolean {
+  return textStep === 'choice' && !detectorAnimating
+}
+
 export function getDetectorDisabledReason({
   textStep,
   hearts,

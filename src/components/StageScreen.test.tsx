@@ -6,6 +6,7 @@ import story from '../data/story.json'
 import { StageScreen } from './StageScreen'
 import {
   advanceStageTextStep,
+  areStageChoicesEnabled,
   getDetectorDisabledReason,
 } from './stageScreenState'
 
@@ -21,7 +22,7 @@ describe('StageScreen', () => {
         currentVoiceLineId="s1-v1"
         detectorUsedThisStage={false}
         detectorAvailable
-        onUseDetector={() => undefined}
+        onUseDetector={() => null}
         onSelectChoice={() => undefined}
       />,
     )
@@ -71,5 +72,10 @@ describe('StageScreen', () => {
         detectorUsedThisStage: true,
       }),
     ).toBe(UI_STRINGS.detectorAlreadyUsed)
+  })
+
+  it('locks choices during detector animation and restores them after', () => {
+    expect(areStageChoicesEnabled('choice', true)).toBe(false)
+    expect(areStageChoicesEnabled('choice', false)).toBe(true)
   })
 })

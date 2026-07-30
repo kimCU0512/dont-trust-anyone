@@ -9,6 +9,8 @@ export const WRONG_CHOICE_HEART_COST: number = 1
 export const TRUE_END_KEY_FRAGMENT_THRESHOLD: number = 3
 export const TOTAL_STAGES: number = 5
 export const TEXT_TYPING_INTERVAL_MS: number = 36
+export const DETECTOR_TRUTH_SYMBOL = '.....'
+export const DETECTOR_LIE_SYMBOL = '.|.|.|.'
 
 export const UI_STRINGS = {
   title: '아무도 믿지마',
@@ -50,6 +52,9 @@ export const UI_STRINGS = {
   detectorAlreadyUsed: '이 스테이지에서는 이미 탐지기를 사용했습니다.',
   detectorNoUses: '남은 탐지기 사용 횟수가 없습니다.',
   detectorLowHearts: '하트가 2개 이상일 때만 사용할 수 있습니다.',
+  detectorResultLabel: '탐지 결과',
+  detectorScanning: '음성 파형 분석 중',
+  detectorSignalLocked: '신호 분석 완료',
   continue: '계속',
   stage: '스테이지',
   choiceA: '선택지 A',

@@ -4,14 +4,14 @@ import { ResetScreen } from './components/ResetScreen'
 import { StageScreen } from './components/StageScreen'
 import { TitleScreen } from './components/TitleScreen'
 import { useGameState } from './hooks/useGameState'
-import type { GameState } from './types'
+import type { DetectorResult, GameState } from './types'
 
 interface GameScreenProps {
   state: GameState
   onStart: () => void
   onContinueIntro: () => void
   detectorAvailable: boolean
-  onUseDetector: () => void
+  onUseDetector: () => DetectorResult | null
   onSelectChoice: (choiceId: string) => void
   onRestart: () => void
   onReturnToTitle: () => void

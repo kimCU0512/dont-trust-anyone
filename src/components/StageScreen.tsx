@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { UI_STRINGS } from '../constants'
 import { toDisplayParagraphs, toDisplayText } from '../data/contentText'
 import story from '../data/story.json'
-import type { StageId } from '../types'
+import type { DetectorResult as DetectorResultType, StageId } from '../types'
+import { DetectorResult } from './DetectorResult'
 import { Hud } from './Hud'
 import { TextBox } from './TextBox'
 import {
   advanceStageTextStep,
+  areStageChoicesEnabled,
   getDetectorDisabledReason,
 } from './stageScreenState'
 import type { StageTextStep } from './stageScreenState'
@@ -19,7 +21,7 @@ interface StageScreenProps {
   currentVoiceLineId: string
   detectorUsedThisStage: boolean
   detectorAvailable: boolean
-  onUseDetector: () => void
+  onUseDetector: () => DetectorResultType | null
   onSelectChoice: (choiceId: string) => void
 }
 
@@ -45,9 +47,15 @@ export function StageScreen({
     stage.voiceLines[0]
   const [textStep, setTextStep] = useState<StageTextStep>('narration')
   const [imageUrl, setImageUrl] = useState<string | null>(stage.imageUrl)
+  const [detectorAnimationResult, setDetectorAnimationResult] =
+    useState<DetectorResultType | null>(null)
+  const [detectorAnimating, setDetectorAnimating] = useState(false)
   const narration = toDisplayParagraphs(stage.narration)
   const voiceText = `“${toDisplayText(voiceLine.text)}”`
-  const choicesReady = textStep === 'choice'
+  const choicesEnabled = areStageChoicesEnabled(
+    textStep,
+    detectorAnimating,
+  )
   const detectorDisabledReason = getDetectorDisabledReason({
     textStep,
     hearts,
@@ -55,7 +63,7 @@ export function StageScreen({
     detectorUsedThisStage,
   })
   const detectorEnabled =
-    choicesReady && detectorAvailable && detectorDisabledReason === null
+    choicesEnabled && detectorAvailable && detectorDisabledReason === null
 
   const advanceText = () => {
     setTextStep((currentStep) => advanceStageTextStep(currentStep))
@@ -71,6 +79,19 @@ export function StageScreen({
     }
 
     setImageUrl(null)
+  }
+
+  const handleUseDetector = () => {
+    if (!detectorEnabled) {
+      return
+    }
+
+    const result = onUseDetector()
+
+    if (result) {
+      setDetectorAnimationResult(result)
+      setDetectorAnimating(true)
+    }
   }
 
   return (
@@ -126,7 +147,7 @@ export function StageScreen({
           />
         )}
 
-        {textStep === 'choice' && (
+        {textStep === 'choice' && detectorAnimationResult === null && (
           <div
             className="text-box text-box--voice stage-dialogue__complete"
             aria-label={UI_STRINGS.textBoxVoice}
@@ -140,6 +161,14 @@ export function StageScreen({
             <span className="text-box__body">{voiceText}</span>
           </div>
         )}
+
+        {textStep === 'choice' && detectorAnimationResult !== null && (
+          <DetectorResult
+            key={detectorAnimationResult}
+            result={detectorAnimationResult}
+            onComplete={() => setDetectorAnimating(false)}
+          />
+        )}
       </div>
 
       <div className="stage-controls">
@@ -148,7 +177,7 @@ export function StageScreen({
             <button
               className="stage-choice"
               type="button"
-              disabled={!choicesReady}
+              disabled={!choicesEnabled}
               key={choice.id}
               onClick={() => onSelectChoice(choice.id)}
             >
@@ -162,7 +191,7 @@ export function StageScreen({
           type="button"
           disabled={!detectorEnabled}
           title={detectorDisabledReason ?? undefined}
-          onClick={onUseDetector}
+          onClick={handleUseDetector}
         >
           <span className="stage-detector__signal" aria-hidden="true">
             ⌁
