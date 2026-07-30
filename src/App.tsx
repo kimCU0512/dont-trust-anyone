@@ -1,9 +1,13 @@
+import { getGameBgmScene } from './audio/gameBgm'
+import { BgmControl } from './components/BgmControl'
 import { EndingScreen } from './components/EndingScreen'
 import { IntroScreen } from './components/IntroScreen'
 import { ResetScreen } from './components/ResetScreen'
 import { StageScreen } from './components/StageScreen'
 import { TitleScreen } from './components/TitleScreen'
 import { useGameState } from './hooks/useGameState'
+import { useBgm } from './hooks/useBgm'
+import story from './data/story.json'
 import type { DetectorResult, GameState } from './types'
 
 interface GameScreenProps {
@@ -69,12 +73,20 @@ function App() {
     restartGame,
     returnToTitle,
   } = useGameState()
+  const bgmScene = getGameBgmScene(state)
+  const bgm = useBgm(bgmScene.trackId, bgmScene.sceneKey)
+
+  const startGameWithBgm = () => {
+    bgm.unlock(story.intro.bgmTrack, 'intro')
+    startGame()
+  }
 
   return (
     <main className="game" aria-label="게임 화면">
+      <BgmControl isEnabled={bgm.isEnabled} onToggle={bgm.toggle} />
       <GameScreen
         state={state}
-        onStart={startGame}
+        onStart={startGameWithBgm}
         onContinueIntro={completeIntro}
         detectorAvailable={canUseDetector}
         onUseDetector={useDetector}

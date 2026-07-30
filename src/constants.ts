@@ -10,6 +10,9 @@ export const TRUE_END_KEY_FRAGMENT_THRESHOLD: number = 3
 export const TOTAL_STAGES: number = 5
 export const TEXT_TYPING_INTERVAL_MS: number = 36
 export const STAGE_TRANSITION_MS: number = 420
+export const BGM_FADE_DURATION_MS: number = 600
+export const BGM_FADE_STEP_MS: number = 50
+export const BGM_VOLUME: number = 0.45
 export const DETECTOR_TRUTH_SYMBOL = '.....'
 export const DETECTOR_LIE_SYMBOL = '.|.|.|.'
 
@@ -26,6 +29,7 @@ export const UI_STRINGS = {
   bgm: 'BGM',
   bgmOn: 'ON',
   bgmOff: 'OFF',
+  bgmToggleLabel: '배경음악 켜기 또는 끄기',
   titleBackgroundAlt: '어둠에 잠긴 폐교 외관',
   textBoxNarration: '상황 서술',
   textBoxVoice: '목소리',

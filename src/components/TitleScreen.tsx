@@ -8,7 +8,6 @@ interface TitleScreenProps {
 }
 
 export function TitleScreen({ onStart }: TitleScreenProps) {
-  const [isBgmEnabled, setIsBgmEnabled] = useState(true)
   const [hasBackgroundError, setHasBackgroundError] = useState(false)
 
   return (
@@ -24,18 +23,6 @@ export function TitleScreen({ onStart }: TitleScreenProps) {
           />
         )}
         <div className="title-backdrop__veil" />
-      </div>
-
-      <div className="title-controls">
-        <span className="title-controls__label">{UI_STRINGS.bgm}</span>
-        <button
-          className="title-controls__toggle"
-          type="button"
-          aria-pressed={isBgmEnabled}
-          onClick={() => setIsBgmEnabled((enabled) => !enabled)}
-        >
-          {isBgmEnabled ? UI_STRINGS.bgmOn : UI_STRINGS.bgmOff}
-        </button>
       </div>
 
       <div className="title-content">

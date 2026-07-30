@@ -4,7 +4,7 @@ import { UI_STRINGS } from '../constants'
 import { TitleScreen } from './TitleScreen'
 
 describe('TitleScreen', () => {
-  it('renders the title, start action, background slot, and BGM toggle', () => {
+  it('renders the title, start action, and background slot', () => {
     const html = renderToStaticMarkup(
       <TitleScreen onStart={() => undefined} />,
     )
@@ -13,7 +13,5 @@ describe('TitleScreen', () => {
     expect(html).toContain(UI_STRINGS.start)
     expect(html).toContain('/images/title_abandoned_school.png')
     expect(html).toContain('title-backdrop__fallback')
-    expect(html).toContain('aria-pressed="true"')
-    expect(html).toContain(UI_STRINGS.bgmOn)
   })
 })
