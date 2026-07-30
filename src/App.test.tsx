@@ -26,6 +26,7 @@ describe('GameScreen', () => {
           onStart={() => undefined}
           onContinueIntro={() => undefined}
           detectorAvailable={false}
+          evidenceEntries={[]}
           onUseDetector={() => null}
           onSelectChoice={() => undefined}
           onDiscoverEvidence={() => undefined}

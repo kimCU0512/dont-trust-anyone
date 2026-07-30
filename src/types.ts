@@ -42,6 +42,7 @@ export interface PointOfInterest {
     y: number
   }
   clue: string
+  deduction: string
 }
 
 export interface EvidenceEntry {
@@ -51,6 +52,7 @@ export interface EvidenceEntry {
   label: string
   imageUrl: string
   clue: string
+  deduction: string
 }
 
 export interface Stage {

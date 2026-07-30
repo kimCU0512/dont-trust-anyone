@@ -11,13 +11,22 @@ const evidence: EvidenceEntry = {
   label: '창밖',
   imageUrl: '/images/objects/s1-window.png',
   clue: '창밖에는 탈출로가 없다.',
+  deduction: '창문이 안전하다는 목소리와 충돌한다.',
 }
 
 describe('EvidenceJournal', () => {
   it('renders the global evidence count', () => {
-    const html = renderToStaticMarkup(<EvidenceJournal entries={[evidence]} />)
+    const html = renderToStaticMarkup(
+      <EvidenceJournal
+        entries={[evidence]}
+        currentVoiceText="“창문은 안전해.”"
+        currentStageId={1}
+      />,
+    )
 
     expect(html).toContain(UI_STRINGS.evidenceJournal)
     expect(html).toContain(`1 / ${MAX_EVIDENCE_COUNT}`)
+    expect(html).toContain(evidence.deduction)
+    expect(html).toContain('창문은 안전해')
   })
 })

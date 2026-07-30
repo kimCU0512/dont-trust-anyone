@@ -9,6 +9,7 @@ const evidence: EvidenceEntry = {
   label: '창밖',
   imageUrl: '/images/objects/s1-window.png',
   clue: '창밖에는 탈출로가 없다.',
+  deduction: '창문이 안전하다는 목소리와 충돌한다.',
 }
 
 describe('evidence journal state', () => {

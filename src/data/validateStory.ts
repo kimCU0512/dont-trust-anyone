@@ -92,6 +92,7 @@ function validatePointOfInterest(
       y: requireCoordinate(position.y, `${path}.position.y`),
     },
     clue: requireString(object.clue, `${path}.clue`),
+    deduction: requireString(object.deduction, `${path}.deduction`),
   }
 }
 

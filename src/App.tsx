@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { getGameBgmScene } from './audio/gameBgm'
 import { BgmControl } from './components/BgmControl'
-import { EvidenceJournal } from './components/EvidenceJournal'
 import { EndingScreen } from './components/EndingScreen'
 import { IntroScreen } from './components/IntroScreen'
 import { ResetScreen } from './components/ResetScreen'
@@ -22,6 +21,7 @@ interface GameScreenProps {
   detectorAvailable: boolean
   onUseDetector: () => DetectorResult | null
   onSelectChoice: (choiceId: string) => void
+  evidenceEntries: EvidenceEntry[]
   onDiscoverEvidence: (entry: EvidenceEntry) => void
   onRestart: () => void
   onReturnToTitle: () => void
@@ -34,6 +34,7 @@ export function GameScreen({
   detectorAvailable,
   onUseDetector,
   onSelectChoice,
+  evidenceEntries,
   onDiscoverEvidence,
   onRestart,
   onReturnToTitle,
@@ -54,6 +55,7 @@ export function GameScreen({
           currentVoiceLineId={state.currentVoiceLineId}
           detectorUsedThisStage={state.detectorUsedThisStage}
           detectorAvailable={detectorAvailable}
+          evidenceEntries={evidenceEntries}
           onUseDetector={onUseDetector}
           onSelectChoice={onSelectChoice}
           onDiscoverEvidence={onDiscoverEvidence}
@@ -103,16 +105,12 @@ function App() {
   return (
     <main className="game" aria-label="게임 화면">
       <BgmControl isEnabled={bgm.isEnabled} onToggle={bgm.toggle} />
-      {(state.gamePhase === 'stage' ||
-        state.gamePhase === 'endingTrue' ||
-        state.gamePhase === 'endingBad') && (
-        <EvidenceJournal entries={evidenceEntries} />
-      )}
       <GameScreen
         state={state}
         onStart={startGameWithBgm}
         onContinueIntro={completeIntro}
         detectorAvailable={canUseDetector}
+        evidenceEntries={evidenceEntries}
         onUseDetector={useDetector}
         onSelectChoice={selectChoice}
         onDiscoverEvidence={(entry) =>

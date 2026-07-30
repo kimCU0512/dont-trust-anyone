@@ -24,6 +24,7 @@ describe('StageScreen', () => {
         currentVoiceLineId="s1-v1"
         detectorUsedThisStage={false}
         detectorAvailable
+        evidenceEntries={[]}
         onUseDetector={() => null}
         onSelectChoice={() => undefined}
         onDiscoverEvidence={() => undefined}
@@ -48,6 +49,7 @@ describe('StageScreen', () => {
         currentVoiceLineId="s1-v1"
         detectorUsedThisStage={false}
         detectorAvailable
+        evidenceEntries={[]}
         onUseDetector={() => null}
         onSelectChoice={() => undefined}
         onDiscoverEvidence={() => undefined}

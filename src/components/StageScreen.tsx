@@ -9,6 +9,7 @@ import type {
   StageId,
 } from '../types'
 import { DetectorResult } from './DetectorResult'
+import { EvidenceJournal } from './EvidenceJournal'
 import { Hud } from './Hud'
 import { TextBox } from './TextBox'
 import {
@@ -28,6 +29,7 @@ interface StageScreenProps {
   currentVoiceLineId: string
   detectorUsedThisStage: boolean
   detectorAvailable: boolean
+  evidenceEntries: EvidenceEntry[]
   onUseDetector: () => DetectorResultType | null
   onSelectChoice: (choiceId: string) => void
   onDiscoverEvidence: (entry: EvidenceEntry) => void
@@ -41,6 +43,7 @@ export function StageScreen({
   currentVoiceLineId,
   detectorUsedThisStage,
   detectorAvailable,
+  evidenceEntries,
   onUseDetector,
   onSelectChoice,
   onDiscoverEvidence,
@@ -168,6 +171,7 @@ export function StageScreen({
         label: inspectedObject.label,
         imageUrl: inspectedObject.imageUrl,
         clue: inspectedObject.clue,
+        deduction: inspectedObject.deduction,
       })
     }
     setDiscoveredObjectIds((currentIds) =>
@@ -213,187 +217,200 @@ export function StageScreen({
         detectorUses={detectorUses}
       />
 
-      <header className="stage-heading">
-        <div>
-          <p className="screen__code">P-10 / STAGE 0{stageId}</p>
-          <h1>
-            <span>0{stageId}.</span> {stage.name}
-          </h1>
-        </div>
-        <span className="stage-heading__track">{stage.bgmTrack}</span>
-      </header>
-
-      <figure
-        className={`stage-scene stage-scene--${stageId}`}
-        aria-label={`${stage.name}${UI_STRINGS.stageImageAltSuffix}`}
-      >
-        <div className="stage-scene__fallback" aria-hidden="true">
-          <span className="stage-scene__architecture" />
-        </div>
-        {imageUrl && <img src={imageUrl} alt="" onError={handleImageError} />}
-        <span className="stage-scene__shade" aria-hidden="true" />
-        <div
-          className="stage-hotspots"
-          aria-label={UI_STRINGS.stageExploreHint}
-        >
-          {stage.objects.map((object, index) => {
-            const discovered = discoveredObjectIds.includes(object.id)
-
-            return (
-              <button
-                className={`stage-hotspot${discovered ? ' stage-hotspot--discovered' : ''}`}
-                type="button"
-                key={object.id}
-                style={{
-                  left: `${object.position.x}%`,
-                  top: `${object.position.y}%`,
-                }}
-                disabled={textStep !== 'choice' || interactionLocked}
-                aria-label={`${object.label} 조사`}
-                aria-pressed={activeObjectId === object.id}
-                onClick={() => handleInspectObject(object.id)}
-              >
-                <span>{index + 1}</span>
-              </button>
-            )
-          })}
-        </div>
-        <figcaption>
-          <span>LOCATION</span>
-          {stage.name}
-        </figcaption>
-        {textStep === 'choice' && !interaction.selection && (
-          <p className="stage-explore-hint">
-            {UI_STRINGS.stageExploreHint}
-            <span>
-              {discoveredObjectIds.length} / {stage.objects.length}
-            </span>
-          </p>
-        )}
-
-        <div className="stage-dialogue">
-          {activeObject ? (
-            <div className="object-inspection">
-              <img
-                src={resolveAssetUrl(activeObject.imageUrl)}
-                alt=""
-                className="object-inspection__image"
-              />
-              <div className="object-inspection__copy">
-                <span>{UI_STRINGS.objectDiscovered}</span>
-                <h2>{activeObject.label}</h2>
-                <p>{activeObject.clue}</p>
-              </div>
-              <button
-                type="button"
-                className="object-inspection__close"
-                onClick={handleCloseInspection}
-              >
-                {UI_STRINGS.objectClose}
-              </button>
+      <div className="stage-workspace">
+        <div className="stage-playfield">
+          <header className="stage-heading">
+            <div>
+              <p className="screen__code">P-10 / STAGE 0{stageId}</p>
+              <h1>
+                <span>0{stageId}.</span> {stage.name}
+              </h1>
             </div>
-          ) : interaction.selection ? (
+            <span className="stage-heading__track">{stage.bgmTrack}</span>
+          </header>
+
+          <figure
+            className={`stage-scene stage-scene--${stageId}`}
+            aria-label={`${stage.name}${UI_STRINGS.stageImageAltSuffix}`}
+          >
+            <div className="stage-scene__fallback" aria-hidden="true">
+              <span className="stage-scene__architecture" />
+            </div>
+            {imageUrl && (
+              <img src={imageUrl} alt="" onError={handleImageError} />
+            )}
+            <span className="stage-scene__shade" aria-hidden="true" />
             <div
-              className={`stage-result stage-result--${interaction.selection.isCorrect ? 'correct' : 'wrong'}`}
+              className="stage-hotspots"
+              aria-label={UI_STRINGS.stageExploreHint}
             >
-              <p className="stage-result__verdict">
-                {interaction.selection.isCorrect
-                  ? UI_STRINGS.choiceCorrect
-                  : UI_STRINGS.choiceWrong}
-              </p>
-              <TextBox
-                key={`stage-${stageId}-result-${interaction.selection.choiceId}`}
-                paragraphs={[interaction.selection.resultText]}
-                speaker="system"
-                onComplete={handleResultComplete}
-              />
+              {stage.objects.map((object, index) => {
+                const discovered = discoveredObjectIds.includes(object.id)
+
+                return (
+                  <button
+                    className={`stage-hotspot${discovered ? ' stage-hotspot--discovered' : ''}`}
+                    type="button"
+                    key={object.id}
+                    style={{
+                      left: `${object.position.x}%`,
+                      top: `${object.position.y}%`,
+                    }}
+                    disabled={textStep !== 'choice' || interactionLocked}
+                    aria-label={`${object.label} 조사`}
+                    aria-pressed={activeObjectId === object.id}
+                    onClick={() => handleInspectObject(object.id)}
+                  >
+                    <span>{index + 1}</span>
+                  </button>
+                )
+              })}
             </div>
-          ) : (
-            <>
-              {textStep === 'narration' && (
-                <TextBox
-                  key={`stage-${stageId}-narration`}
-                  paragraphs={narration}
-                  onComplete={advanceText}
-                />
-              )}
+            <figcaption>
+              <span>LOCATION</span>
+              {stage.name}
+            </figcaption>
+            {textStep === 'choice' && !interaction.selection && (
+              <p className="stage-explore-hint">
+                {UI_STRINGS.stageExploreHint}
+                <span>
+                  {discoveredObjectIds.length} / {stage.objects.length}
+                </span>
+              </p>
+            )}
 
-              {textStep === 'voice' && (
-                <TextBox
-                  key={`stage-${stageId}-voice`}
-                  paragraphs={[voiceText]}
-                  speaker="voice"
-                  onComplete={advanceText}
-                />
-              )}
-
-              {textStep === 'choice' && detectorAnimationResult === null && (
-                <div
-                  className="text-box text-box--voice stage-dialogue__complete"
-                  aria-label={UI_STRINGS.textBoxVoice}
-                >
-                  <span className="text-box__header">
-                    <span className="text-box__speaker">
-                      {UI_STRINGS.textBoxVoice}
-                    </span>
-                    <span>{UI_STRINGS.stageVoiceReady}</span>
-                  </span>
-                  <span className="text-box__body">{voiceText}</span>
+            <div className="stage-dialogue">
+              {activeObject ? (
+                <div className="object-inspection">
+                  <img
+                    src={resolveAssetUrl(activeObject.imageUrl)}
+                    alt=""
+                    className="object-inspection__image"
+                  />
+                  <div className="object-inspection__copy">
+                    <span>{UI_STRINGS.objectDiscovered}</span>
+                    <h2>{activeObject.label}</h2>
+                    <p>{activeObject.clue}</p>
+                  </div>
+                  <button
+                    type="button"
+                    className="object-inspection__close"
+                    onClick={handleCloseInspection}
+                  >
+                    {UI_STRINGS.objectClose}
+                  </button>
                 </div>
-              )}
+              ) : interaction.selection ? (
+                <div
+                  className={`stage-result stage-result--${interaction.selection.isCorrect ? 'correct' : 'wrong'}`}
+                >
+                  <p className="stage-result__verdict">
+                    {interaction.selection.isCorrect
+                      ? UI_STRINGS.choiceCorrect
+                      : UI_STRINGS.choiceWrong}
+                  </p>
+                  <TextBox
+                    key={`stage-${stageId}-result-${interaction.selection.choiceId}`}
+                    paragraphs={[interaction.selection.resultText]}
+                    speaker="system"
+                    onComplete={handleResultComplete}
+                  />
+                </div>
+              ) : (
+                <>
+                  {textStep === 'narration' && (
+                    <TextBox
+                      key={`stage-${stageId}-narration`}
+                      paragraphs={narration}
+                      onComplete={advanceText}
+                    />
+                  )}
 
-              {textStep === 'choice' && detectorAnimationResult !== null && (
-                <DetectorResult
-                  key={detectorAnimationResult}
-                  result={detectorAnimationResult}
-                  onComplete={() => setDetectorAnimating(false)}
-                />
-              )}
-            </>
-          )}
-        </div>
-        {sceneIntruding && (
-          <div className="stage-intrusion" role="status">
-            <span>{UI_STRINGS.intrusionLabel}</span>
-            <p>{stage.intrusionText}</p>
-          </div>
-        )}
-      </figure>
+                  {textStep === 'voice' && (
+                    <TextBox
+                      key={`stage-${stageId}-voice`}
+                      paragraphs={[voiceText]}
+                      speaker="voice"
+                      onComplete={advanceText}
+                    />
+                  )}
 
-      <div className="stage-controls">
-        <div className="stage-choices">
-          {stage.choices.map((choice) => (
+                  {textStep === 'choice' &&
+                    detectorAnimationResult === null && (
+                      <div
+                        className="text-box text-box--voice stage-dialogue__complete"
+                        aria-label={UI_STRINGS.textBoxVoice}
+                      >
+                        <span className="text-box__header">
+                          <span className="text-box__speaker">
+                            {UI_STRINGS.textBoxVoice}
+                          </span>
+                          <span>{UI_STRINGS.stageVoiceReady}</span>
+                        </span>
+                        <span className="text-box__body">{voiceText}</span>
+                      </div>
+                    )}
+
+                  {textStep === 'choice' &&
+                    detectorAnimationResult !== null && (
+                      <DetectorResult
+                        key={detectorAnimationResult}
+                        result={detectorAnimationResult}
+                        onComplete={() => setDetectorAnimating(false)}
+                      />
+                    )}
+                </>
+              )}
+            </div>
+            {sceneIntruding && (
+              <div className="stage-intrusion" role="status">
+                <span>{UI_STRINGS.intrusionLabel}</span>
+                <p>{stage.intrusionText}</p>
+              </div>
+            )}
+          </figure>
+
+          <div className="stage-controls">
+            <div className="stage-choices">
+              {stage.choices.map((choice) => (
+                <button
+                  className="stage-choice"
+                  type="button"
+                  disabled={!choicesEnabled}
+                  key={choice.id}
+                  onClick={() => handleSelectChoice(choice)}
+                >
+                  <span>{choice.id}</span>
+                  {toDisplayText(choice.text)}
+                </button>
+              ))}
+            </div>
             <button
-              className="stage-choice"
+              className="stage-detector"
               type="button"
-              disabled={!choicesEnabled}
-              key={choice.id}
-              onClick={() => handleSelectChoice(choice)}
+              disabled={!detectorEnabled}
+              title={
+                inputLocked
+                  ? UI_STRINGS.stageInteractionLocked
+                  : (detectorDisabledReason ?? undefined)
+              }
+              onClick={handleUseDetector}
             >
-              <span>{choice.id}</span>
-              {toDisplayText(choice.text)}
+              <span className="stage-detector__signal" aria-hidden="true">
+                ⌁
+              </span>
+              <span>
+                <strong>{UI_STRINGS.detectorAction}</strong>
+                <small>{UI_STRINGS.detectorCost}</small>
+              </span>
             </button>
-          ))}
+          </div>
         </div>
-        <button
-          className="stage-detector"
-          type="button"
-          disabled={!detectorEnabled}
-          title={
-            inputLocked
-              ? UI_STRINGS.stageInteractionLocked
-              : (detectorDisabledReason ?? undefined)
-          }
-          onClick={handleUseDetector}
-        >
-          <span className="stage-detector__signal" aria-hidden="true">
-            ⌁
-          </span>
-          <span>
-            <strong>{UI_STRINGS.detectorAction}</strong>
-            <small>{UI_STRINGS.detectorCost}</small>
-          </span>
-        </button>
+        <EvidenceJournal
+          entries={evidenceEntries}
+          currentVoiceText={voiceText}
+          currentStageId={stageId}
+        />
       </div>
       {interaction.exiting && (
         <p className="stage-transition-lock" role="status">
