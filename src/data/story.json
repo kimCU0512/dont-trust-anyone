@@ -1,0 +1,280 @@
+{
+  "contentFlag": "TODO_CONTENT",
+  "intro": {
+    "contentFlag": "TODO_CONTENT",
+    "imageUrl": "/images/intro_locked_door.png",
+    "bgmTrack": "intro",
+    "narration": [
+      "TODO_CONTENT: 비를 피해 들어온 폐교의 현관문이 등 뒤에서 닫혔다.",
+      "TODO_CONTENT: 잠긴 문 너머로 나를 부르는 목소리가 들려온다."
+    ],
+    "tutorial": [
+      "TODO_CONTENT: 하트가 모두 사라지기 전에 열쇠조각을 모아 학교를 탈출해야 한다.",
+      "탐지기는 목소리의 진위를 파형으로 보여준다. `.....`은 진실, `.|.|.|.`은 거짓."
+    ]
+  },
+  "stages": [
+    {
+      "contentFlag": "TODO_CONTENT",
+      "id": 1,
+      "name": "복도",
+      "imageUrl": "/images/stage1_hallway.png",
+      "bgmTrack": "main",
+      "narration": [
+        "TODO_CONTENT: 복도 바닥에는 교실 쪽으로 이어지는 젖은 발자국이 남아 있다.",
+        "TODO_CONTENT: 반대편 계단은 무너져 더 이상 지나갈 수 없다."
+      ],
+      "voiceLines": [
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "s1-v1",
+          "text": "TODO_CONTENT: 발자국을 따라 교실로 와. 안전한 길은 그쪽뿐이야.",
+          "isLie": false,
+          "contradictsStage": null
+        },
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "s1-v2",
+          "text": "TODO_CONTENT: 계단은 위험해. 교실 문으로 들어오는 게 좋아.",
+          "isLie": false,
+          "contradictsStage": null
+        }
+      ],
+      "choices": [
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "A",
+          "text": "TODO_CONTENT: 발자국을 따라 교실로 간다.",
+          "isCorrect": true
+        },
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "B",
+          "text": "TODO_CONTENT: 무너진 계단을 넘어간다.",
+          "isCorrect": false
+        }
+      ],
+      "resultText": {
+        "contentFlag": "TODO_CONTENT",
+        "correct": "TODO_CONTENT: 교실 문틈에서 첫 번째 열쇠조각을 발견했다.",
+        "wrong": "TODO_CONTENT: 무너진 계단에서 발을 헛디뎌 다쳤다."
+      }
+    },
+    {
+      "contentFlag": "TODO_CONTENT",
+      "id": 2,
+      "name": "교실",
+      "imageUrl": "/images/stage2_classroom.png",
+      "bgmTrack": "main",
+      "narration": [
+        "TODO_CONTENT: 교실 창문은 안쪽에서 굳게 잠겨 있고 깨진 유리가 바닥에 흩어져 있다.",
+        "TODO_CONTENT: 칠판에는 '물이 흐르는 곳을 찾아라'라는 문장이 적혀 있다."
+      ],
+      "voiceLines": [
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "s2-v1",
+          "text": "TODO_CONTENT: 아까 복도의 계단은 멀쩡했어. 창문으로 나가면 돼.",
+          "isLie": true,
+          "contradictsStage": 1
+        },
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "s2-v2",
+          "text": "TODO_CONTENT: 복도 계단으로 돌아가. 무너진 곳은 하나도 없었어.",
+          "isLie": true,
+          "contradictsStage": 1
+        }
+      ],
+      "choices": [
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "A",
+          "text": "TODO_CONTENT: 잠긴 창문을 억지로 부순다.",
+          "isCorrect": false
+        },
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "B",
+          "text": "TODO_CONTENT: 칠판의 단서를 따라 화장실로 간다.",
+          "isCorrect": true
+        }
+      ],
+      "resultText": {
+        "contentFlag": "TODO_CONTENT",
+        "correct": "TODO_CONTENT: 칠판 뒤에서 두 번째 열쇠조각이 떨어졌다.",
+        "wrong": "TODO_CONTENT: 깨진 유리에 손을 베이고 말았다."
+      }
+    },
+    {
+      "contentFlag": "TODO_CONTENT",
+      "id": 3,
+      "name": "화장실",
+      "imageUrl": "/images/stage3_restroom.png",
+      "bgmTrack": "main",
+      "narration": [
+        "TODO_CONTENT: 세면대 하나에서만 녹슨 물이 가늘게 흐르고 있다.",
+        "TODO_CONTENT: 거울에는 보건실 약장 번호가 손가락으로 적혀 있다."
+      ],
+      "voiceLines": [
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "s3-v1",
+          "text": "TODO_CONTENT: 흐르는 물 아래를 살펴봐. 네가 찾는 것이 있어.",
+          "isLie": false,
+          "contradictsStage": null
+        },
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "s3-v2",
+          "text": "TODO_CONTENT: 거울의 숫자를 기억하고 세면대 배수구를 확인해.",
+          "isLie": false,
+          "contradictsStage": null
+        }
+      ],
+      "choices": [
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "A",
+          "text": "TODO_CONTENT: 물이 흐르는 세면대의 배수구를 살핀다.",
+          "isCorrect": true
+        },
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "B",
+          "text": "TODO_CONTENT: 불 꺼진 마지막 칸으로 들어간다.",
+          "isCorrect": false
+        }
+      ],
+      "resultText": {
+        "contentFlag": "TODO_CONTENT",
+        "correct": "TODO_CONTENT: 배수구 안에서 세 번째 열쇠조각을 꺼냈다.",
+        "wrong": "TODO_CONTENT: 마지막 칸의 문이 닫히며 손목을 강하게 붙잡았다."
+      }
+    },
+    {
+      "contentFlag": "TODO_CONTENT",
+      "id": 4,
+      "name": "보건실",
+      "imageUrl": "/images/stage4_infirmary.png",
+      "bgmTrack": "main",
+      "narration": [
+        "TODO_CONTENT: 약장은 비어 있지만 거울에서 본 번호의 서랍만 잠겨 있다.",
+        "TODO_CONTENT: 침대 아래에는 복도로 돌아가는 낡은 안내도가 놓여 있다."
+      ],
+      "voiceLines": [
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "s4-v1",
+          "text": "TODO_CONTENT: 교실 칠판에는 아무것도 없었어. 번호는 함정이야.",
+          "isLie": true,
+          "contradictsStage": 2
+        },
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "s4-v2",
+          "text": "TODO_CONTENT: 물이 흐르는 곳이라는 문장은 없었어. 잠긴 서랍을 건드리지 마.",
+          "isLie": true,
+          "contradictsStage": 2
+        }
+      ],
+      "choices": [
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "A",
+          "text": "TODO_CONTENT: 거울에서 본 번호로 서랍을 연다.",
+          "isCorrect": true
+        },
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "B",
+          "text": "TODO_CONTENT: 목소리를 믿고 서랍에서 물러난다.",
+          "isCorrect": false
+        }
+      ],
+      "resultText": {
+        "contentFlag": "TODO_CONTENT",
+        "correct": "TODO_CONTENT: 서랍 속에서 네 번째 열쇠조각과 출구 안내도를 찾았다.",
+        "wrong": "TODO_CONTENT: 침대 뒤의 그림자가 달려들어 어깨를 할퀴었다."
+      }
+    },
+    {
+      "contentFlag": "TODO_CONTENT",
+      "id": 5,
+      "name": "복도",
+      "imageUrl": "/images/stage5_hallway.png",
+      "fallbackImageUrl": "/images/stage1_hallway.png",
+      "bgmTrack": "finale",
+      "narration": [
+        "TODO_CONTENT: 처음의 복도로 돌아왔지만 젖은 발자국은 출구 앞에서 끊겨 있다.",
+        "TODO_CONTENT: 출구 자물쇠에는 열쇠조각을 끼우는 홈이 다섯 개 보인다."
+      ],
+      "voiceLines": [
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "s5-v1",
+          "text": "TODO_CONTENT: 보건실 침대 아래에는 안내도가 없었어. 열쇠를 내게 넘겨.",
+          "isLie": true,
+          "contradictsStage": 4
+        },
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "s5-v2",
+          "text": "TODO_CONTENT: 네가 본 출구 안내도는 가짜야. 문에서 멀리 떨어져.",
+          "isLie": true,
+          "contradictsStage": 4
+        }
+      ],
+      "choices": [
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "A",
+          "text": "TODO_CONTENT: 모은 열쇠조각을 자물쇠에 끼운다.",
+          "isCorrect": true
+        },
+        {
+          "contentFlag": "TODO_CONTENT",
+          "id": "B",
+          "text": "TODO_CONTENT: 열쇠조각을 목소리에게 건넨다.",
+          "isCorrect": false
+        }
+      ],
+      "resultText": {
+        "contentFlag": "TODO_CONTENT",
+        "correct": "TODO_CONTENT: 열쇠조각이 맞물리며 굳게 닫힌 출구가 흔들린다.",
+        "wrong": "TODO_CONTENT: 어둠 속에서 뻗어 나온 손이 열쇠와 나를 함께 움켜쥔다."
+      }
+    }
+  ],
+  "reset": {
+    "contentFlag": "TODO_CONTENT",
+    "imageUrl": "/images/reset_darkness.png",
+    "text": [
+      "TODO_CONTENT: 시야가 어두워지고 발소리가 바로 뒤에서 멈췄다.",
+      "TODO_CONTENT: 정신을 차렸을 때 나는 다시 폐교의 입구에 서 있었다."
+    ]
+  },
+  "endings": {
+    "true": {
+      "contentFlag": "TODO_CONTENT",
+      "imageUrl": "/images/ending_true.png",
+      "bgmTrack": "ending",
+      "label": "TRUE END",
+      "text": [
+        "TODO_CONTENT: 열쇠가 완성되자 출구 너머로 새벽빛이 스며들었다.",
+        "TODO_CONTENT: 나를 이끈 목소리는 이곳에 갇힌 과거의 나였고, 마지막 인사를 남긴 채 사라졌다."
+      ]
+    },
+    "bad": {
+      "contentFlag": "TODO_CONTENT",
+      "imageUrl": "/images/ending_bad.png",
+      "bgmTrack": "ending",
+      "label": "BAD END",
+      "text": [
+        "TODO_CONTENT: 부족한 열쇠조각은 자물쇠를 열지 못했다.",
+        "TODO_CONTENT: 믿었던 목소리가 웃음을 터뜨리고, 열린 것은 출구가 아니라 어둠으로 향하는 문이었다."
+      ],
+      "hint": "TODO_CONTENT: 출구를 열기에는 열쇠조각이 부족했다."
+    }
+  }
+}
