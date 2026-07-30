@@ -6,10 +6,21 @@
   font-synthesis: none;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: #090909;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 button {
@@ -1207,5 +1218,308 @@ button {
 @keyframes reset-blackout {
   to {
     background: radial-gradient(ellipse at center, transparent 0 19%, rgb(0 0 0 / 88%) 72%);
+  }
+}
+
+@media (min-width: 1100px) {
+  .screen {
+    width: min(calc(100% - 64px), 900px);
+  }
+
+  .screen--stage {
+    padding: 24px 28px;
+  }
+
+  .stage-scene {
+    height: 260px;
+  }
+
+  .stage-choice {
+    padding-inline: 16px;
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .game {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: block;
+    overflow: visible;
+  }
+
+  .screen {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    gap: 18px;
+    padding: 64px 16px 24px;
+    border-right: 0;
+    border-left: 0;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .screen::before {
+    inset: 8px;
+  }
+
+  .game-audio-control {
+    top: max(10px, env(safe-area-inset-top));
+    right: max(12px, env(safe-area-inset-right));
+    gap: 7px;
+    font-size: 0.6rem;
+  }
+
+  .game-audio-control button {
+    min-width: 44px;
+    min-height: 36px;
+  }
+
+  .screen__title {
+    max-width: 100%;
+    font-size: clamp(2.7rem, 13vw, 3.5rem);
+    white-space: nowrap;
+  }
+
+  .screen__action {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .screen--title {
+    padding-inline: 20px;
+    overflow: hidden;
+  }
+
+  .title-content {
+    width: 100%;
+    min-width: 0;
+    gap: 16px;
+  }
+
+  .title-content__tagline {
+    max-width: 19rem;
+    margin-bottom: 12px;
+    line-height: 1.7;
+  }
+
+  .title-content__start {
+    width: min(100%, 280px);
+    min-width: 0;
+  }
+
+  .title-content__facts {
+    width: min(100%, 320px);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    letter-spacing: 0.08em;
+  }
+
+  .title-content__facts span {
+    padding: 8px 4px;
+    white-space: nowrap;
+  }
+
+  .title-meta {
+    font-size: 0.52rem;
+    letter-spacing: 0.12em;
+  }
+
+  .screen--intro {
+    min-height: 100vh;
+    min-height: 100dvh;
+    gap: 14px;
+    padding: 60px 14px 22px;
+  }
+
+  .intro-header__location {
+    font-size: 0.95rem;
+  }
+
+  .intro-scene {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+
+  .intro-scene__caption {
+    left: 14px;
+    bottom: 13px;
+  }
+
+  .intro-scene__caption h1 {
+    font-size: 1.3rem;
+  }
+
+  .intro-tutorial {
+    grid-template-columns: 1fr;
+  }
+
+  .intro-tutorial__heading {
+    padding: 11px 13px;
+  }
+
+  .intro-tutorial__signals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid rgb(209 209 201 / 16%);
+    border-left: 0;
+  }
+
+  .intro-ready {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .intro-ready p {
+    line-height: 1.55;
+    text-align: left;
+  }
+
+  .text-box {
+    min-height: 158px;
+    gap: 13px;
+    padding: 17px 16px 14px;
+  }
+
+  .text-box__body {
+    font-size: 1rem;
+    line-height: 1.65;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  .screen--stage {
+    min-height: 100vh;
+    min-height: 100dvh;
+    gap: 12px;
+    padding: 58px 12px 20px;
+  }
+
+  .hud {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hud__resource {
+    min-width: 0;
+    min-height: 64px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+    padding: 7px 5px;
+  }
+
+  .hud__label {
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+    font-size: 0.5rem;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .hud__resource strong {
+    font-size: 0.94rem;
+  }
+
+  .hud__maximum {
+    font-size: 0.54rem;
+  }
+
+  .hud__hearts {
+    gap: 1px;
+    font-size: 0.7rem;
+  }
+
+  .stage-heading {
+    align-items: flex-start;
+  }
+
+  .stage-heading > * {
+    min-width: 0;
+  }
+
+  .stage-heading h1 {
+    font-size: 1.3rem;
+  }
+
+  .stage-heading__track {
+    padding-top: 5px;
+    font-size: 0.5rem;
+  }
+
+  .stage-scene {
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+
+  .stage-dialogue .text-box,
+  .detector-result {
+    min-height: 158px;
+  }
+
+  .stage-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .stage-choices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stage-choice,
+  .stage-detector {
+    min-height: 64px;
+  }
+
+  .stage-choice {
+    min-width: 0;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 5px;
+    padding: 9px;
+    overflow-wrap: anywhere;
+  }
+
+  .stage-detector {
+    width: 100%;
+  }
+
+  .stage-result__verdict {
+    position: static;
+    padding: 0 2px 7px;
+    text-align: left;
+  }
+
+  .screen--reset,
+  .screen--ending {
+    min-height: 100vh;
+    min-height: 100dvh;
+    gap: 13px;
+    padding: 58px 14px 24px;
+  }
+
+  .conclusion-heading .screen__heading {
+    font-size: clamp(1.9rem, 10vw, 2.7rem);
+  }
+
+  .conclusion-heading > p:last-child {
+    max-width: 19rem;
+    line-height: 1.55;
+  }
+
+  .conclusion-artwork {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+  }
+
+  .conclusion-copy {
+    width: 100%;
+  }
+
+  .conclusion-copy .text-box {
+    min-height: 158px;
+  }
+
+  .ending-hint {
+    line-height: 1.55;
   }
 }

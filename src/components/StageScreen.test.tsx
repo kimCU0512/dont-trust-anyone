@@ -37,6 +37,29 @@ describe('StageScreen', () => {
     expect(html).toContain(UI_STRINGS.detectorWaitForVoice)
   })
 
+  it('keeps the mobile content order as image, text, then controls', () => {
+    const html = renderToStaticMarkup(
+      <StageScreen
+        stageId={1}
+        hearts={3}
+        keyFragments={0}
+        detectorUses={2}
+        currentVoiceLineId="s1-v1"
+        detectorUsedThisStage={false}
+        detectorAvailable
+        onUseDetector={() => null}
+        onSelectChoice={() => undefined}
+      />,
+    )
+    const imagePosition = html.indexOf('stage-scene')
+    const textPosition = html.indexOf('stage-dialogue')
+    const controlsPosition = html.indexOf('stage-controls')
+
+    expect(imagePosition).toBeGreaterThan(-1)
+    expect(imagePosition).toBeLessThan(textPosition)
+    expect(textPosition).toBeLessThan(controlsPosition)
+  })
+
   it('orders narration before voice and choices', () => {
     const voiceStep = advanceStageTextStep('narration')
     const choiceStep = advanceStageTextStep(voiceStep)
