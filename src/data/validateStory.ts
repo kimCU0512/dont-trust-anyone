@@ -1,6 +1,7 @@
 import { TOTAL_STAGES } from '../constants'
 import type {
   Choice,
+  PointOfInterest,
   Stage,
   StageId,
   StoryData,
@@ -28,9 +29,7 @@ function requireString(value: unknown, path: string): string {
 }
 
 function requireBoolean(value: unknown, path: string): boolean {
-  return typeof value === 'boolean'
-    ? value
-    : fail(`${path} must be a boolean`)
+  return typeof value === 'boolean' ? value : fail(`${path} must be a boolean`)
 }
 
 function requireArray(value: unknown, path: string): unknown[] {
@@ -54,9 +53,9 @@ function validateVoiceLine(
     const referencedStage = contradictsStage as StageId
     const stageGap = stageId - referencedStage
 
-    if (stageGap < 1 || stageGap > 2) {
+    if (stageGap < 0 || stageGap > 2) {
       fail(
-        `${path}.contradictsStage must reference one of the previous two stages`,
+        `${path}.contradictsStage must reference the current or one of the previous two stages`,
       )
     }
   } else if (contradictsStage !== null) {
@@ -68,6 +67,31 @@ function validateVoiceLine(
     text: requireString(voiceLine.text, `${path}.text`),
     isLie,
     contradictsStage: contradictsStage as StageId | null,
+  }
+}
+
+function requireCoordinate(value: unknown, path: string): number {
+  return typeof value === 'number' && value >= 0 && value <= 100
+    ? value
+    : fail(`${path} must be a number from 0 to 100`)
+}
+
+function validatePointOfInterest(
+  value: unknown,
+  path: string,
+): PointOfInterest {
+  const object = requireRecord(value, path)
+  const position = requireRecord(object.position, `${path}.position`)
+
+  return {
+    id: requireString(object.id, `${path}.id`),
+    label: requireString(object.label, `${path}.label`),
+    imageUrl: requireString(object.imageUrl, `${path}.imageUrl`),
+    position: {
+      x: requireCoordinate(position.x, `${path}.position.x`),
+      y: requireCoordinate(position.y, `${path}.position.y`),
+    },
+    clue: requireString(object.clue, `${path}.clue`),
   }
 }
 
@@ -94,16 +118,23 @@ function validateStage(value: unknown, index: number): Stage {
     (paragraph, paragraphIndex) =>
       requireString(paragraph, `${path}.narration[${paragraphIndex}]`),
   )
-  const voiceLines = requireArray(
-    stage.voiceLines,
-    `${path}.voiceLines`,
-  ).map((voiceLine, voiceLineIndex) =>
-    validateVoiceLine(voiceLine, `${path}.voiceLines[${voiceLineIndex}]`, id),
+  const voiceLines = requireArray(stage.voiceLines, `${path}.voiceLines`).map(
+    (voiceLine, voiceLineIndex) =>
+      validateVoiceLine(voiceLine, `${path}.voiceLines[${voiceLineIndex}]`, id),
   )
   const choices = requireArray(stage.choices, `${path}.choices`).map(
     (choice, choiceIndex) =>
       validateChoice(choice, `${path}.choices[${choiceIndex}]`),
   )
+  const objects = requireArray(stage.objects, `${path}.objects`).map(
+    (object, objectIndex) =>
+      validatePointOfInterest(object, `${path}.objects[${objectIndex}]`),
+  )
+  const objectIds = new Set(objects.map((object) => object.id))
+
+  if (objects.length !== 3 || objectIds.size !== objects.length) {
+    fail(`${path}.objects must contain exactly three unique objects`)
+  }
   const correctChoiceCount = choices.filter((choice) => choice.isCorrect).length
 
   if (correctChoiceCount !== 1) {
@@ -118,7 +149,9 @@ function validateStage(value: unknown, index: number): Stage {
     imageUrl: requireString(stage.imageUrl, `${path}.imageUrl`),
     bgmTrack: requireString(stage.bgmTrack, `${path}.bgmTrack`),
     narration,
+    intrusionText: requireString(stage.intrusionText, `${path}.intrusionText`),
     voiceLines,
+    objects,
     choices,
     resultText: {
       correct: requireString(resultText.correct, `${path}.resultText.correct`),

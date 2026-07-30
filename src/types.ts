@@ -1,10 +1,5 @@
 export type GamePhase =
-  | 'title'
-  | 'intro'
-  | 'stage'
-  | 'reset'
-  | 'endingTrue'
-  | 'endingBad'
+  'title' | 'intro' | 'stage' | 'reset' | 'endingTrue' | 'endingBad'
 
 export type StageId = 1 | 2 | 3 | 4 | 5
 export type DetectorResult = 'truth' | 'lie'
@@ -38,13 +33,26 @@ export interface StageResultText {
   wrong: string
 }
 
+export interface PointOfInterest {
+  id: string
+  label: string
+  imageUrl: string
+  position: {
+    x: number
+    y: number
+  }
+  clue: string
+}
+
 export interface Stage {
   id: StageId
   name: string
   imageUrl: string
   bgmTrack: string
   narration: string[]
+  intrusionText: string
   voiceLines: VoiceLine[]
+  objects: PointOfInterest[]
   choices: Choice[]
   resultText: StageResultText
 }

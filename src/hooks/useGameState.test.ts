@@ -77,7 +77,7 @@ describe('useGameState reducer', () => {
       { type: 'COMPLETE_INTRO' },
     )
 
-    expect(result.currentVoiceLineId).toBe('s1-v2')
+    expect(result.currentVoiceLineId).toBe('s1-v4')
   })
 
   it('adds a key fragment and advances after a correct choice', () => {
@@ -125,12 +125,12 @@ describe('useGameState reducer', () => {
     })
   })
 
-  it('branches to the true ending with at least three fragments', () => {
+  it('branches to the true ending only after collecting all five fragments', () => {
     const reducer = createGameReducer(storyData)
     const result = reducer(
       stageState({
         stageId: 5,
-        keyFragments: 2,
+        keyFragments: 4,
         currentVoiceLineId: 's5-v1',
       }),
       { type: 'SELECT_CHOICE', choiceId: 'A' },
@@ -138,16 +138,16 @@ describe('useGameState reducer', () => {
 
     expect(result).toMatchObject({
       gamePhase: 'endingTrue',
-      keyFragments: 3,
+      keyFragments: 5,
     })
   })
 
-  it('branches to the bad ending with fewer than three fragments', () => {
+  it('branches to the bad ending with fewer than five fragments', () => {
     const reducer = createGameReducer(storyData)
     const result = reducer(
       stageState({
         stageId: 5,
-        keyFragments: 1,
+        keyFragments: 3,
         currentVoiceLineId: 's5-v1',
       }),
       { type: 'SELECT_CHOICE', choiceId: 'A' },
@@ -155,7 +155,7 @@ describe('useGameState reducer', () => {
 
     expect(result).toMatchObject({
       gamePhase: 'endingBad',
-      keyFragments: 2,
+      keyFragments: 4,
     })
   })
 
@@ -194,7 +194,7 @@ describe('useGameState reducer', () => {
     expect(result).toEqual({
       ...createInitialGameState(),
       gamePhase: 'stage',
-      currentVoiceLineId: 's1-v2',
+      currentVoiceLineId: 's1-v4',
     })
   })
 
@@ -225,7 +225,7 @@ describe('useGameState reducer', () => {
     const result = reducer(
       stageState({
         stageId: 2,
-        currentVoiceLineId: 's2-v1',
+        currentVoiceLineId: 's2-v3',
       }),
       { type: 'USE_DETECTOR' },
     )

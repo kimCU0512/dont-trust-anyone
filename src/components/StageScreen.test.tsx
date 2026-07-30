@@ -37,7 +37,7 @@ describe('StageScreen', () => {
     expect(html).toContain(UI_STRINGS.detectorWaitForVoice)
   })
 
-  it('keeps the mobile content order as image, text, then controls', () => {
+  it('layers dialogue inside the image before controls', () => {
     const html = renderToStaticMarkup(
       <StageScreen
         stageId={1}
@@ -58,6 +58,8 @@ describe('StageScreen', () => {
     expect(imagePosition).toBeGreaterThan(-1)
     expect(imagePosition).toBeLessThan(textPosition)
     expect(textPosition).toBeLessThan(controlsPosition)
+    expect(html).toContain('stage-hotspot')
+    expect(html).toContain(UI_STRINGS.stageExploreHint)
   })
 
   it('orders narration before voice and choices', () => {

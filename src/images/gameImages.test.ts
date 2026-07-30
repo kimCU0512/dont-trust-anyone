@@ -11,7 +11,10 @@ describe('upcoming game images', () => {
         ...createInitialGameState(),
         gamePhase: 'intro',
       }),
-    ).toEqual([story.stages[0].imageUrl])
+    ).toEqual([
+      story.stages[0].imageUrl,
+      ...story.stages[0].objects.map((object) => object.imageUrl),
+    ])
   })
 
   it('preloads the next stage and its optional fallback', () => {
@@ -23,6 +26,7 @@ describe('upcoming game images', () => {
       }),
     ).toEqual([
       story.stages[4].imageUrl,
+      ...story.stages[4].objects.map((object) => object.imageUrl),
       story.stages[4].fallbackImageUrl,
     ])
   })
@@ -47,7 +51,10 @@ describe('upcoming game images', () => {
         ...createInitialGameState(),
         gamePhase: 'reset',
       }),
-    ).toEqual([story.stages[0].imageUrl])
+    ).toEqual([
+      story.stages[0].imageUrl,
+      ...story.stages[0].objects.map((object) => object.imageUrl),
+    ])
 
     expect(
       getUpcomingImageUrls({

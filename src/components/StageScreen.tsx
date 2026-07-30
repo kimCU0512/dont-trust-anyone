@@ -55,19 +55,29 @@ export function StageScreen({
   const [detectorAnimationResult, setDetectorAnimationResult] =
     useState<DetectorResultType | null>(null)
   const [detectorAnimating, setDetectorAnimating] = useState(false)
+  const [activeObjectId, setActiveObjectId] = useState<string | null>(null)
+  const [discoveredObjectIds, setDiscoveredObjectIds] = useState<string[]>([])
+  const [intrusionSeen, setIntrusionSeen] = useState(false)
+  const [sceneIntruding, setSceneIntruding] = useState(false)
   const [interaction, dispatchInteraction] = useReducer(
     stageInteractionReducer,
     undefined,
     createStageInteractionState,
   )
   const transitionTimerRef = useRef<number | null>(null)
+  const intrusionTimerRef = useRef<number | null>(null)
   const narration = toDisplayParagraphs(stage.narration)
   const voiceText = `“${toDisplayText(voiceLine.text)}”`
   const inputLocked = interaction.selection !== null
-  const choicesEnabled = areStageChoicesEnabled(
+  const interactionLocked = inputLocked || sceneIntruding
+  const baseChoicesEnabled = areStageChoicesEnabled(
     textStep,
     detectorAnimating,
-    inputLocked,
+    interactionLocked,
+  )
+  const choicesEnabled = baseChoicesEnabled && activeObjectId === null
+  const activeObject = stage.objects.find(
+    (object) => object.id === activeObjectId,
   )
   const detectorDisabledReason = getDetectorDisabledReason({
     textStep,
@@ -82,6 +92,9 @@ export function StageScreen({
     () => () => {
       if (transitionTimerRef.current !== null) {
         window.clearTimeout(transitionTimerRef.current)
+      }
+      if (intrusionTimerRef.current !== null) {
+        window.clearTimeout(intrusionTimerRef.current)
       }
     },
     [],
@@ -131,6 +144,32 @@ export function StageScreen({
     })
   }
 
+  const handleInspectObject = (objectId: string) => {
+    if (textStep !== 'choice' || interactionLocked) {
+      return
+    }
+
+    setActiveObjectId(objectId)
+    setDiscoveredObjectIds((currentIds) =>
+      currentIds.includes(objectId) ? currentIds : [...currentIds, objectId],
+    )
+  }
+
+  const handleCloseInspection = () => {
+    setActiveObjectId(null)
+
+    if (intrusionSeen || discoveredObjectIds.length < 2) {
+      return
+    }
+
+    setIntrusionSeen(true)
+    setSceneIntruding(true)
+    intrusionTimerRef.current = window.setTimeout(() => {
+      setSceneIntruding(false)
+      intrusionTimerRef.current = null
+    }, 2600)
+  }
+
   const handleResultComplete = () => {
     if (!interaction.selection || transitionTimerRef.current !== null) {
       return
@@ -144,9 +183,9 @@ export function StageScreen({
 
   return (
     <section
-      className={`screen screen--stage${interaction.exiting ? ' stage-screen--exiting' : ''}`}
+      className={`screen screen--stage${interaction.exiting ? ' stage-screen--exiting' : ''}${sceneIntruding ? ' stage-screen--intruding' : ''}`}
       data-screen="P-10"
-      aria-busy={inputLocked}
+      aria-busy={interactionLocked}
     >
       <Hud
         hearts={hearts}
@@ -171,77 +210,135 @@ export function StageScreen({
         <div className="stage-scene__fallback" aria-hidden="true">
           <span className="stage-scene__architecture" />
         </div>
-        {imageUrl && (
-          <img src={imageUrl} alt="" onError={handleImageError} />
-        )}
+        {imageUrl && <img src={imageUrl} alt="" onError={handleImageError} />}
         <span className="stage-scene__shade" aria-hidden="true" />
+        <div
+          className="stage-hotspots"
+          aria-label={UI_STRINGS.stageExploreHint}
+        >
+          {stage.objects.map((object, index) => {
+            const discovered = discoveredObjectIds.includes(object.id)
+
+            return (
+              <button
+                className={`stage-hotspot${discovered ? ' stage-hotspot--discovered' : ''}`}
+                type="button"
+                key={object.id}
+                style={{
+                  left: `${object.position.x}%`,
+                  top: `${object.position.y}%`,
+                }}
+                disabled={textStep !== 'choice' || interactionLocked}
+                aria-label={`${object.label} 조사`}
+                aria-pressed={activeObjectId === object.id}
+                onClick={() => handleInspectObject(object.id)}
+              >
+                <span>{index + 1}</span>
+              </button>
+            )
+          })}
+        </div>
         <figcaption>
           <span>LOCATION</span>
           {stage.name}
         </figcaption>
-      </figure>
-
-      <div className="stage-dialogue">
-        {interaction.selection ? (
-          <div
-            className={`stage-result stage-result--${interaction.selection.isCorrect ? 'correct' : 'wrong'}`}
-          >
-            <p className="stage-result__verdict">
-              {interaction.selection.isCorrect
-                ? UI_STRINGS.choiceCorrect
-                : UI_STRINGS.choiceWrong}
-            </p>
-            <TextBox
-              key={`stage-${stageId}-result-${interaction.selection.choiceId}`}
-              paragraphs={[interaction.selection.resultText]}
-              speaker="system"
-              onComplete={handleResultComplete}
-            />
-          </div>
-        ) : (
-          <>
-        {textStep === 'narration' && (
-          <TextBox
-            key={`stage-${stageId}-narration`}
-            paragraphs={narration}
-            onComplete={advanceText}
-          />
-        )}
-
-        {textStep === 'voice' && (
-          <TextBox
-            key={`stage-${stageId}-voice`}
-            paragraphs={[voiceText]}
-            speaker="voice"
-            onComplete={advanceText}
-          />
-        )}
-
-        {textStep === 'choice' && detectorAnimationResult === null && (
-          <div
-            className="text-box text-box--voice stage-dialogue__complete"
-            aria-label={UI_STRINGS.textBoxVoice}
-          >
-            <span className="text-box__header">
-              <span className="text-box__speaker">
-                {UI_STRINGS.textBoxVoice}
-              </span>
-              <span>{UI_STRINGS.stageVoiceReady}</span>
+        {textStep === 'choice' && !interaction.selection && (
+          <p className="stage-explore-hint">
+            {UI_STRINGS.stageExploreHint}
+            <span>
+              {discoveredObjectIds.length} / {stage.objects.length}
             </span>
-            <span className="text-box__body">{voiceText}</span>
-          </div>
+          </p>
         )}
 
-        {textStep === 'choice' && detectorAnimationResult !== null && (
-          <DetectorResult
-            key={detectorAnimationResult}
-            result={detectorAnimationResult}
-            onComplete={() => setDetectorAnimating(false)}
-          />
+        <div className="stage-dialogue">
+          {activeObject ? (
+            <div className="object-inspection">
+              <img
+                src={resolveAssetUrl(activeObject.imageUrl)}
+                alt=""
+                className="object-inspection__image"
+              />
+              <div className="object-inspection__copy">
+                <span>{UI_STRINGS.objectDiscovered}</span>
+                <h2>{activeObject.label}</h2>
+                <p>{activeObject.clue}</p>
+              </div>
+              <button
+                type="button"
+                className="object-inspection__close"
+                onClick={handleCloseInspection}
+              >
+                {UI_STRINGS.objectClose}
+              </button>
+            </div>
+          ) : interaction.selection ? (
+            <div
+              className={`stage-result stage-result--${interaction.selection.isCorrect ? 'correct' : 'wrong'}`}
+            >
+              <p className="stage-result__verdict">
+                {interaction.selection.isCorrect
+                  ? UI_STRINGS.choiceCorrect
+                  : UI_STRINGS.choiceWrong}
+              </p>
+              <TextBox
+                key={`stage-${stageId}-result-${interaction.selection.choiceId}`}
+                paragraphs={[interaction.selection.resultText]}
+                speaker="system"
+                onComplete={handleResultComplete}
+              />
+            </div>
+          ) : (
+            <>
+              {textStep === 'narration' && (
+                <TextBox
+                  key={`stage-${stageId}-narration`}
+                  paragraphs={narration}
+                  onComplete={advanceText}
+                />
+              )}
+
+              {textStep === 'voice' && (
+                <TextBox
+                  key={`stage-${stageId}-voice`}
+                  paragraphs={[voiceText]}
+                  speaker="voice"
+                  onComplete={advanceText}
+                />
+              )}
+
+              {textStep === 'choice' && detectorAnimationResult === null && (
+                <div
+                  className="text-box text-box--voice stage-dialogue__complete"
+                  aria-label={UI_STRINGS.textBoxVoice}
+                >
+                  <span className="text-box__header">
+                    <span className="text-box__speaker">
+                      {UI_STRINGS.textBoxVoice}
+                    </span>
+                    <span>{UI_STRINGS.stageVoiceReady}</span>
+                  </span>
+                  <span className="text-box__body">{voiceText}</span>
+                </div>
+              )}
+
+              {textStep === 'choice' && detectorAnimationResult !== null && (
+                <DetectorResult
+                  key={detectorAnimationResult}
+                  result={detectorAnimationResult}
+                  onComplete={() => setDetectorAnimating(false)}
+                />
+              )}
+            </>
+          )}
+        </div>
+        {sceneIntruding && (
+          <div className="stage-intrusion" role="status">
+            <span>{UI_STRINGS.intrusionLabel}</span>
+            <p>{stage.intrusionText}</p>
+          </div>
         )}
-          </>
-        )}
-      </div>
+      </figure>
 
       <div className="stage-controls">
         <div className="stage-choices">

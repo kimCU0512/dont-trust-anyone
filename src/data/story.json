@@ -1,280 +1,429 @@
 {
-  "contentFlag": "TODO_CONTENT",
   "intro": {
-    "contentFlag": "TODO_CONTENT",
-    "imageUrl": "/images/intro_locked_door.png",
+    "imageUrl": "/images/objects/s1-classroom-door.png",
     "bgmTrack": "intro",
     "narration": [
-      "TODO_CONTENT: 비를 피해 들어온 폐교의 현관문이 등 뒤에서 닫혔다.",
-      "TODO_CONTENT: 잠긴 문 너머로 나를 부르는 목소리가 들려온다."
+      "비를 피해 들어온 폐교. 녹슨 현관문이 등 뒤에서 저절로 잠겼다.",
+      "교내 방송이 켜지고, 서로 다른 목소리들이 같은 이름으로 나를 부르기 시작했다.",
+      "문에는 다섯 개의 빈 홈이 있다. 학교 어딘가에 흩어진 열쇠조각을 모두 찾아야 한다."
     ],
     "tutorial": [
-      "TODO_CONTENT: 하트가 모두 사라지기 전에 열쇠조각을 모아 학교를 탈출해야 한다.",
-      "탐지기는 목소리의 진위를 파형으로 보여준다. `.....`은 진실, `.|.|.|.`은 거짓."
+      "하트가 모두 사라지기 전에 다섯 스테이지의 올바른 단서를 선택하세요. 정답마다 열쇠조각 하나를 얻습니다.",
+      "탐지기는 목소리의 진위를 파형으로 보여줍니다. `.....`은 진실, `.|.|.|.`은 거짓입니다.",
+      "탐지기는 하트와 사용 횟수를 하나씩 소모합니다. 장면 속 빛나는 물건을 조사하면 소모 없이 거짓말을 가려낼 수 있습니다."
     ]
   },
   "stages": [
     {
-      "contentFlag": "TODO_CONTENT",
       "id": 1,
-      "name": "복도",
+      "name": "처음의 복도",
       "imageUrl": "/images/stage1_hallway.png",
       "bgmTrack": "main",
       "narration": [
-        "TODO_CONTENT: 복도 바닥에는 교실 쪽으로 이어지는 젖은 발자국이 남아 있다.",
-        "TODO_CONTENT: 반대편 계단은 무너져 더 이상 지나갈 수 없다."
+        "기울어진 햇빛 사이로 젖은 발자국이 2-3 교실까지 이어진다.",
+        "반대편 계단은 천장이 무너져 막혔다. 방송실 스피커에서는 낮은 숨소리가 섞여 나온다."
       ],
+      "intrusionText": "교실 문 유리에 비친 나는 움직이지 않았다. 내가 뒤를 돌아본 뒤에야, 유리 속의 내가 천천히 고개를 돌렸다.",
       "voiceLines": [
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "s1-v1",
-          "text": "TODO_CONTENT: 발자국을 따라 교실로 와. 안전한 길은 그쪽뿐이야.",
+          "text": "발자국을 따라 2-3 교실로 와. 문손잡이에 내가 표시를 남겼어.",
           "isLie": false,
           "contradictsStage": null
         },
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "s1-v2",
-          "text": "TODO_CONTENT: 계단은 위험해. 교실 문으로 들어오는 게 좋아.",
+          "text": "게시판의 대피도에도 계단이 막혔다고 표시돼 있어. 교실로 들어가.",
           "isLie": false,
           "contradictsStage": null
+        },
+        {
+          "id": "s1-v3",
+          "text": "창문은 낮아서 뛰어내려도 안전해. 교실 문은 절대 열지 마.",
+          "isLie": true,
+          "contradictsStage": 1
+        },
+        {
+          "id": "s1-v4",
+          "text": "발자국은 계단으로 향했어. 무너진 곳은 발만 조심하면 건널 수 있어.",
+          "isLie": true,
+          "contradictsStage": 1
+        }
+      ],
+      "objects": [
+        {
+          "id": "s1-window",
+          "label": "창밖",
+          "imageUrl": "/images/objects/s1-window.png",
+          "position": { "x": 18, "y": 43 },
+          "clue": "이곳은 2층이다. 깨진 유리 아래로 철제 구조물이 날카롭게 솟아 있어 탈출로로 쓸 수 없다."
+        },
+        {
+          "id": "s1-door",
+          "label": "2-3 교실 문",
+          "imageUrl": "/images/objects/s1-classroom-door.png",
+          "position": { "x": 76, "y": 42 },
+          "clue": "손잡이에 아직 마르지 않은 손자국과 세 번 긁은 표시가 있다. 젖은 발자국도 여기서 멈춘다."
+        },
+        {
+          "id": "s1-board",
+          "label": "게시판",
+          "imageUrl": "/images/objects/s1-bulletin.png",
+          "position": { "x": 89, "y": 43 },
+          "clue": "낡은 대피도에서 계단 부분만 붉게 지워져 있다. 보건실에는 누군가 동그라미를 쳐 두었다."
         }
       ],
       "choices": [
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "A",
-          "text": "TODO_CONTENT: 발자국을 따라 교실로 간다.",
+          "text": "젖은 발자국과 손자국을 따라 2-3 교실로 들어간다.",
           "isCorrect": true
         },
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "B",
-          "text": "TODO_CONTENT: 무너진 계단을 넘어간다.",
+          "text": "막힌 계단을 넘어 반대편 복도로 간다.",
           "isCorrect": false
         }
       ],
       "resultText": {
-        "contentFlag": "TODO_CONTENT",
-        "correct": "TODO_CONTENT: 교실 문틈에서 첫 번째 열쇠조각을 발견했다.",
-        "wrong": "TODO_CONTENT: 무너진 계단에서 발을 헛디뎌 다쳤다."
+        "correct": "책상 위 출석부 사이에서 첫 번째 열쇠조각이 은빛으로 반짝였다.",
+        "wrong": "무너진 계단이 다시 꺼졌다. 잔해에 팔을 베인 채 간신히 교실로 기어들어갔다."
       }
     },
     {
-      "contentFlag": "TODO_CONTENT",
       "id": 2,
-      "name": "교실",
+      "name": "2-3 교실",
       "imageUrl": "/images/stage2_classroom.png",
       "bgmTrack": "main",
       "narration": [
-        "TODO_CONTENT: 교실 창문은 안쪽에서 굳게 잠겨 있고 깨진 유리가 바닥에 흩어져 있다.",
-        "TODO_CONTENT: 칠판에는 '물이 흐르는 곳을 찾아라'라는 문장이 적혀 있다."
+        "모든 시계가 5시 17분에 멈춰 있다. 펼쳐진 일기에는 같은 시간이 여러 번 눌러 쓰여 있다.",
+        "칠판 아래 희미한 글씨가 보인다. '물이 흐르는 곳에서 2-3을 기억해.'"
       ],
+      "intrusionText": "출석부의 마지막 줄에 내 이름이 생겨났다. 결석 사유는 단 한 줄이었다. '아직 학교 안에 있음.'",
       "voiceLines": [
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "s2-v1",
-          "text": "TODO_CONTENT: 아까 복도의 계단은 멀쩡했어. 창문으로 나가면 돼.",
+          "text": "일기의 마지막 장을 봐. 화장실 세면대와 2-3이라는 숫자가 적혀 있을 거야.",
+          "isLie": false,
+          "contradictsStage": null
+        },
+        {
+          "id": "s2-v2",
+          "text": "칠판의 물 자국은 화장실 방향을 가리켜. 거기서 다음 조각을 찾을 수 있어.",
+          "isLie": false,
+          "contradictsStage": null
+        },
+        {
+          "id": "s2-v3",
+          "text": "아까 복도 계단은 멀쩡했어. 교실 창문을 부수고 계단으로 돌아가.",
           "isLie": true,
           "contradictsStage": 1
         },
         {
-          "contentFlag": "TODO_CONTENT",
-          "id": "s2-v2",
-          "text": "TODO_CONTENT: 복도 계단으로 돌아가. 무너진 곳은 하나도 없었어.",
+          "id": "s2-v4",
+          "text": "칠판에는 아무 글도 없어. 교탁 아래 비상구로 내려가면 돼.",
           "isLie": true,
-          "contradictsStage": 1
+          "contradictsStage": 2
+        }
+      ],
+      "objects": [
+        {
+          "id": "s2-notebook",
+          "label": "책상 위 일기",
+          "imageUrl": "/images/objects/s2-notebook.png",
+          "position": { "x": 50, "y": 78 },
+          "clue": "마지막 장에 '5:17, 세면대 세 번째 칸, 번호 2-3'이라고 적혀 있다. 글씨는 방금 쓴 듯 번져 있다."
+        },
+        {
+          "id": "s2-desk",
+          "label": "교탁 서랍",
+          "imageUrl": "/images/objects/s2-teacher-desk.png",
+          "position": { "x": 58, "y": 48 },
+          "clue": "서랍은 텅 비었다. 바닥으로 이어지는 통로나 비상구도 없다."
+        },
+        {
+          "id": "s2-board",
+          "label": "칠판",
+          "imageUrl": "/images/objects/s2-blackboard.png",
+          "position": { "x": 68, "y": 26 },
+          "clue": "지워진 글씨 아래 물결 모양 화살표가 화장실 쪽 출입문을 가리킨다."
         }
       ],
       "choices": [
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "A",
-          "text": "TODO_CONTENT: 잠긴 창문을 억지로 부순다.",
+          "text": "잠긴 창문을 깨고 막힌 계단 쪽으로 돌아간다.",
           "isCorrect": false
         },
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "B",
-          "text": "TODO_CONTENT: 칠판의 단서를 따라 화장실로 간다.",
+          "text": "일기와 칠판의 단서를 따라 화장실로 간다.",
           "isCorrect": true
         }
       ],
       "resultText": {
-        "contentFlag": "TODO_CONTENT",
-        "correct": "TODO_CONTENT: 칠판 뒤에서 두 번째 열쇠조각이 떨어졌다.",
-        "wrong": "TODO_CONTENT: 깨진 유리에 손을 베이고 말았다."
+        "correct": "일기 표지 안쪽에서 두 번째 열쇠조각이 떨어졌다. 조각에는 '기억'이라는 글자가 새겨져 있다.",
+        "wrong": "깨진 유리가 손바닥을 깊게 긁었다. 창밖에는 내려갈 길이 없었다."
       }
     },
     {
-      "contentFlag": "TODO_CONTENT",
       "id": 3,
       "name": "화장실",
       "imageUrl": "/images/stage3_restroom.png",
       "bgmTrack": "main",
       "narration": [
-        "TODO_CONTENT: 세면대 하나에서만 녹슨 물이 가늘게 흐르고 있다.",
-        "TODO_CONTENT: 거울에는 보건실 약장 번호가 손가락으로 적혀 있다."
+        "세면대 하나에서만 녹슨 물이 가늘게 흐른다. 물방울은 정확히 세 번씩 끊겨 떨어진다.",
+        "칸막이에는 '아무도 믿지 마'라는 경고가 반복되어 있고, 닫힌 마지막 칸 안에서 손톱 긁는 소리가 난다."
       ],
+      "intrusionText": "거울 속 화장실은 비어 있지 않았다. 마지막 칸 안에 내가 서서, 거울 밖의 나에게 조용히 하라는 손짓을 했다.",
       "voiceLines": [
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "s3-v1",
-          "text": "TODO_CONTENT: 흐르는 물 아래를 살펴봐. 네가 찾는 것이 있어.",
+          "text": "물이 흐르는 세 번째 세면대를 봐. 마개 아래에 네가 찾는 게 있어.",
           "isLie": false,
           "contradictsStage": null
         },
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "s3-v2",
-          "text": "TODO_CONTENT: 거울의 숫자를 기억하고 세면대 배수구를 확인해.",
+          "text": "2-3은 교실 번호가 아니라 순서야. 두 번째 줄, 세 번째 세면대를 확인해.",
           "isLie": false,
           "contradictsStage": null
+        },
+        {
+          "id": "s3-v3",
+          "text": "교실 일기에는 창문을 열라고 적혀 있었어. 세면대는 함정이야.",
+          "isLie": true,
+          "contradictsStage": 2
+        },
+        {
+          "id": "s3-v4",
+          "text": "마지막 칸에서 누가 울고 있어. 문을 열어 주면 열쇠를 줄 거야.",
+          "isLie": true,
+          "contradictsStage": 3
+        }
+      ],
+      "objects": [
+        {
+          "id": "s3-graffiti",
+          "label": "칸막이 낙서",
+          "imageUrl": "/images/objects/s3-graffiti.png",
+          "position": { "x": 39, "y": 57 },
+          "clue": "붉은 글씨 아래 작은 문장: '우는 목소리는 사람 흉내를 낸다. 절대로 마지막 칸을 열지 마.'"
+        },
+        {
+          "id": "s3-sink",
+          "label": "젖은 수도꼭지",
+          "imageUrl": "/images/objects/s3-sink.png",
+          "position": { "x": 88, "y": 60 },
+          "clue": "세 번째 세면대 마개에 2-3이 새겨져 있다. 배수구 안쪽에서 금속성 빛이 비친다."
+        },
+        {
+          "id": "s3-window",
+          "label": "화장실 창문",
+          "imageUrl": "/images/objects/s3-window.png",
+          "position": { "x": 70, "y": 20 },
+          "clue": "창틀은 녹슬어 움직이지 않는다. 바깥쪽에는 굵은 방범창이 덧대어져 있다."
         }
       ],
       "choices": [
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "A",
-          "text": "TODO_CONTENT: 물이 흐르는 세면대의 배수구를 살핀다.",
+          "text": "2-3 표시가 있는 세 번째 세면대의 배수구를 연다.",
           "isCorrect": true
         },
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "B",
-          "text": "TODO_CONTENT: 불 꺼진 마지막 칸으로 들어간다.",
+          "text": "울음소리를 따라 닫힌 마지막 칸의 문을 연다.",
           "isCorrect": false
         }
       ],
       "resultText": {
-        "contentFlag": "TODO_CONTENT",
-        "correct": "TODO_CONTENT: 배수구 안에서 세 번째 열쇠조각을 꺼냈다.",
-        "wrong": "TODO_CONTENT: 마지막 칸의 문이 닫히며 손목을 강하게 붙잡았다."
+        "correct": "차가운 물속에서 세 번째 열쇠조각을 건졌다. 멀리서 울음소리가 웃음으로 바뀌었다.",
+        "wrong": "문틈에서 나온 손이 손목을 움켜쥐었다. 겨우 뿌리쳤지만 피부에 검은 자국이 남았다."
       }
     },
     {
-      "contentFlag": "TODO_CONTENT",
       "id": 4,
       "name": "보건실",
       "imageUrl": "/images/stage4_infirmary.png",
       "bgmTrack": "main",
       "narration": [
-        "TODO_CONTENT: 약장은 비어 있지만 거울에서 본 번호의 서랍만 잠겨 있다.",
-        "TODO_CONTENT: 침대 아래에는 복도로 돌아가는 낡은 안내도가 놓여 있다."
+        "소독약 냄새가 남은 보건실. 약장 유리는 깨졌지만 2번 책상의 3번 서랍만 잠겨 있다.",
+        "인체 모형의 심장 자리에 종이 조각이 끼워져 있다. '다섯 번째 조각은 처음의 문 앞에.'"
       ],
+      "intrusionText": "인체 모형의 얼굴이 내 쪽으로 돌아와 있었다. 가슴을 열자 플라스틱 심장 대신, 5시 17분에 멈춘 손목시계가 뛰고 있었다.",
       "voiceLines": [
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "s4-v1",
-          "text": "TODO_CONTENT: 교실 칠판에는 아무것도 없었어. 번호는 함정이야.",
+          "text": "화장실의 2-3은 이 방의 두 번째 책상, 세 번째 서랍을 뜻해.",
+          "isLie": false,
+          "contradictsStage": null
+        },
+        {
+          "id": "s4-v2",
+          "text": "인체 모형 심장에 출구 지도가 있어. 서랍을 연 뒤 꼭 챙겨.",
+          "isLie": false,
+          "contradictsStage": null
+        },
+        {
+          "id": "s4-v3",
+          "text": "교실 칠판에는 물에 관한 글이 없었어. 2-3 서랍은 건드리지 마.",
           "isLie": true,
           "contradictsStage": 2
         },
         {
-          "contentFlag": "TODO_CONTENT",
-          "id": "s4-v2",
-          "text": "TODO_CONTENT: 물이 흐르는 곳이라는 문장은 없었어. 잠긴 서랍을 건드리지 마.",
+          "id": "s4-v4",
+          "text": "화장실에서 본 숫자는 3-2였어. 세 번째 책상 두 번째 서랍을 열어.",
           "isLie": true,
-          "contradictsStage": 2
+          "contradictsStage": 3
+        }
+      ],
+      "objects": [
+        {
+          "id": "s4-cabinet",
+          "label": "약품장",
+          "imageUrl": "/images/objects/s4-medicine-cabinet.png",
+          "position": { "x": 51, "y": 30 },
+          "clue": "약병은 모두 비어 있고 열쇠조각도 없다. 문 안쪽에 '2번 책상'이라는 라벨만 붙어 있다."
+        },
+        {
+          "id": "s4-drawer",
+          "label": "잠긴 책상 서랍",
+          "imageUrl": "/images/objects/s4-drawer.png",
+          "position": { "x": 62, "y": 68 },
+          "clue": "두 번째 책상의 세 번째 서랍. 화장실 세면대에서 얻은 작은 금속 핀이 자물쇠에 꼭 맞는다."
+        },
+        {
+          "id": "s4-model",
+          "label": "인체 모형",
+          "imageUrl": "/images/objects/s4-anatomy-model.png",
+          "position": { "x": 33, "y": 29 },
+          "clue": "심장 뒤에 접힌 지도가 있다. 처음 복도의 2-3 교실 앞을 붉은 원으로 표시했다."
         }
       ],
       "choices": [
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "A",
-          "text": "TODO_CONTENT: 거울에서 본 번호로 서랍을 연다.",
+          "text": "두 번째 책상의 세 번째 서랍을 열고 인체 모형의 지도도 챙긴다.",
           "isCorrect": true
         },
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "B",
-          "text": "TODO_CONTENT: 목소리를 믿고 서랍에서 물러난다.",
+          "text": "목소리의 경고를 믿고 잠긴 서랍에서 물러난다.",
           "isCorrect": false
         }
       ],
       "resultText": {
-        "contentFlag": "TODO_CONTENT",
-        "correct": "TODO_CONTENT: 서랍 속에서 네 번째 열쇠조각과 출구 안내도를 찾았다.",
-        "wrong": "TODO_CONTENT: 침대 뒤의 그림자가 달려들어 어깨를 할퀴었다."
+        "correct": "서랍 안에서 네 번째 열쇠조각과 오래된 학생증을 찾았다. 사진 속 얼굴은 나와 똑같다.",
+        "wrong": "커튼 뒤 그림자가 어깨를 할퀴었다. 쓰러진 인체 모형이 처음 복도 방향을 가리켰다."
       }
     },
     {
-      "contentFlag": "TODO_CONTENT",
       "id": 5,
-      "name": "복도",
+      "name": "되돌아온 복도",
       "imageUrl": "/images/stage5_hallway.png",
       "fallbackImageUrl": "/images/stage1_hallway.png",
       "bgmTrack": "finale",
       "narration": [
-        "TODO_CONTENT: 처음의 복도로 돌아왔지만 젖은 발자국은 출구 앞에서 끊겨 있다.",
-        "TODO_CONTENT: 출구 자물쇠에는 열쇠조각을 끼우는 홈이 다섯 개 보인다."
+        "처음의 복도지만 햇빛은 사라지고 덩굴과 검은 얼룩이 벽을 뒤덮었다.",
+        "2-3 교실 문 아래 마지막 열쇠조각이 보인다. 출구 자물쇠에는 정확히 다섯 개의 홈이 있다."
       ],
+      "intrusionText": "복도 끝 현관문이 열리고 또 다른 내가 들어왔다. 그 아이는 등 뒤에서 문이 잠기기 전에, 정확히 내 쪽을 보고 웃었다.",
       "voiceLines": [
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "s5-v1",
-          "text": "TODO_CONTENT: 보건실 침대 아래에는 안내도가 없었어. 열쇠를 내게 넘겨.",
+          "text": "학생증은 네 것이야. 교실 문 아래 마지막 조각까지 모으면 이 기억에서 나갈 수 있어.",
+          "isLie": false,
+          "contradictsStage": null
+        },
+        {
+          "id": "s5-v2",
+          "text": "낙서와 지도를 함께 봐. 문 앞의 조각을 주워 다섯 홈에 직접 끼워.",
+          "isLie": false,
+          "contradictsStage": null
+        },
+        {
+          "id": "s5-v3",
+          "text": "보건실에는 지도도 학생증도 없었어. 네 조각을 내게 넘기면 문을 열어 줄게.",
           "isLie": true,
           "contradictsStage": 4
         },
         {
-          "contentFlag": "TODO_CONTENT",
-          "id": "s5-v2",
-          "text": "TODO_CONTENT: 네가 본 출구 안내도는 가짜야. 문에서 멀리 떨어져.",
+          "id": "s5-v4",
+          "text": "출구의 홈은 네 개뿐이야. 문 아래 조각을 건드리면 처음으로 되돌아가.",
           "isLie": true,
-          "contradictsStage": 4
+          "contradictsStage": 5
+        }
+      ],
+      "objects": [
+        {
+          "id": "s5-window",
+          "label": "덩굴진 창밖",
+          "imageUrl": "/images/objects/s5-window.png",
+          "position": { "x": 19, "y": 38 },
+          "clue": "창밖 풍경이 사진처럼 멈춰 있다. 이곳은 실제 학교가 아니라 반복되는 기억이라는 사실이 드러난다."
+        },
+        {
+          "id": "s5-graffiti",
+          "label": "벽의 경고",
+          "imageUrl": "/images/objects/s5-graffiti.png",
+          "position": { "x": 67, "y": 55 },
+          "clue": "'아무도 믿지 마. 단, 네가 직접 확인한 기억은 믿어.' 낙서 아래 학생증과 같은 이름이 적혀 있다."
+        },
+        {
+          "id": "s5-door",
+          "label": "2-3 교실 문",
+          "imageUrl": "/images/objects/s5-classroom-door.png",
+          "position": { "x": 88, "y": 42 },
+          "clue": "문 아래 다섯 번째 조각이 놓여 있다. 앞선 네 조각과 맞물리는 홈이 선명하다."
         }
       ],
       "choices": [
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "A",
-          "text": "TODO_CONTENT: 모은 열쇠조각을 자물쇠에 끼운다.",
+          "text": "마지막 조각을 주워 다섯 조각을 출구 자물쇠에 직접 끼운다.",
           "isCorrect": true
         },
         {
-          "contentFlag": "TODO_CONTENT",
           "id": "B",
-          "text": "TODO_CONTENT: 열쇠조각을 목소리에게 건넨다.",
+          "text": "모은 열쇠조각을 보이지 않는 목소리에게 건넨다.",
           "isCorrect": false
         }
       ],
       "resultText": {
-        "contentFlag": "TODO_CONTENT",
-        "correct": "TODO_CONTENT: 열쇠조각이 맞물리며 굳게 닫힌 출구가 흔들린다.",
-        "wrong": "TODO_CONTENT: 어둠 속에서 뻗어 나온 손이 열쇠와 나를 함께 움켜쥔다."
+        "correct": "다섯 조각이 하나의 열쇠로 맞물렸다. 교내 방송의 목소리들이 비명처럼 겹치고 출구가 열린다.",
+        "wrong": "어둠 속 손이 열쇠와 나를 함께 움켜쥔다. 학생증의 얼굴이 천천히 웃기 시작했다."
       }
     }
   ],
   "reset": {
-    "contentFlag": "TODO_CONTENT",
-    "imageUrl": "/images/reset_darkness.png",
+    "imageUrl": "/images/ending_bad.png",
     "text": [
-      "TODO_CONTENT: 시야가 어두워지고 발소리가 바로 뒤에서 멈췄다.",
-      "TODO_CONTENT: 정신을 차렸을 때 나는 다시 폐교의 입구에 서 있었다."
+      "시야가 꺼지고 발소리가 바로 뒤에서 멈췄다.",
+      "정신을 차리자 잠긴 현관문 앞이었다. 교내 방송이 다시 내 이름을 부른다."
     ]
   },
   "endings": {
     "true": {
-      "contentFlag": "TODO_CONTENT",
       "imageUrl": "/images/ending_true.png",
       "bgmTrack": "ending",
       "label": "TRUE END",
       "text": [
-        "TODO_CONTENT: 열쇠가 완성되자 출구 너머로 새벽빛이 스며들었다.",
-        "TODO_CONTENT: 나를 이끈 목소리는 이곳에 갇힌 과거의 나였고, 마지막 인사를 남긴 채 사라졌다."
+        "완성된 열쇠가 돌아가자 멈춰 있던 5시 17분의 기억이 움직이기 시작했다.",
+        "목소리의 정체는 사고 당일 이곳에 남겨진 나의 두려움과 후회였다. 진실을 말한 목소리는 기억을 돌려주려 했고, 거짓 목소리는 나를 반복 속에 붙잡으려 했다.",
+        "새벽 공기 속으로 나오자 손에 있던 학생증과 열쇠가 재처럼 흩어졌다. 폐교의 방송은 마침내 침묵했다."
       ]
     },
     "bad": {
-      "contentFlag": "TODO_CONTENT",
       "imageUrl": "/images/ending_bad.png",
       "bgmTrack": "ending",
       "label": "BAD END",
       "text": [
-        "TODO_CONTENT: 부족한 열쇠조각은 자물쇠를 열지 못했다.",
-        "TODO_CONTENT: 믿었던 목소리가 웃음을 터뜨리고, 열린 것은 출구가 아니라 어둠으로 향하는 문이었다."
+        "다섯 홈 중 하나라도 비어 있으면 출구는 열리지 않았다.",
+        "믿었던 목소리가 바로 뒤에서 웃었다. 그것은 길을 알려 준 적이 없다. 내가 외면한 단서만 되풀이했을 뿐이다.",
+        "끌려가는 동안 복도 끝에 또 다른 내가 현관문을 열고 들어오는 모습이 보였다."
       ],
-      "hint": "TODO_CONTENT: 출구를 열기에는 열쇠조각이 부족했다."
+      "hint": "진짜 출구는 열쇠조각 다섯 개가 모두 맞물릴 때만 열린다. 장면 속 물건을 조사해 목소리와 대조하자."
     }
   }
 }

@@ -10,7 +10,10 @@ function getStageImageUrls(stageIndex: number): string[] {
     return []
   }
 
-  const imageUrls = [stage.imageUrl]
+  const imageUrls = [
+    stage.imageUrl,
+    ...stage.objects.map((object) => object.imageUrl),
+  ]
 
   if (
     'fallbackImageUrl' in stage &&

@@ -6,15 +6,14 @@ export const INITIAL_DETECTOR_USES: number = 2
 export const MIN_HEARTS_FOR_DETECTOR: number = 2
 export const DETECTOR_HEART_COST: number = 1
 export const WRONG_CHOICE_HEART_COST: number = 1
-export const TRUE_END_KEY_FRAGMENT_THRESHOLD: number = 3
+export const TRUE_END_KEY_FRAGMENT_THRESHOLD: number = 5
 export const TOTAL_STAGES: number = 5
 export const TEXT_TYPING_INTERVAL_MS: number = 36
 export const STAGE_TRANSITION_MS: number = 420
 export const BGM_FADE_DURATION_MS: number = 600
 export const BGM_FADE_STEP_MS: number = 50
 export const BGM_VOLUME: number = 0.45
-export const TITLE_BACKGROUND_URL =
-  '/images/title_abandoned_school.png'
+export const TITLE_BACKGROUND_URL = '/images/stage5_hallway.png'
 export const DETECTOR_TRUTH_SYMBOL = '.....'
 export const DETECTOR_LIE_SYMBOL = '.|.|.|.'
 
@@ -53,6 +52,10 @@ export const UI_STRINGS = {
   stageImageAltSuffix: '의 현재 모습',
   stageNarrationComplete: '주변을 확인했다',
   stageVoiceReady: '목소리를 판단하세요',
+  stageExploreHint: '빛나는 지점을 눌러 단서를 조사하세요',
+  objectDiscovered: '단서 확인',
+  objectClose: '조사 마치기',
+  intrusionLabel: '기억 침식',
   detectorAction: '판별 도구 사용',
   detectorCost: '하트 1 · 탐지기 1 소모',
   detectorWaitForVoice: '목소리 대사가 끝난 뒤 사용할 수 있습니다.',

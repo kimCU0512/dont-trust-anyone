@@ -47,10 +47,17 @@ describe('validateStory', () => {
 
   it('rejects a lie without a contradiction reference', () => {
     const invalidStory = copyStory()
-    invalidStory.stages[1].voiceLines[0].contradictsStage = null
+    invalidStory.stages[1].voiceLines[2].contradictsStage = null
 
     expect(() => validateStory(invalidStory)).toThrow(
       /must reference a valid stage/,
     )
+  })
+
+  it('rejects an object positioned outside the scene', () => {
+    const invalidStory = copyStory()
+    invalidStory.stages[0].objects[0].position.x = 101
+
+    expect(() => validateStory(invalidStory)).toThrow(/position.x/)
   })
 })
