@@ -13,6 +13,8 @@ export const STAGE_TRANSITION_MS: number = 420
 export const BGM_FADE_DURATION_MS: number = 600
 export const BGM_FADE_STEP_MS: number = 50
 export const BGM_VOLUME: number = 0.45
+export const TITLE_BACKGROUND_URL =
+  '/images/title_abandoned_school.png'
 export const DETECTOR_TRUTH_SYMBOL = '.....'
 export const DETECTOR_LIE_SYMBOL = '.|.|.|.'
 

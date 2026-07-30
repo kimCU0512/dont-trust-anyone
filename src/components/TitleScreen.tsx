@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import { UI_STRINGS } from '../constants'
-
-const TITLE_BACKGROUND_URL = '/images/title_abandoned_school.png'
+import { TITLE_BACKGROUND_URL, UI_STRINGS } from '../constants'
 
 interface TitleScreenProps {
   onStart: () => void

@@ -8,6 +8,8 @@ import { TitleScreen } from './components/TitleScreen'
 import { useGameState } from './hooks/useGameState'
 import { useBgm } from './hooks/useBgm'
 import story from './data/story.json'
+import { getUpcomingImageUrls } from './images/gameImages'
+import { useImagePreload } from './hooks/useImagePreload'
 import type { DetectorResult, GameState } from './types'
 
 interface GameScreenProps {
@@ -75,6 +77,7 @@ function App() {
   } = useGameState()
   const bgmScene = getGameBgmScene(state)
   const bgm = useBgm(bgmScene.trackId, bgmScene.sceneKey)
+  useImagePreload(getUpcomingImageUrls(state))
 
   const startGameWithBgm = () => {
     bgm.unlock(story.intro.bgmTrack, 'intro')
