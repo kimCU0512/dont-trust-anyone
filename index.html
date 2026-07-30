@@ -6,7 +6,26 @@
     <title>아무도 믿지마</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div
+        style="
+          min-height: 100vh;
+          display: grid;
+          place-content: center;
+          gap: 12px;
+          color: #aaa;
+          background: #090909;
+          font-family: system-ui, sans-serif;
+          text-align: center;
+        "
+      >
+        <strong style="color: #ddd">아무도 믿지마</strong>
+        <span style="font-size: 12px"
+          >페이지를 불러오는 중입니다. 화면이 유지되면 새로고침해 주세요.</span
+        >
+      </div>
+    </div>
+    <noscript>이 게임은 JavaScript를 켜야 실행할 수 있습니다.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

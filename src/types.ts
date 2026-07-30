@@ -44,6 +44,15 @@ export interface PointOfInterest {
   clue: string
 }
 
+export interface EvidenceEntry {
+  id: string
+  stageId: StageId
+  stageName: string
+  label: string
+  imageUrl: string
+  clue: string
+}
+
 export interface Stage {
   id: StageId
   name: string

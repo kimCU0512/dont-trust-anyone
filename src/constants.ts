@@ -8,6 +8,8 @@ export const DETECTOR_HEART_COST: number = 1
 export const WRONG_CHOICE_HEART_COST: number = 1
 export const TRUE_END_KEY_FRAGMENT_THRESHOLD: number = 5
 export const TOTAL_STAGES: number = 5
+export const EVIDENCE_PER_STAGE: number = 3
+export const MAX_EVIDENCE_COUNT: number = TOTAL_STAGES * EVIDENCE_PER_STAGE
 export const TEXT_TYPING_INTERVAL_MS: number = 36
 export const STAGE_TRANSITION_MS: number = 420
 export const BGM_FADE_DURATION_MS: number = 600
@@ -56,6 +58,11 @@ export const UI_STRINGS = {
   objectDiscovered: '단서 확인',
   objectClose: '조사 마치기',
   intrusionLabel: '기억 침식',
+  evidenceJournal: '증거 수첩',
+  evidenceClose: '수첩 닫기',
+  evidenceEmpty: '아직 직접 확인한 증거가 없습니다.',
+  evidenceIndex: '발견한 증거 목록',
+  evidenceVerified: '직접 확인한 기억',
   detectorAction: '판별 도구 사용',
   detectorCost: '하트 1 · 탐지기 1 소모',
   detectorWaitForVoice: '목소리 대사가 끝난 뒤 사용할 수 있습니다.',

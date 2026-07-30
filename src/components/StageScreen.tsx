@@ -3,7 +3,11 @@ import { STAGE_TRANSITION_MS, UI_STRINGS } from '../constants'
 import { resolveAssetUrl } from '../assets/assetUrl'
 import { toDisplayParagraphs, toDisplayText } from '../data/contentText'
 import story from '../data/story.json'
-import type { DetectorResult as DetectorResultType, StageId } from '../types'
+import type {
+  DetectorResult as DetectorResultType,
+  EvidenceEntry,
+  StageId,
+} from '../types'
 import { DetectorResult } from './DetectorResult'
 import { Hud } from './Hud'
 import { TextBox } from './TextBox'
@@ -26,6 +30,7 @@ interface StageScreenProps {
   detectorAvailable: boolean
   onUseDetector: () => DetectorResultType | null
   onSelectChoice: (choiceId: string) => void
+  onDiscoverEvidence: (entry: EvidenceEntry) => void
 }
 
 export function StageScreen({
@@ -38,6 +43,7 @@ export function StageScreen({
   detectorAvailable,
   onUseDetector,
   onSelectChoice,
+  onDiscoverEvidence,
 }: StageScreenProps) {
   const stage = story.stages.find((candidate) => candidate.id === stageId)
 
@@ -150,6 +156,20 @@ export function StageScreen({
     }
 
     setActiveObjectId(objectId)
+    const inspectedObject = stage.objects.find(
+      (object) => object.id === objectId,
+    )
+
+    if (inspectedObject) {
+      onDiscoverEvidence({
+        id: inspectedObject.id,
+        stageId,
+        stageName: stage.name,
+        label: inspectedObject.label,
+        imageUrl: inspectedObject.imageUrl,
+        clue: inspectedObject.clue,
+      })
+    }
     setDiscoveredObjectIds((currentIds) =>
       currentIds.includes(objectId) ? currentIds : [...currentIds, objectId],
     )

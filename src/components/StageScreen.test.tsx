@@ -26,6 +26,7 @@ describe('StageScreen', () => {
         detectorAvailable
         onUseDetector={() => null}
         onSelectChoice={() => undefined}
+        onDiscoverEvidence={() => undefined}
       />,
     )
 
@@ -49,6 +50,7 @@ describe('StageScreen', () => {
         detectorAvailable
         onUseDetector={() => null}
         onSelectChoice={() => undefined}
+        onDiscoverEvidence={() => undefined}
       />,
     )
     const imagePosition = html.indexOf('stage-scene')

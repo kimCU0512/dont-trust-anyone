@@ -28,6 +28,7 @@ describe('GameScreen', () => {
           detectorAvailable={false}
           onUseDetector={() => null}
           onSelectChoice={() => undefined}
+          onDiscoverEvidence={() => undefined}
           onRestart={() => undefined}
           onReturnToTitle={() => undefined}
         />,
