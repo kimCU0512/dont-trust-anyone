@@ -8,6 +8,7 @@ export const DETECTOR_HEART_COST: number = 1
 export const WRONG_CHOICE_HEART_COST: number = 1
 export const TRUE_END_KEY_FRAGMENT_THRESHOLD: number = 3
 export const TOTAL_STAGES: number = 5
+export const TEXT_TYPING_INTERVAL_MS: number = 36
 
 export const UI_STRINGS = {
   title: '아무도 믿지마',
@@ -23,6 +24,11 @@ export const UI_STRINGS = {
   bgmOn: 'ON',
   bgmOff: 'OFF',
   titleBackgroundAlt: '어둠에 잠긴 폐교 외관',
+  textBoxNarration: '상황 서술',
+  textBoxVoice: '목소리',
+  textBoxSystem: '안내',
+  textBoxTypingHint: '클릭하면 문장을 바로 표시합니다',
+  textBoxAdvanceHint: '클릭하여 계속',
   introHeading: '문이 잠겼다',
   continue: '계속',
   stage: '스테이지',

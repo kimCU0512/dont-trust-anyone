@@ -284,3 +284,79 @@ button {
   font-size: 0.58rem;
   letter-spacing: 0.19em;
 }
+
+.text-box {
+  width: min(100%, 620px);
+  min-height: 168px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 22px 16px;
+  border: 1px solid rgb(211 211 202 / 22%);
+  color: #d9d9d3;
+  background: rgb(5 5 5 / 88%);
+  text-align: left;
+  cursor: pointer;
+}
+
+.text-box:hover {
+  border-color: rgb(211 211 202 / 38%);
+}
+
+.text-box:focus-visible {
+  outline: 2px solid #c94038;
+  outline-offset: 3px;
+}
+
+.text-box__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #85857f;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.text-box--voice .text-box__speaker {
+  color: #c94038;
+}
+
+.text-box__body {
+  flex: 1;
+  display: block;
+  min-height: 3.4em;
+  font-family: Georgia, 'Noto Serif KR', serif;
+  font-size: clamp(1rem, 2.5vw, 1.15rem);
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+.text-box--voice .text-box__body {
+  color: #ebe2df;
+  font-style: italic;
+}
+
+.text-box__cursor {
+  display: inline-block;
+  width: 0.48em;
+  height: 1em;
+  margin-left: 3px;
+  background: #c94038;
+  vertical-align: -0.12em;
+  animation: text-cursor-blink 0.75s steps(1) infinite;
+}
+
+.text-box__hint {
+  align-self: flex-end;
+  color: #696963;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+}
+
+@keyframes text-cursor-blink {
+  50% {
+    opacity: 0;
+  }
+}
