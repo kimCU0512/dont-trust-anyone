@@ -1,11 +1,122 @@
 :root {
   color: #f4f4f4;
   background: #090909;
-  font-family: system-ui, sans-serif;
+  font-family:
+    Pretendard, Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-synthesis: none;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+}
+
+button {
+  font: inherit;
+}
+
+.game {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 30%, rgb(74 81 76 / 18%), transparent 38%),
+    linear-gradient(145deg, #101311 0%, #050606 68%);
+}
+
+.screen {
+  position: relative;
+  width: min(100% - 40px, 760px);
+  min-height: min(620px, calc(100vh - 40px));
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 48px;
+  border: 1px solid rgb(220 232 222 / 12%);
+  background: rgb(7 9 8 / 76%);
+  box-shadow: 0 30px 90px rgb(0 0 0 / 55%);
+  text-align: center;
+}
+
+.screen::before {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border: 1px solid rgb(255 255 255 / 4%);
+  pointer-events: none;
+}
+
+.screen__eyebrow,
+.screen__code {
+  margin: 0;
+  color: #8f9c91;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+}
+
+.screen__title {
+  margin: 0;
+  color: #e8ece9;
+  font-family: Georgia, serif;
+  font-size: clamp(3rem, 10vw, 6.4rem);
+  font-weight: 500;
+  letter-spacing: -0.08em;
+  text-shadow: 0 0 28px rgb(194 210 199 / 18%);
+}
+
+.screen__heading {
+  margin: 0;
+  font-family: Georgia, serif;
+  font-size: clamp(2rem, 6vw, 3.8rem);
+  font-weight: 500;
+}
+
+.screen__placeholder {
+  width: min(100%, 520px);
+  aspect-ratio: 16 / 7;
+  border: 1px solid rgb(255 255 255 / 9%);
+  background:
+    linear-gradient(115deg, transparent 0 48%, rgb(255 255 255 / 3%) 49% 51%, transparent 52%),
+    #111512;
+}
+
+.screen__choices {
+  width: min(100%, 520px);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.screen__action {
+  min-width: 180px;
+  padding: 14px 24px;
+  border: 1px solid #aab7ad;
+  color: #0a0c0b;
+  background: #dbe2dc;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.screen__action:hover {
+  background: #ffffff;
+}
+
+.screen__action--secondary {
+  color: #dbe2dc;
+  background: transparent;
+}
+
+.screen--reset,
+.screen--ending-bad {
+  background: rgb(20 5 7 / 82%);
+}
+
+.screen--ending-true {
+  background: rgb(10 20 15 / 82%);
 }
