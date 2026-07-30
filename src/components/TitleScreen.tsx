@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { TITLE_BACKGROUND_URL, UI_STRINGS } from '../constants'
+import { resolveAssetUrl } from '../assets/assetUrl'
 
 interface TitleScreenProps {
   onStart: () => void
@@ -7,6 +8,7 @@ interface TitleScreenProps {
 
 export function TitleScreen({ onStart }: TitleScreenProps) {
   const [hasBackgroundError, setHasBackgroundError] = useState(false)
+  const backgroundUrl = resolveAssetUrl(TITLE_BACKGROUND_URL)
 
   return (
     <section className="screen screen--title" data-screen="P-00">
@@ -15,7 +17,7 @@ export function TitleScreen({ onStart }: TitleScreenProps) {
         {!hasBackgroundError && (
           <img
             className="title-backdrop__image"
-            src={TITLE_BACKGROUND_URL}
+            src={backgroundUrl}
             alt={UI_STRINGS.titleBackgroundAlt}
             onError={() => setHasBackgroundError(true)}
           />

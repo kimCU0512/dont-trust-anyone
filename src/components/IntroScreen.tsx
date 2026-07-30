@@ -4,6 +4,7 @@ import {
   DETECTOR_TRUTH_SYMBOL,
   UI_STRINGS,
 } from '../constants'
+import { resolveAssetUrl } from '../assets/assetUrl'
 import { toDisplayParagraphs } from '../data/contentText'
 import story from '../data/story.json'
 import { TextBox } from './TextBox'
@@ -49,7 +50,7 @@ export function IntroScreen({ onContinue }: IntroScreenProps) {
           </div>
           {!hasImageError && (
             <img
-              src={story.intro.imageUrl}
+              src={resolveAssetUrl(story.intro.imageUrl)}
               alt=""
               onError={() => setHasImageError(true)}
             />

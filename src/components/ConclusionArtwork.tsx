@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { resolveAssetUrl } from '../assets/assetUrl'
 
 type ConclusionArtworkVariant = 'reset' | 'true' | 'bad'
 
@@ -14,7 +15,7 @@ export function ConclusionArtwork({
   variant,
 }: ConclusionArtworkProps) {
   const [visibleImageUrl, setVisibleImageUrl] = useState<string | null>(
-    imageUrl,
+    resolveAssetUrl(imageUrl),
   )
 
   return (

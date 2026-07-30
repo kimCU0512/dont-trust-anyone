@@ -3,6 +3,7 @@ import {
   BGM_FADE_STEP_MS,
   BGM_VOLUME,
 } from '../constants'
+import { resolveAssetUrl } from '../assets/assetUrl'
 
 export interface BgmAudio {
   loop: boolean
@@ -25,7 +26,7 @@ function createBrowserAudio(source: string): BgmAudio {
 }
 
 export function getBgmSource(trackId: string): string {
-  return `/audio/${trackId}.mp3`
+  return resolveAssetUrl(`/audio/${trackId}.mp3`)
 }
 
 export class BgmManager {

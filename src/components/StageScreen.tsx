@@ -1,5 +1,6 @@
 import { useEffect, useReducer, useRef, useState } from 'react'
 import { STAGE_TRANSITION_MS, UI_STRINGS } from '../constants'
+import { resolveAssetUrl } from '../assets/assetUrl'
 import { toDisplayParagraphs, toDisplayText } from '../data/contentText'
 import story from '../data/story.json'
 import type { DetectorResult as DetectorResultType, StageId } from '../types'
@@ -48,7 +49,9 @@ export function StageScreen({
     stage.voiceLines.find((candidate) => candidate.id === currentVoiceLineId) ??
     stage.voiceLines[0]
   const [textStep, setTextStep] = useState<StageTextStep>('narration')
-  const [imageUrl, setImageUrl] = useState<string | null>(stage.imageUrl)
+  const [imageUrl, setImageUrl] = useState<string | null>(
+    resolveAssetUrl(stage.imageUrl),
+  )
   const [detectorAnimationResult, setDetectorAnimationResult] =
     useState<DetectorResultType | null>(null)
   const [detectorAnimating, setDetectorAnimating] = useState(false)
@@ -90,7 +93,9 @@ export function StageScreen({
 
   const handleImageError = () => {
     const stageFallback =
-      'fallbackImageUrl' in stage ? stage.fallbackImageUrl : null
+      'fallbackImageUrl' in stage && stage.fallbackImageUrl
+        ? resolveAssetUrl(stage.fallbackImageUrl)
+        : null
 
     if (stageFallback && imageUrl !== stageFallback) {
       setImageUrl(stageFallback)

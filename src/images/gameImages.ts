@@ -1,4 +1,5 @@
 import { TITLE_BACKGROUND_URL } from '../constants'
+import { resolveAssetUrl } from '../assets/assetUrl'
 import story from '../data/story.json'
 import type { GameState } from '../types'
 
@@ -18,13 +19,13 @@ function getStageImageUrls(stageIndex: number): string[] {
     imageUrls.push(stage.fallbackImageUrl)
   }
 
-  return imageUrls
+  return imageUrls.map((imageUrl) => resolveAssetUrl(imageUrl))
 }
 
 export function getUpcomingImageUrls(state: GameState): string[] {
   switch (state.gamePhase) {
     case 'title':
-      return [story.intro.imageUrl]
+      return [resolveAssetUrl(story.intro.imageUrl)]
     case 'intro':
       return getStageImageUrls(0)
     case 'stage':
@@ -36,11 +37,11 @@ export function getUpcomingImageUrls(state: GameState): string[] {
         story.reset.imageUrl,
         story.endings.true.imageUrl,
         story.endings.bad.imageUrl,
-      ]
+      ].map((imageUrl) => resolveAssetUrl(imageUrl))
     case 'reset':
       return getStageImageUrls(0)
     case 'endingTrue':
     case 'endingBad':
-      return [TITLE_BACKGROUND_URL]
+      return [resolveAssetUrl(TITLE_BACKGROUND_URL)]
   }
 }
