@@ -1664,7 +1664,7 @@ button {
   left: 50%;
   width: min(820px, calc(100% - 48px));
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 190px;
+  grid-template-columns: minmax(0, 1fr);
   padding: 18px;
   border: 1px solid rgb(201 64 56 / 58%);
   background: rgb(4 5 4 / 76%);
@@ -1696,6 +1696,17 @@ button {
   font-size: 0.84rem;
   backdrop-filter: blur(8px);
   animation: decision-choice-in 280ms ease-out both;
+}
+
+.stage-controls--decision .stage-detector {
+  min-height: 62px;
+  border-color: rgb(201 64 56 / 54%);
+  background: rgb(37 13 12 / 64%);
+}
+
+.stage-controls--decision .stage-detector--result-open {
+  border-color: rgb(225 222 210 / 48%);
+  background: rgb(12 12 11 / 82%);
 }
 
 .stage-controls--decision .stage-choice:nth-of-type(2) {

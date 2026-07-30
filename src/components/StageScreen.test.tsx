@@ -41,7 +41,7 @@ describe('StageScreen', () => {
     expect(html).toContain('현장 대조 중')
     expect(html).toContain('data-resource="hearts"')
     expect(html).toContain('disabled=""')
-    expect(html).toContain(UI_STRINGS.detectorWaitForVoice)
+    expect(html).not.toContain(UI_STRINGS.detectorAction)
   })
 
   it('layers dialogue inside the image before controls', () => {

@@ -102,7 +102,10 @@ export function StageScreen({
     investigationComplete &&
     activeObjectId === null &&
     interaction.selection === null
-  const choicesEnabled = baseChoicesEnabled && decisionReady
+  const choicesEnabled =
+    baseChoicesEnabled &&
+    decisionReady &&
+    detectorAnimationResult === null
   const activeObject = stage.objects.find(
     (object) => object.id === activeObjectId,
   )
@@ -149,6 +152,12 @@ export function StageScreen({
   }
 
   const handleUseDetector = () => {
+    if (detectorAnimationResult !== null) {
+      setDetectorAnimationResult(null)
+      setDetectorAnimating(false)
+      return
+    }
+
     if (!detectorEnabled) {
       return
     }
@@ -366,7 +375,6 @@ export function StageScreen({
                         result={detectorAnimationResult}
                         onComplete={() => {
                           setDetectorAnimating(false)
-                          setDetectorAnimationResult(null)
                         }}
                       />
                     )}
@@ -406,6 +414,39 @@ export function StageScreen({
                     {toDisplayText(choice.text)}
                   </button>
                 ))}
+                <button
+                  className={`stage-detector${detectorAnimationResult !== null ? ' stage-detector--result-open' : ''}`}
+                  type="button"
+                  disabled={
+                    detectorAnimationResult === null && !detectorEnabled
+                  }
+                  title={
+                    inputLocked
+                      ? UI_STRINGS.stageInteractionLocked
+                      : (detectorDisabledReason ?? undefined)
+                  }
+                  aria-expanded={detectorAnimationResult !== null}
+                  onClick={handleUseDetector}
+                >
+                  <span
+                    className="stage-detector__signal"
+                    aria-hidden="true"
+                  >
+                    {detectorAnimationResult !== null ? '×' : '⌁'}
+                  </span>
+                  <span>
+                    <strong>
+                      {detectorAnimationResult !== null
+                        ? UI_STRINGS.detectorClose
+                        : UI_STRINGS.detectorAction}
+                    </strong>
+                    <small>
+                      {detectorAnimationResult !== null
+                        ? UI_STRINGS.detectorSignalLocked
+                        : UI_STRINGS.detectorCost}
+                    </small>
+                  </span>
+                </button>
               </div>
             ) : (
               <p className="stage-investigation-status">
@@ -413,25 +454,6 @@ export function StageScreen({
                 기록 {discoveredObjectIds.length} / {stage.objects.length}
               </p>
             )}
-            <button
-              className="stage-detector"
-              type="button"
-              disabled={!detectorEnabled}
-              title={
-                inputLocked
-                  ? UI_STRINGS.stageInteractionLocked
-                  : (detectorDisabledReason ?? undefined)
-              }
-              onClick={handleUseDetector}
-            >
-              <span className="stage-detector__signal" aria-hidden="true">
-                ⌁
-              </span>
-              <span>
-                <strong>{UI_STRINGS.detectorAction}</strong>
-                <small>{UI_STRINGS.detectorCost}</small>
-              </span>
-            </button>
           </div>
         </div>
         <div className="stage-side-panel">

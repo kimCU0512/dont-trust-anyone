@@ -64,6 +64,7 @@ export const UI_STRINGS = {
   evidenceIndex: '발견한 증거 목록',
   evidenceVerified: '직접 확인한 기억',
   detectorAction: '판별 도구 사용',
+  detectorClose: '판별 결과 닫기',
   detectorCost: '탐지기 1회 소모',
   detectorWaitForVoice: '목소리 대사가 끝난 뒤 사용할 수 있습니다.',
   detectorAlreadyUsed: '이 스테이지에서는 이미 탐지기를 사용했습니다.',
