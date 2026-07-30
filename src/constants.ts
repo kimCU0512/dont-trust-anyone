@@ -11,7 +11,18 @@ export const TOTAL_STAGES: number = 5
 
 export const UI_STRINGS = {
   title: '아무도 믿지마',
+  titleEnglish: "DON'T TRUST ANYONE",
+  titleTagline: '목소리를 의심하고, 기억을 믿어라.',
+  titleChapterNumber: '01.',
+  titleChapter: '폐교 진입',
+  titleStageCount: '5 STAGES',
+  titleEndingCount: '2 ENDINGS',
+  titlePlayTime: '5–8 MIN',
   start: '시작하기',
+  bgm: 'BGM',
+  bgmOn: 'ON',
+  bgmOff: 'OFF',
+  titleBackgroundAlt: '어둠에 잠긴 폐교 외관',
   introHeading: '문이 잠겼다',
   continue: '계속',
   stage: '스테이지',
