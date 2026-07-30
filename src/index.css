@@ -132,6 +132,8 @@ button {
 
 .evidence-panel__index p {
   width: 100%;
+  height: 100vh;
+  height: 100dvh;
   margin: 3px 0 0;
   color: #686458;
   font-size: 0.48rem;
@@ -270,8 +272,9 @@ button {
 
 .screen {
   position: relative;
-  width: min(100% - 40px, 760px);
-  min-height: min(620px, calc(100vh - 40px));
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -279,11 +282,12 @@ button {
   justify-content: center;
   gap: 24px;
   padding: 48px;
-  border: 1px solid rgb(220 232 222 / 12%);
+  border: 0;
   background: rgb(7 9 8 / 76%);
-  box-shadow: 0 30px 90px rgb(0 0 0 / 55%);
+  box-shadow: none;
   text-align: center;
   overflow: hidden;
+  animation: unified-screen-in 520ms ease-out both;
 }
 
 .screen::before {
@@ -382,7 +386,8 @@ button {
 
 .screen--reset,
 .screen--ending {
-  min-height: min(720px, calc(100vh - 40px));
+  min-height: 100vh;
+  min-height: 100dvh;
   justify-content: flex-start;
   gap: 14px;
   padding: 32px 44px;
@@ -421,7 +426,8 @@ button {
 
 .conclusion-artwork {
   position: relative;
-  width: min(100%, 620px);
+  width: min(100%, 1040px);
+  max-height: 46vh;
   aspect-ratio: 16 / 6.4;
   flex: 0 0 auto;
   margin: 0;
@@ -540,7 +546,7 @@ button {
 }
 
 .conclusion-copy {
-  width: min(100%, 620px);
+  width: min(100%, 900px);
 }
 
 .conclusion-copy .text-box {
@@ -847,6 +853,19 @@ button {
   gap: 16px;
   padding: 30px;
   background: #090909;
+}
+
+.screen--intro .intro-scene {
+  flex: 1;
+  min-height: 260px;
+  animation: page-visual-in 640ms 80ms ease-out both;
+}
+
+.screen--intro > .text-box,
+.screen--intro .intro-tutorial,
+.screen--intro .intro-ready {
+  width: min(100%, 900px);
+  animation: page-panel-in 420ms 180ms ease-out both;
 }
 
 .intro-header {
@@ -1516,6 +1535,67 @@ button {
   text-shadow: 2px 0 #3d0000;
 }
 
+.stage-intrusion small {
+  max-width: 38rem;
+  display: grid;
+  gap: 7px;
+  margin-top: 18px;
+  padding: 12px 15px;
+  border-left: 2px solid #d1ad45;
+  color: #d5cdb8;
+  background: rgb(0 0 0 / 48%);
+  font-size: 0.72rem;
+  line-height: 1.65;
+  word-break: keep-all;
+}
+
+.stage-intrusion small strong {
+  color: #d1ad45;
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+}
+
+.choice-commit-veil {
+  position: absolute;
+  z-index: 50;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  color: #d8d5c9;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 4px,
+      rgb(255 255 255 / 3%) 5px
+    ),
+    #030303;
+  pointer-events: all;
+  animation: choice-commit-cover 720ms ease-in-out both;
+}
+
+.choice-commit-veil span {
+  color: #a43d36;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.28em;
+}
+
+.choice-commit-veil strong {
+  margin: 8px 0;
+  color: #d44840;
+  font-family: Georgia, serif;
+  font-size: clamp(4rem, 11vw, 8rem);
+  text-shadow: 3px 0 #6b1111;
+}
+
+.choice-commit-veil p {
+  margin: 0;
+  color: #706d66;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+}
+
 .stage-screen--intruding .stage-heading,
 .stage-screen--intruding .hud,
 .stage-screen--intruding .stage-controls {
@@ -1587,6 +1667,11 @@ button {
 .stage-controls--decision .stage-choice {
   min-height: 70px;
   font-size: 0.82rem;
+  animation: decision-choice-in 280ms ease-out both;
+}
+
+.stage-controls--decision .stage-choice:nth-of-type(2) {
+  animation-delay: 70ms;
 }
 
 .stage-choices {
@@ -1797,6 +1882,7 @@ button {
 .stage-result {
   position: relative;
   width: 100%;
+  animation: result-dialogue-in 360ms ease-out both;
 }
 
 .stage-result__verdict {
@@ -1918,9 +2004,64 @@ button {
   }
 }
 
+@keyframes unified-screen-in {
+  from {
+    opacity: 0;
+    filter: brightness(0.25);
+    transform: scale(1.012);
+  }
+}
+
+@keyframes page-visual-in {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes page-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+@keyframes choice-commit-cover {
+  0% {
+    opacity: 0;
+    clip-path: inset(50% 0);
+  }
+  18%,
+  72% {
+    opacity: 1;
+    clip-path: inset(0);
+  }
+  100% {
+    opacity: 0;
+    clip-path: inset(0);
+  }
+}
+
+@keyframes decision-choice-in {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+}
+
+@keyframes result-dialogue-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(4px);
+  }
+}
+
 @media (min-width: 1100px) {
   .screen {
-    width: min(calc(100% - 64px), 900px);
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
   }
 
   .screen--stage {
@@ -1948,6 +2089,7 @@ button {
 
   .screen {
     width: 100%;
+    height: auto;
     min-height: 100vh;
     min-height: 100dvh;
     gap: 18px;

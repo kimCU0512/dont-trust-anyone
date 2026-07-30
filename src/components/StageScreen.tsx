@@ -22,6 +22,8 @@ import {
 } from './stageScreenState'
 import type { StageTextStep } from './stageScreenState'
 
+const CHOICE_COMMIT_MS = 720
+
 interface StageScreenProps {
   stageId: StageId
   hearts: number
@@ -77,6 +79,7 @@ export function StageScreen({
   const [discoveredObjectIds, setDiscoveredObjectIds] = useState<string[]>([])
   const [intrusionSeen, setIntrusionSeen] = useState(false)
   const [sceneIntruding, setSceneIntruding] = useState(false)
+  const [selectionRevealReady, setSelectionRevealReady] = useState(false)
   const [interaction, dispatchInteraction] = useReducer(
     stageInteractionReducer,
     undefined,
@@ -84,6 +87,7 @@ export function StageScreen({
   )
   const transitionTimerRef = useRef<number | null>(null)
   const intrusionTimerRef = useRef<number | null>(null)
+  const selectionRevealTimerRef = useRef<number | null>(null)
   const narration = toDisplayParagraphs(stage.narration)
   const voiceText = `“${toDisplayText(voiceLine.text)}”`
   const inputLocked = interaction.selection !== null
@@ -119,6 +123,9 @@ export function StageScreen({
       }
       if (intrusionTimerRef.current !== null) {
         window.clearTimeout(intrusionTimerRef.current)
+      }
+      if (selectionRevealTimerRef.current !== null) {
+        window.clearTimeout(selectionRevealTimerRef.current)
       }
     },
     [],
@@ -156,6 +163,7 @@ export function StageScreen({
   }
 
   const handleSelectChoice = (choice: (typeof stage.choices)[number]) => {
+    setSelectionRevealReady(false)
     dispatchInteraction({
       type: 'SELECT_CHOICE',
       selection: {
@@ -166,6 +174,10 @@ export function StageScreen({
         ),
       },
     })
+    selectionRevealTimerRef.current = window.setTimeout(() => {
+      setSelectionRevealReady(true)
+      selectionRevealTimerRef.current = null
+    }, CHOICE_COMMIT_MS)
   }
 
   const handleInspectObject = (objectId: string) => {
@@ -317,7 +329,7 @@ export function StageScreen({
                     {UI_STRINGS.objectClose}
                   </button>
                 </div>
-              ) : interaction.selection ? (
+              ) : interaction.selection && selectionRevealReady ? (
                 <div
                   className={`stage-result stage-result--${interaction.selection.isCorrect ? 'correct' : 'wrong'}`}
                 >
@@ -383,6 +395,10 @@ export function StageScreen({
               <div className="stage-intrusion" role="status">
                 <span>{UI_STRINGS.intrusionLabel}</span>
                 <p>{stage.intrusionText}</p>
+                <small>
+                  <strong>기억 잔상 / 판별 단서</strong>
+                  {stage.intrusionHint}
+                </small>
               </div>
             )}
           </figure>
@@ -450,6 +466,13 @@ export function StageScreen({
           />
         </div>
       </div>
+      {interaction.selection && !selectionRevealReady && (
+        <div className="choice-commit-veil" role="status" aria-live="assertive">
+          <span>CHOICE LOCKED</span>
+          <strong>{interaction.selection.choiceId}</strong>
+          <p>기억이 선택을 기록하는 중</p>
+        </div>
+      )}
       {interaction.exiting && (
         <p className="stage-transition-lock" role="status">
           {UI_STRINGS.stageTransitioning}

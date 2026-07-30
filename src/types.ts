@@ -62,6 +62,7 @@ export interface Stage {
   bgmTrack: string
   narration: string[]
   intrusionText: string
+  intrusionHint: string
   voiceLines: VoiceLine[]
   objects: PointOfInterest[]
   choices: Choice[]
