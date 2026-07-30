@@ -7,6 +7,7 @@ export type GamePhase =
   | 'endingBad'
 
 export type StageId = 1 | 2 | 3 | 4 | 5
+export type DetectorResult = 'truth' | 'lie'
 
 export interface GameState {
   gamePhase: GamePhase

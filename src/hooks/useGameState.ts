@@ -1,20 +1,29 @@
 import { useReducer } from 'react'
 import type { Reducer } from 'react'
 import {
+  DETECTOR_HEART_COST,
   INITIAL_DETECTOR_USES,
   INITIAL_HEARTS,
   INITIAL_KEY_FRAGMENTS,
+  MIN_HEARTS_FOR_DETECTOR,
   TOTAL_STAGES,
   TRUE_END_KEY_FRAGMENT_THRESHOLD,
   WRONG_CHOICE_HEART_COST,
 } from '../constants'
 import story from '../data/story.json'
 import { validateStory } from '../data/validateStory'
-import type { GameState, Stage, StageId, StoryData } from '../types'
+import type {
+  DetectorResult,
+  GameState,
+  Stage,
+  StageId,
+  StoryData,
+} from '../types'
 
 export type GameAction =
   | { type: 'START_GAME' }
   | { type: 'COMPLETE_INTRO' }
+  | { type: 'USE_DETECTOR' }
   | { type: 'SELECT_CHOICE'; choiceId: string }
   | { type: 'RESTART_GAME' }
   | { type: 'RETURN_TO_TITLE' }
@@ -23,6 +32,9 @@ export interface UseGameStateResult {
   state: GameState
   startGame: () => void
   completeIntro: () => void
+  canUseDetector: boolean
+  detectorResult: DetectorResult | null
+  useDetector: () => DetectorResult | null
   selectChoice: (choiceId: string) => void
   restartGame: () => void
   returnToTitle: () => void
@@ -52,6 +64,43 @@ function getStage(data: StoryData, stageId: StageId): Stage {
   }
 
   return stage
+}
+
+export function canUseDetector(state: GameState): boolean {
+  return (
+    state.gamePhase === 'stage' &&
+    state.detectorUses >= 1 &&
+    state.hearts >= MIN_HEARTS_FOR_DETECTOR &&
+    !state.detectorUsedThisStage
+  )
+}
+
+function resolveDetectorResult(
+  state: GameState,
+  data: StoryData,
+): DetectorResult | null {
+  if (state.gamePhase !== 'stage') {
+    return null
+  }
+
+  const voiceLine = getStage(data, state.stageId).voiceLines.find(
+    (candidate) => candidate.id === state.currentVoiceLineId,
+  )
+
+  if (!voiceLine) {
+    return null
+  }
+
+  return voiceLine.isLie ? 'lie' : 'truth'
+}
+
+export function getDetectorResult(
+  state: GameState,
+  data: StoryData,
+): DetectorResult | null {
+  return state.detectorUsedThisStage
+    ? resolveDetectorResult(state, data)
+    : null
 }
 
 function pickVoiceLineId(stage: Stage, random: () => number): string {
@@ -100,6 +149,16 @@ export function createGameReducer(
       case 'COMPLETE_INTRO':
         return state.gamePhase === 'intro'
           ? enterStage(state, 1, data, random)
+          : state
+
+      case 'USE_DETECTOR':
+        return canUseDetector(state)
+          ? {
+              ...state,
+              hearts: state.hearts - DETECTOR_HEART_COST,
+              detectorUses: state.detectorUses - 1,
+              detectorUsedThisStage: true,
+            }
           : state
 
       case 'SELECT_CHOICE': {
@@ -171,11 +230,24 @@ const gameReducer = createGameReducer(storyData)
 
 export function useGameState(): UseGameStateResult {
   const [state, dispatch] = useReducer(gameReducer, createInitialGameState())
+  const detectorAvailable = canUseDetector(state)
+  const detectorResult = getDetectorResult(state, storyData)
 
   return {
     state,
     startGame: () => dispatch({ type: 'START_GAME' }),
     completeIntro: () => dispatch({ type: 'COMPLETE_INTRO' }),
+    canUseDetector: detectorAvailable,
+    detectorResult,
+    useDetector: () => {
+      if (!detectorAvailable) {
+        return null
+      }
+
+      const result = resolveDetectorResult(state, storyData)
+      dispatch({ type: 'USE_DETECTOR' })
+      return result
+    },
     selectChoice: (choiceId) =>
       dispatch({ type: 'SELECT_CHOICE', choiceId }),
     restartGame: () => dispatch({ type: 'RESTART_GAME' }),

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  DETECTOR_HEART_COST,
   INITIAL_DETECTOR_USES,
   INITIAL_HEARTS,
   INITIAL_KEY_FRAGMENTS,
@@ -7,7 +8,12 @@ import {
 import story from '../data/story.json'
 import { validateStory } from '../data/validateStory'
 import type { GameState, StoryData } from '../types'
-import { createGameReducer, createInitialGameState } from './useGameState'
+import {
+  canUseDetector,
+  createGameReducer,
+  createInitialGameState,
+  getDetectorResult,
+} from './useGameState'
 
 validateStory(story)
 const storyData: StoryData = story
@@ -200,5 +206,59 @@ describe('useGameState reducer', () => {
     )
 
     expect(result).toEqual(createInitialGameState())
+  })
+
+  it('uses the detector by spending one heart and one use', () => {
+    const reducer = createGameReducer(storyData)
+    const result = reducer(stageState(), { type: 'USE_DETECTOR' })
+
+    expect(result).toMatchObject({
+      hearts: INITIAL_HEARTS - DETECTOR_HEART_COST,
+      detectorUses: INITIAL_DETECTOR_USES - 1,
+      detectorUsedThisStage: true,
+    })
+    expect(getDetectorResult(result, storyData)).toBe('truth')
+  })
+
+  it('returns a lie result for a lying voice line', () => {
+    const reducer = createGameReducer(storyData)
+    const result = reducer(
+      stageState({
+        stageId: 2,
+        currentVoiceLineId: 's2-v1',
+      }),
+      { type: 'USE_DETECTOR' },
+    )
+
+    expect(getDetectorResult(result, storyData)).toBe('lie')
+  })
+
+  it('does not expose a result before the detector is used', () => {
+    expect(getDetectorResult(stageState(), storyData)).toBeNull()
+  })
+
+  it('disables the detector when only one heart remains', () => {
+    const reducer = createGameReducer(storyData)
+    const state = stageState({ hearts: 1 })
+
+    expect(canUseDetector(state)).toBe(false)
+    expect(reducer(state, { type: 'USE_DETECTOR' })).toBe(state)
+  })
+
+  it('disables the detector when no uses remain', () => {
+    const reducer = createGameReducer(storyData)
+    const state = stageState({ detectorUses: 0 })
+
+    expect(canUseDetector(state)).toBe(false)
+    expect(reducer(state, { type: 'USE_DETECTOR' })).toBe(state)
+  })
+
+  it('prevents using the detector twice in one stage', () => {
+    const reducer = createGameReducer(storyData)
+    const firstUse = reducer(stageState(), { type: 'USE_DETECTOR' })
+    const secondUse = reducer(firstUse, { type: 'USE_DETECTOR' })
+
+    expect(canUseDetector(firstUse)).toBe(false)
+    expect(secondUse).toBe(firstUse)
   })
 })
