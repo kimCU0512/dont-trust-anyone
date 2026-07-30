@@ -6,7 +6,7 @@
 
 - [x] T-01 Vite React+TS 프로젝트 생성, ESLint/Prettier/Vitest 설정, `verify.sh` 실행 가능 상태 확인
   - 완료 기준: 빈 App이 빌드되고 verify.sh 4단계(lint/tsc/test/build)가 모두 통과
-- [ ] T-02 `src/constants.ts` 작성 — 하트 3, 판별 도구 2, 진엔딩 열쇠조각 기준 3, 스테이지 수 5 등 게임 수치 상수화
+- [x] T-02 `src/constants.ts` 작성 — 하트 3, 판별 도구 2, 진엔딩 열쇠조각 기준 3, 스테이지 수 5 등 게임 수치 상수화
   - 완료 기준: 상수 export + 타입 지정, 다른 파일에서 import 가능
 
 ## Phase 1 — 데이터 & 타입

@@ -1,0 +1,10 @@
+export const INITIAL_HEARTS: number = 3
+export const MAX_HEARTS: number = 3
+export const INITIAL_KEY_FRAGMENTS: number = 0
+export const MAX_KEY_FRAGMENTS: number = 5
+export const INITIAL_DETECTOR_USES: number = 2
+export const MIN_HEARTS_FOR_DETECTOR: number = 2
+export const DETECTOR_HEART_COST: number = 1
+export const WRONG_CHOICE_HEART_COST: number = 1
+export const TRUE_END_KEY_FRAGMENT_THRESHOLD: number = 3
+export const TOTAL_STAGES: number = 5
