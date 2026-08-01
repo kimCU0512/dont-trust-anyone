@@ -655,14 +655,20 @@ button {
   position: fixed;
   top: 22px;
   right: 24px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  display: grid;
+  gap: 5px;
   z-index: 20;
   color: #9ba69d;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.16em;
+}
+
+.game-audio-control__row {
+  display: grid;
+  grid-template-columns: 32px 48px minmax(100px, 1fr);
+  align-items: center;
+  gap: 10px;
 }
 
 .game-audio-control button {
@@ -1114,7 +1120,6 @@ button {
   position: static;
   width: 100%;
   min-height: 44px;
-  justify-content: flex-start;
   padding: 7px 10px;
   border: 1px solid rgb(203 190 150 / 20%);
   background: rgb(5 6 5 / 88%);
@@ -2362,6 +2367,11 @@ button {
 
   .stage-side-panel .game-audio-control__label {
     display: none;
+  }
+
+  .stage-side-panel .game-audio-control__row {
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 7px;
   }
 
   .stage-side-panel .game-audio-control button {

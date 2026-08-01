@@ -27,6 +27,10 @@ describe('StageScreen', () => {
         evidenceEntries={[]}
         bgmEnabled
         bgmVolume={0.45}
+        sfxEnabled
+        sfxVolume={0.6}
+        onToggleSfx={() => undefined}
+        onSfxVolumeChange={() => undefined}
         onToggleBgm={() => undefined}
         onBgmVolumeChange={() => undefined}
         onUseDetector={() => null}
@@ -57,6 +61,10 @@ describe('StageScreen', () => {
         evidenceEntries={[]}
         bgmEnabled
         bgmVolume={0.45}
+        sfxEnabled
+        sfxVolume={0.6}
+        onToggleSfx={() => undefined}
+        onSfxVolumeChange={() => undefined}
         onToggleBgm={() => undefined}
         onBgmVolumeChange={() => undefined}
         onUseDetector={() => null}

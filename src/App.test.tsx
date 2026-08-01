@@ -31,6 +31,10 @@ describe('GameScreen', () => {
           bgmVolume={0.45}
           onToggleBgm={() => undefined}
           onBgmVolumeChange={() => undefined}
+          sfxEnabled
+          sfxVolume={0.6}
+          onToggleSfx={() => undefined}
+          onSfxVolumeChange={() => undefined}
           onUseDetector={() => null}
           onSelectChoice={() => undefined}
           onDiscoverEvidence={() => undefined}

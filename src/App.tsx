@@ -8,6 +8,7 @@ import { StageScreen } from './components/StageScreen'
 import { TitleScreen } from './components/TitleScreen'
 import { useGameState } from './hooks/useGameState'
 import { useBgm } from './hooks/useBgm'
+import { useSfx } from './hooks/useSfx'
 import story from './data/story.json'
 import { getUpcomingImageUrls } from './images/gameImages'
 import { useImagePreload } from './hooks/useImagePreload'
@@ -26,6 +27,10 @@ interface GameScreenProps {
   bgmVolume: number
   onToggleBgm: () => void
   onBgmVolumeChange: (volume: number) => void
+  sfxEnabled: boolean
+  sfxVolume: number
+  onToggleSfx: () => void
+  onSfxVolumeChange: (volume: number) => void
   onDiscoverEvidence: (entry: EvidenceEntry) => void
   onRestart: () => void
   onReturnToTitle: () => void
@@ -43,6 +48,10 @@ export function GameScreen({
   bgmVolume,
   onToggleBgm,
   onBgmVolumeChange,
+  sfxEnabled,
+  sfxVolume,
+  onToggleSfx,
+  onSfxVolumeChange,
   onDiscoverEvidence,
   onRestart,
   onReturnToTitle,
@@ -68,6 +77,10 @@ export function GameScreen({
           bgmVolume={bgmVolume}
           onToggleBgm={onToggleBgm}
           onBgmVolumeChange={onBgmVolumeChange}
+          sfxEnabled={sfxEnabled}
+          sfxVolume={sfxVolume}
+          onToggleSfx={onToggleSfx}
+          onSfxVolumeChange={onSfxVolumeChange}
           onUseDetector={onUseDetector}
           onSelectChoice={onSelectChoice}
           onDiscoverEvidence={onDiscoverEvidence}
@@ -96,6 +109,7 @@ function App() {
   } = useGameState()
   const bgmScene = getGameBgmScene(state)
   const bgm = useBgm(bgmScene.trackId, bgmScene.sceneKey)
+  const sfx = useSfx()
   useImagePreload(getUpcomingImageUrls(state))
 
   const startGameWithBgm = () => {
@@ -122,6 +136,10 @@ function App() {
           volume={bgm.volume}
           onToggle={bgm.toggle}
           onVolumeChange={bgm.setVolume}
+          sfxEnabled={sfx.isEnabled}
+          sfxVolume={sfx.volume}
+          onToggleSfx={sfx.toggle}
+          onSfxVolumeChange={sfx.setVolume}
         />
       )}
       <GameScreen
@@ -134,6 +152,10 @@ function App() {
         bgmVolume={bgm.volume}
         onToggleBgm={bgm.toggle}
         onBgmVolumeChange={bgm.setVolume}
+        sfxEnabled={sfx.isEnabled}
+        sfxVolume={sfx.volume}
+        onToggleSfx={sfx.toggle}
+        onSfxVolumeChange={sfx.setVolume}
         onUseDetector={useDetector}
         onSelectChoice={selectChoice}
         onDiscoverEvidence={(entry) =>

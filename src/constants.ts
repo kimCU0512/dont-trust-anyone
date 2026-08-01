@@ -15,6 +15,7 @@ export const STAGE_TRANSITION_MS: number = 420
 export const BGM_FADE_DURATION_MS: number = 600
 export const BGM_FADE_STEP_MS: number = 50
 export const BGM_VOLUME: number = 0.45
+export const SFX_VOLUME: number = 0.6
 export const TITLE_BACKGROUND_URL = '/images/stage5_hallway.png'
 export const DETECTOR_TRUTH_SYMBOL = '.....'
 export const DETECTOR_LIE_SYMBOL = '.|.|.|.'
@@ -33,6 +34,8 @@ export const UI_STRINGS = {
   bgmOn: 'ON',
   bgmOff: 'OFF',
   bgmToggleLabel: '배경음악 켜기 또는 끄기',
+  sfx: 'SFX',
+  sfxToggleLabel: '효과음 켜기 또는 끄기',
   titleBackgroundAlt: '어둠에 잠긴 폐교 외관',
   textBoxNarration: '상황 서술',
   textBoxVoice: '목소리',

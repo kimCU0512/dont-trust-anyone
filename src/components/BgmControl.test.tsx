@@ -14,11 +14,17 @@ describe('BgmControl', () => {
         volume={0.45}
         onToggle={() => undefined}
         onVolumeChange={() => undefined}
+        sfxEnabled
+        sfxVolume={0.6}
+        onToggleSfx={() => undefined}
+        onSfxVolumeChange={() => undefined}
       />,
     )
 
     expect(html).toContain(`aria-pressed="${isEnabled}"`)
     expect(html).toContain(`>${label}</button>`)
     expect(html).toContain('value="45"')
+    expect(html).toContain('aria-label="효과음 볼륨"')
+    expect(html).toContain('value="60"')
   })
 })

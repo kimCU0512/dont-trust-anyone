@@ -37,6 +37,10 @@ interface StageScreenProps {
   bgmVolume: number
   onToggleBgm: () => void
   onBgmVolumeChange: (volume: number) => void
+  sfxEnabled: boolean
+  sfxVolume: number
+  onToggleSfx: () => void
+  onSfxVolumeChange: (volume: number) => void
   onUseDetector: () => DetectorResultType | null
   onSelectChoice: (choiceId: string) => void
   onDiscoverEvidence: (entry: EvidenceEntry) => void
@@ -53,6 +57,10 @@ export function StageScreen({
   evidenceEntries,
   bgmEnabled,
   bgmVolume,
+  sfxEnabled,
+  sfxVolume,
+  onToggleSfx,
+  onSfxVolumeChange,
   onToggleBgm,
   onBgmVolumeChange,
   onUseDetector,
@@ -473,6 +481,10 @@ export function StageScreen({
             volume={bgmVolume}
             onToggle={onToggleBgm}
             onVolumeChange={onBgmVolumeChange}
+            sfxEnabled={sfxEnabled}
+            sfxVolume={sfxVolume}
+            onToggleSfx={onToggleSfx}
+            onSfxVolumeChange={onSfxVolumeChange}
           />
           <EvidenceJournal
             entries={evidenceEntries}
