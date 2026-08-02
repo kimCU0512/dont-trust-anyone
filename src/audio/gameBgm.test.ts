@@ -8,8 +8,8 @@ describe('game BGM scene selection', () => {
     ['title', null],
     ['intro', 'intro'],
     ['reset', null],
-    ['endingTrue', 'ending'],
-    ['endingBad', 'ending'],
+    ['endingTrue', 'true_E'],
+    ['endingBad', 'bad_E'],
   ] as const)('maps %s to its story track', (gamePhase, trackId) => {
     expect(
       getGameBgmScene({
