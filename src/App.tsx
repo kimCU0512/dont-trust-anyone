@@ -32,7 +32,7 @@ interface GameScreenProps {
   sfxVolume: number
   onToggleSfx: () => void
   onSfxVolumeChange: (volume: number) => void
-  onPlaySfx: (id: SfxId) => void
+  onPlaySfx?: (id: SfxId) => void
   onDiscoverEvidence: (entry: EvidenceEntry) => void
   onRestart: () => void
   onReturnToTitle: () => void
@@ -54,7 +54,7 @@ export function GameScreen({
   sfxVolume,
   onToggleSfx,
   onSfxVolumeChange,
-  onPlaySfx,
+  onPlaySfx = () => undefined,
   onDiscoverEvidence,
   onRestart,
   onReturnToTitle,
