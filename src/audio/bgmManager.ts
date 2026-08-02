@@ -26,6 +26,11 @@ function createBrowserAudio(source: string): BgmAudio {
 }
 
 export function getBgmSource(trackId: string): string {
+  if (trackId === 'bad_E') {
+    return resolveAssetUrl(
+      '/images/audio/bgm/bad_E/dragon-studio-spooky-transition-401719.mp3',
+    )
+  }
   return resolveAssetUrl(`/audio/${trackId}.mp3`)
 }
 
@@ -147,7 +152,7 @@ export class BgmManager {
     this.audio?.pause()
 
     const audio = this.audioFactory(getBgmSource(trackId))
-    audio.loop = true
+    audio.loop = trackId !== 'bad_E'
     audio.preload = 'auto'
     audio.volume = 0
     this.audio = audio

@@ -1,16 +1,37 @@
+import { resolveAssetUrl } from '../assets/assetUrl'
 import { SFX_VOLUME } from '../constants'
 
-type AudioContextFactory = () => AudioContext
+export const SFX_SOURCES = {
+  click: '/images/audio/sfx/click/dragon-studio-mouse-click-4-393911.mp3',
+  correct:
+    '/images/audio/sfx/correct/freesound_community-coins-falling-013-36967.mp3',
+  detector:
+    '/images/audio/sfx/detector/freesound_community-smoke-detector-90594.mp3',
+  incorrect:
+    '/images/audio/sfx/incorrect/dragon-studio-violent-sword-slice-2-393841.mp3',
+  moving:
+    '/images/audio/sfx/move/moving/dragon-studio-footsteps-on-wood-397989.mp3',
+  start:
+    '/images/audio/sfx/move/start/freesound_community-school-door-with-metal-latch-96124.mp3',
+} as const
 
-const createBrowserAudioContext: AudioContextFactory = () =>
-  new window.AudioContext()
+export type SfxId = keyof typeof SFX_SOURCES
+
+export interface SfxAudio {
+  loop: boolean
+  volume: number
+  currentTime: number
+  play: () => Promise<void> | void
+}
+
+type AudioFactory = (source: string) => SfxAudio
+const createBrowserAudio: AudioFactory = (source) => new Audio(source)
 
 export class SfxManager {
-  private context: AudioContext | null = null
   private enabled = true
   private volume = SFX_VOLUME
 
-  constructor(private readonly contextFactory = createBrowserAudioContext) {}
+  constructor(private readonly audioFactory = createBrowserAudio) {}
 
   setEnabled(enabled: boolean): void {
     this.enabled = enabled
@@ -20,31 +41,23 @@ export class SfxManager {
     this.volume = Math.min(1, Math.max(0, volume))
   }
 
-  playClick(): void {
+  play(id: SfxId): void {
     if (!this.enabled || this.volume === 0 || typeof window === 'undefined') {
       return
     }
 
     try {
-      const context = this.context ?? this.contextFactory()
-      this.context = context
-      void context.resume()
+      const audio = this.audioFactory(resolveAssetUrl(SFX_SOURCES[id]))
+      audio.loop = false
+      audio.volume = this.volume
+      audio.currentTime = 0
+      const result = audio.play()
 
-      const oscillator = context.createOscillator()
-      const gain = context.createGain()
-      const now = context.currentTime
-
-      oscillator.type = 'sine'
-      oscillator.frequency.setValueAtTime(420, now)
-      oscillator.frequency.exponentialRampToValueAtTime(260, now + 0.055)
-      gain.gain.setValueAtTime(this.volume * 0.12, now)
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06)
-      oscillator.connect(gain)
-      gain.connect(context.destination)
-      oscillator.start(now)
-      oscillator.stop(now + 0.065)
+      if (result && 'catch' in result) {
+        void result.catch(() => undefined)
+      }
     } catch {
-      // Audio support is optional; interaction must never block the game.
+      // Missing files or unsupported audio must never block interaction.
     }
   }
 }

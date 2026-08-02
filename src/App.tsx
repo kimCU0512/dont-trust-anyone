@@ -13,6 +13,7 @@ import story from './data/story.json'
 import { getUpcomingImageUrls } from './images/gameImages'
 import { useImagePreload } from './hooks/useImagePreload'
 import type { DetectorResult, EvidenceEntry, GameState } from './types'
+import type { SfxId } from './audio/sfxManager'
 import { addEvidence } from './components/evidenceJournalState'
 
 interface GameScreenProps {
@@ -31,6 +32,7 @@ interface GameScreenProps {
   sfxVolume: number
   onToggleSfx: () => void
   onSfxVolumeChange: (volume: number) => void
+  onPlaySfx: (id: SfxId) => void
   onDiscoverEvidence: (entry: EvidenceEntry) => void
   onRestart: () => void
   onReturnToTitle: () => void
@@ -52,6 +54,7 @@ export function GameScreen({
   sfxVolume,
   onToggleSfx,
   onSfxVolumeChange,
+  onPlaySfx,
   onDiscoverEvidence,
   onRestart,
   onReturnToTitle,
@@ -81,6 +84,7 @@ export function GameScreen({
           sfxVolume={sfxVolume}
           onToggleSfx={onToggleSfx}
           onSfxVolumeChange={onSfxVolumeChange}
+          onPlaySfx={onPlaySfx}
           onUseDetector={onUseDetector}
           onSelectChoice={onSelectChoice}
           onDiscoverEvidence={onDiscoverEvidence}
@@ -114,6 +118,7 @@ function App() {
 
   const startGameWithBgm = () => {
     setEvidenceEntries([])
+    sfx.play('start')
     bgm.unlock(story.intro.bgmTrack, 'intro')
     startGame()
   }
@@ -156,6 +161,7 @@ function App() {
         sfxVolume={sfx.volume}
         onToggleSfx={sfx.toggle}
         onSfxVolumeChange={sfx.setVolume}
+        onPlaySfx={sfx.play}
         onUseDetector={useDetector}
         onSelectChoice={selectChoice}
         onDiscoverEvidence={(entry) =>

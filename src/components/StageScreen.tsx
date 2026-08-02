@@ -1,5 +1,9 @@
 import { useEffect, useReducer, useRef, useState } from 'react'
-import { STAGE_TRANSITION_MS, UI_STRINGS } from '../constants'
+import {
+  STAGE_TRANSITION_MS,
+  UI_STRINGS,
+  WRONG_CHOICE_HEART_COST,
+} from '../constants'
 import { resolveAssetUrl } from '../assets/assetUrl'
 import { toDisplayParagraphs, toDisplayText } from '../data/contentText'
 import story from '../data/story.json'
@@ -21,6 +25,7 @@ import {
   stageInteractionReducer,
 } from './stageScreenState'
 import type { StageTextStep } from './stageScreenState'
+import type { SfxId } from '../audio/sfxManager'
 
 const CHOICE_COMMIT_MS = 720
 
@@ -41,6 +46,7 @@ interface StageScreenProps {
   sfxVolume: number
   onToggleSfx: () => void
   onSfxVolumeChange: (volume: number) => void
+  onPlaySfx?: (id: SfxId) => void
   onUseDetector: () => DetectorResultType | null
   onSelectChoice: (choiceId: string) => void
   onDiscoverEvidence: (entry: EvidenceEntry) => void
@@ -61,6 +67,7 @@ export function StageScreen({
   sfxVolume,
   onToggleSfx,
   onSfxVolumeChange,
+  onPlaySfx = () => undefined,
   onToggleBgm,
   onBgmVolumeChange,
   onUseDetector,
@@ -173,12 +180,18 @@ export function StageScreen({
     const result = onUseDetector()
 
     if (result) {
+      onPlaySfx('detector')
       setDetectorAnimationResult(result)
       setDetectorAnimating(true)
     }
   }
 
   const handleSelectChoice = (choice: (typeof stage.choices)[number]) => {
+    if (choice.isCorrect) {
+      onPlaySfx('correct')
+    } else if (hearts > 0 && WRONG_CHOICE_HEART_COST > 0) {
+      onPlaySfx('incorrect')
+    }
     setSelectionRevealReady(false)
     dispatchInteraction({
       type: 'SELECT_CHOICE',
@@ -202,6 +215,7 @@ export function StageScreen({
     }
 
     setActiveObjectId(objectId)
+    onPlaySfx('click')
     const inspectedObject = stage.objects.find(
       (object) => object.id === objectId,
     )
@@ -239,6 +253,9 @@ export function StageScreen({
     }
 
     dispatchInteraction({ type: 'BEGIN_TRANSITION' })
+    if (stageId < 5) {
+      onPlaySfx('moving')
+    }
     transitionTimerRef.current = window.setTimeout(() => {
       onSelectChoice(interaction.selection?.choiceId ?? '')
     }, STAGE_TRANSITION_MS)
