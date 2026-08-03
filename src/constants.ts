@@ -22,13 +22,9 @@ export const DETECTOR_LIE_SYMBOL = '.|.|.|.'
 
 export const UI_STRINGS = {
   title: '아무도 믿지마',
-  titleEnglish: "DON'T TRUST ANYONE",
   titleTagline: '목소리를 의심하고, 기억을 믿어라.',
   titleChapterNumber: '01.',
   titleChapter: '폐교 진입',
-  titleStageCount: '5 STAGES',
-  titleEndingCount: '2 ENDINGS',
-  titlePlayTime: '5–8 MIN',
   start: '시작하기',
   bgm: 'BGM',
   bgmOn: 'ON',
@@ -57,6 +53,7 @@ export const UI_STRINGS = {
   stageImageAltSuffix: '의 현재 모습',
   stageNarrationComplete: '주변을 확인했다',
   stageVoiceReady: '목소리를 판단하세요',
+  stageDialogueSkip: '대화 건너뛰기',
   stageExploreHint: '빛나는 지점을 눌러 단서를 조사하세요',
   objectDiscovered: '단서 확인',
   objectClose: '조사 마치기',

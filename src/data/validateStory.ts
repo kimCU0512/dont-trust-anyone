@@ -119,6 +119,16 @@ function validateStage(value: unknown, index: number): Stage {
     (paragraph, paragraphIndex) =>
       requireString(paragraph, `${path}.narration[${paragraphIndex}]`),
   )
+  const intrusionTexts = requireArray(
+    stage.intrusionTexts,
+    `${path}.intrusionTexts`,
+  ).map((text, textIndex) =>
+    requireString(text, `${path}.intrusionTexts[${textIndex}]`),
+  )
+
+  if (intrusionTexts.length < 2) {
+    fail(`${path}.intrusionTexts must contain at least two variants`)
+  }
   const voiceLines = requireArray(stage.voiceLines, `${path}.voiceLines`).map(
     (voiceLine, voiceLineIndex) =>
       validateVoiceLine(voiceLine, `${path}.voiceLines[${voiceLineIndex}]`, id),
@@ -132,14 +142,20 @@ function validateStage(value: unknown, index: number): Stage {
       validatePointOfInterest(object, `${path}.objects[${objectIndex}]`),
   )
   const objectIds = new Set(objects.map((object) => object.id))
+  const choiceIds = new Set(choices.map((choice) => choice.id))
 
   if (objects.length !== 3 || objectIds.size !== objects.length) {
     fail(`${path}.objects must contain exactly three unique objects`)
   }
-  const correctChoiceCount = choices.filter((choice) => choice.isCorrect).length
+  if (choiceIds.size !== choices.length) {
+    fail(`${path}.choices must have unique ids`)
+  }
 
-  if (correctChoiceCount !== 1) {
-    fail(`${path}.choices must contain exactly one correct choice`)
+  const correctChoiceCount = choices.filter((choice) => choice.isCorrect).length
+  const wrongChoiceCount = choices.length - correctChoiceCount
+
+  if (correctChoiceCount < 2 || wrongChoiceCount < 3) {
+    fail(`${path}.choices must contain at least two correct and three wrong choices`)
   }
 
   const resultText = requireRecord(stage.resultText, `${path}.resultText`)
@@ -150,7 +166,7 @@ function validateStage(value: unknown, index: number): Stage {
     imageUrl: requireString(stage.imageUrl, `${path}.imageUrl`),
     bgmTrack: requireString(stage.bgmTrack, `${path}.bgmTrack`),
     narration,
-    intrusionText: requireString(stage.intrusionText, `${path}.intrusionText`),
+    intrusionTexts,
     voiceLines,
     objects,
     choices,

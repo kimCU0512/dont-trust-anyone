@@ -11,6 +11,8 @@ export interface GameState {
   keyFragments: number
   detectorUses: number
   currentVoiceLineId: string
+  currentChoiceIds: string[]
+  currentIntrusionText: string
   detectorUsedThisStage: boolean
   textCursor: number
 }
@@ -61,7 +63,7 @@ export interface Stage {
   imageUrl: string
   bgmTrack: string
   narration: string[]
-  intrusionText: string
+  intrusionTexts: string[]
   voiceLines: VoiceLine[]
   objects: PointOfInterest[]
   choices: Choice[]

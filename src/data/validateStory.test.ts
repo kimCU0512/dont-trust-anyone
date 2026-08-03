@@ -27,12 +27,12 @@ describe('validateStory', () => {
     expect(() => validateStory(invalidStory)).toThrow(/exactly 5/)
   })
 
-  it('rejects a stage with more than one correct choice', () => {
+  it('rejects a stage without enough correct choice variants', () => {
     const invalidStory = copyStory()
-    invalidStory.stages[0].choices[1].isCorrect = true
+    invalidStory.stages[0].choices[3].isCorrect = false
 
     expect(() => validateStory(invalidStory)).toThrow(
-      /exactly one correct choice/,
+      /at least two correct and three wrong choices/,
     )
   })
 

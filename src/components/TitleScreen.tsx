@@ -30,7 +30,6 @@ export function TitleScreen({ onStart }: TitleScreenProps) {
           <span>{UI_STRINGS.titleChapterNumber}</span>
           {UI_STRINGS.titleChapter}
         </div>
-        <p className="screen__eyebrow">{UI_STRINGS.titleEnglish}</p>
         <h1 className="screen__title">{UI_STRINGS.title}</h1>
         <span className="title-content__rule" aria-hidden="true" />
         <p className="title-content__tagline">{UI_STRINGS.titleTagline}</p>
@@ -41,11 +40,6 @@ export function TitleScreen({ onStart }: TitleScreenProps) {
         >
           {UI_STRINGS.start}
         </button>
-        <div className="title-content__facts" aria-label="게임 정보">
-          <span>{UI_STRINGS.titleStageCount}</span>
-          <span>{UI_STRINGS.titleEndingCount}</span>
-          <span>{UI_STRINGS.titlePlayTime}</span>
-        </div>
       </div>
 
       <p className="title-meta">NAN 2026 · TEXT HORROR ADVENTURE</p>

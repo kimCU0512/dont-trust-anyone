@@ -26,7 +26,7 @@ describe('EvidenceJournal', () => {
 
     expect(html).toContain(UI_STRINGS.evidenceJournal)
     expect(html).toContain(`1 / ${MAX_EVIDENCE_COUNT}`)
-    expect(html).toContain(evidence.deduction)
+    expect(html).not.toContain(evidence.deduction)
     expect(html).toContain('창문은 안전해')
   })
 })

@@ -22,6 +22,9 @@ import {
   areStageChoicesEnabled,
   createStageInteractionState,
   getDetectorDisabledReason,
+  isDetectorRevealedCorrectChoice,
+  isStageDecisionReady,
+  shouldShowMemoryIntrusion,
   stageInteractionReducer,
 } from './stageScreenState'
 import type { StageTextStep } from './stageScreenState'
@@ -35,6 +38,8 @@ interface StageScreenProps {
   keyFragments: number
   detectorUses: number
   currentVoiceLineId: string
+  currentChoiceIds: string[]
+  currentIntrusionText: string
   detectorUsedThisStage: boolean
   detectorAvailable: boolean
   evidenceEntries: EvidenceEntry[]
@@ -58,6 +63,8 @@ export function StageScreen({
   keyFragments,
   detectorUses,
   currentVoiceLineId,
+  currentChoiceIds,
+  currentIntrusionText,
   detectorUsedThisStage,
   detectorAvailable,
   evidenceEntries,
@@ -83,6 +90,11 @@ export function StageScreen({
   const voiceLine =
     stage.voiceLines.find((candidate) => candidate.id === currentVoiceLineId) ??
     stage.voiceLines[0]
+  const stageChoices = currentChoiceIds
+    .map((choiceId) =>
+      stage.choices.find((candidate) => candidate.id === choiceId),
+    )
+    .filter((choice): choice is (typeof stage.choices)[number] => Boolean(choice))
   const [textStep, setTextStep] = useState<StageTextStep>('narration')
   const [imageUrl, setImageUrl] = useState<string | null>(
     resolveAssetUrl(stage.imageUrl),
@@ -113,10 +125,12 @@ export function StageScreen({
   )
   const investigationComplete =
     discoveredObjectIds.length === stage.objects.length
-  const decisionReady =
-    investigationComplete &&
-    activeObjectId === null &&
-    interaction.selection === null
+  const decisionReady = isStageDecisionReady(
+    investigationComplete,
+    activeObjectId !== null,
+    interaction.selection !== null,
+    sceneIntruding,
+  )
   const choicesEnabled =
     baseChoicesEnabled &&
     decisionReady &&
@@ -150,6 +164,12 @@ export function StageScreen({
 
   const advanceText = () => {
     setTextStep((currentStep) => advanceStageTextStep(currentStep))
+  }
+
+  const skipDialogue = () => {
+    if (textStep !== 'choice' && !interactionLocked) {
+      setTextStep('choice')
+    }
   }
 
   const handleImageError = () => {
@@ -192,7 +212,7 @@ export function StageScreen({
     } else if (hearts > 0 && WRONG_CHOICE_HEART_COST > 0) {
       onPlaySfx('incorrect')
     }
-    setSelectionRevealReady(false)
+    setSelectionRevealReady(choice.isCorrect)
     dispatchInteraction({
       type: 'SELECT_CHOICE',
       selection: {
@@ -203,10 +223,12 @@ export function StageScreen({
         ),
       },
     })
-    selectionRevealTimerRef.current = window.setTimeout(() => {
-      setSelectionRevealReady(true)
-      selectionRevealTimerRef.current = null
-    }, CHOICE_COMMIT_MS)
+    if (!choice.isCorrect) {
+      selectionRevealTimerRef.current = window.setTimeout(() => {
+        setSelectionRevealReady(true)
+        selectionRevealTimerRef.current = null
+      }, CHOICE_COMMIT_MS)
+    }
   }
 
   const handleInspectObject = (objectId: string) => {
@@ -239,7 +261,13 @@ export function StageScreen({
   const handleCloseInspection = () => {
     setActiveObjectId(null)
 
-    if (intrusionSeen || discoveredObjectIds.length < 2) {
+    if (
+      !shouldShowMemoryIntrusion(
+        discoveredObjectIds.length,
+        stage.objects.length,
+        intrusionSeen,
+      )
+    ) {
       return
     }
 
@@ -328,6 +356,16 @@ export function StageScreen({
               <span>LOCATION</span>
               {stage.name}
             </figcaption>
+            {textStep !== 'choice' && !interaction.selection && (
+              <button
+                type="button"
+                className="stage-dialogue-skip"
+                onClick={skipDialogue}
+              >
+                <span>SKIP</span>
+                {UI_STRINGS.stageDialogueSkip}
+              </button>
+            )}
             {textStep === 'choice' && !interaction.selection && (
               <p className="stage-explore-hint">
                 {UI_STRINGS.stageExploreHint}
@@ -404,7 +442,7 @@ export function StageScreen({
                 onClick={() => setSceneIntruding(false)}
               >
                 <span>{UI_STRINGS.intrusionLabel}</span>
-                <p>{stage.intrusionText}</p>
+                <p>{currentIntrusionText}</p>
               </button>
             )}
           </figure>
@@ -442,17 +480,24 @@ export function StageScreen({
             ) : decisionReady ? (
               <div className="stage-choices">
                 <p className="stage-decision__label">
-                  EVIDENCE COMPLETE / 목소리를 판단하라
+                  목소리를 판단하라
                 </p>
-                {stage.choices.map((choice) => (
+                {stageChoices.map((choice, index) => (
                   <button
-                    className="stage-choice"
+                    className={`stage-choice${
+                      isDetectorRevealedCorrectChoice(
+                        detectorUsedThisStage,
+                        choice.isCorrect,
+                      )
+                        ? ' stage-choice--detector-correct'
+                        : ''
+                    }`}
                     type="button"
                     disabled={!choicesEnabled}
                     key={choice.id}
                     onClick={() => handleSelectChoice(choice)}
                   >
-                    <span>{choice.id}</span>
+                    <span>{String.fromCharCode(65 + index)}</span>
                     {toDisplayText(choice.text)}
                   </button>
                 ))}
@@ -510,9 +555,9 @@ export function StageScreen({
           />
         </div>
       </div>
-      {interaction.selection && !selectionRevealReady && (
+      {interaction.selection?.isCorrect === false && !selectionRevealReady && (
         <div
-          className="choice-commit-veil"
+          className="choice-commit-veil choice-commit-veil--wrong"
           role="status"
           aria-label="선택 처리 중"
         />

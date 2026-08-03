@@ -73,6 +73,8 @@ export function GameScreen({
           keyFragments={state.keyFragments}
           detectorUses={state.detectorUses}
           currentVoiceLineId={state.currentVoiceLineId}
+          currentChoiceIds={state.currentChoiceIds}
+          currentIntrusionText={state.currentIntrusionText}
           detectorUsedThisStage={state.detectorUsedThisStage}
           detectorAvailable={detectorAvailable}
           evidenceEntries={evidenceEntries}

@@ -51,6 +51,8 @@ export function createInitialGameState(): GameState {
     keyFragments: INITIAL_KEY_FRAGMENTS,
     detectorUses: INITIAL_DETECTOR_USES,
     currentVoiceLineId: '',
+    currentChoiceIds: [],
+    currentIntrusionText: '',
     detectorUsedThisStage: false,
     textCursor: 0,
   }
@@ -116,6 +118,47 @@ function pickVoiceLineId(stage: Stage, random: () => number): string {
   return stage.voiceLines[randomIndex].id
 }
 
+function pickIntrusionText(stage: Stage, random: () => number): string {
+  const randomIndex = Math.min(
+    Math.floor(Math.max(random(), 0) * stage.intrusionTexts.length),
+    stage.intrusionTexts.length - 1,
+  )
+
+  return stage.intrusionTexts[randomIndex]
+}
+
+function shuffled<T>(items: T[], random: () => number): T[] {
+  const result = [...items]
+
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.min(
+      Math.floor(Math.max(random(), 0) * (index + 1)),
+      index,
+    )
+    ;[result[index], result[swapIndex]] = [result[swapIndex], result[index]]
+  }
+
+  return result
+}
+
+export function pickStageChoiceIds(
+  stage: Stage,
+  random: () => number,
+): string[] {
+  const correctChoices = shuffled(
+    stage.choices.filter((choice) => choice.isCorrect),
+    random,
+  )
+  const wrongChoices = shuffled(
+    stage.choices.filter((choice) => !choice.isCorrect),
+    random,
+  )
+
+  return shuffled([correctChoices[0], ...wrongChoices.slice(0, 2)], random).map(
+    (choice) => choice.id,
+  )
+}
+
 function enterStage(
   state: GameState,
   stageId: StageId,
@@ -129,6 +172,8 @@ function enterStage(
     gamePhase: 'stage',
     stageId,
     currentVoiceLineId: pickVoiceLineId(stage, random),
+    currentChoiceIds: pickStageChoiceIds(stage, random),
+    currentIntrusionText: pickIntrusionText(stage, random),
     detectorUsedThisStage: false,
     textCursor: 0,
   }
@@ -172,6 +217,10 @@ export function createGameReducer(
         )
 
         if (!choice) {
+          return state
+        }
+
+        if (!state.currentChoiceIds.includes(choice.id)) {
           return state
         }
 

@@ -13,6 +13,7 @@ import {
   createGameReducer,
   createInitialGameState,
   getDetectorResult,
+  pickStageChoiceIds,
 } from './useGameState'
 
 validateStory(story)
@@ -23,6 +24,8 @@ function stageState(overrides: Partial<GameState> = {}): GameState {
     ...createInitialGameState(),
     gamePhase: 'stage',
     currentVoiceLineId: 's1-v1',
+    currentChoiceIds: ['A', 'B', 'C'],
+    currentIntrusionText: storyData.stages[0].intrusionTexts[0],
     ...overrides,
   }
 }
@@ -36,6 +39,8 @@ describe('useGameState reducer', () => {
       keyFragments: INITIAL_KEY_FRAGMENTS,
       detectorUses: INITIAL_DETECTOR_USES,
       currentVoiceLineId: '',
+      currentChoiceIds: [],
+      currentIntrusionText: '',
       detectorUsedThisStage: false,
       textCursor: 0,
     })
@@ -65,6 +70,8 @@ describe('useGameState reducer', () => {
       gamePhase: 'stage',
       stageId: 1,
       currentVoiceLineId: 's1-v1',
+      currentChoiceIds: expect.any(Array),
+      currentIntrusionText: expect.any(String),
       detectorUsedThisStage: false,
       textCursor: 0,
     })
@@ -77,7 +84,38 @@ describe('useGameState reducer', () => {
       { type: 'COMPLETE_INTRO' },
     )
 
-    expect(result.currentVoiceLineId).toBe('s1-v6')
+    expect(result.currentVoiceLineId).toBe('s1-v8')
+  })
+
+  it('randomly selects one memory intrusion variant for the stage', () => {
+    const firstReducer = createGameReducer(storyData, () => 0)
+    const lastReducer = createGameReducer(storyData, () => 0.999)
+    const introState = { ...createInitialGameState(), gamePhase: 'intro' as const }
+
+    const firstResult = firstReducer(introState, { type: 'COMPLETE_INTRO' })
+    const lastResult = lastReducer(introState, { type: 'COMPLETE_INTRO' })
+
+    expect(firstResult.currentIntrusionText).toBe(
+      storyData.stages[0].intrusionTexts[0],
+    )
+    expect(lastResult.currentIntrusionText).toBe(
+      storyData.stages[0].intrusionTexts[2],
+    )
+  })
+
+  it('draws one correct and two wrong choices in a random order', () => {
+    const firstDraw = pickStageChoiceIds(storyData.stages[0], () => 0)
+    const secondDraw = pickStageChoiceIds(storyData.stages[0], () => 0.999)
+
+    for (const draw of [firstDraw, secondDraw]) {
+      const drawnChoices = draw.map((choiceId) =>
+        storyData.stages[0].choices.find((choice) => choice.id === choiceId),
+      )
+
+      expect(draw).toHaveLength(3)
+      expect(drawnChoices.filter((choice) => choice?.isCorrect)).toHaveLength(1)
+    }
+    expect(firstDraw).not.toEqual(secondDraw)
   })
 
   it('adds a key fragment and advances after a correct choice', () => {
@@ -191,10 +229,12 @@ describe('useGameState reducer', () => {
       { type: 'RESTART_GAME' },
     )
 
-    expect(result).toEqual({
+    expect(result).toMatchObject({
       ...createInitialGameState(),
       gamePhase: 'stage',
-      currentVoiceLineId: 's1-v6',
+      currentVoiceLineId: 's1-v8',
+      currentChoiceIds: expect.any(Array),
+      currentIntrusionText: expect.any(String),
     })
   })
 

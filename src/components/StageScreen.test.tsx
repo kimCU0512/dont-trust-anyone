@@ -9,6 +9,9 @@ import {
   areStageChoicesEnabled,
   createStageInteractionState,
   getDetectorDisabledReason,
+  isDetectorRevealedCorrectChoice,
+  isStageDecisionReady,
+  shouldShowMemoryIntrusion,
   stageInteractionReducer,
 } from './stageScreenState'
 
@@ -22,6 +25,8 @@ describe('StageScreen', () => {
         keyFragments={0}
         detectorUses={2}
         currentVoiceLineId="s1-v1"
+        currentChoiceIds={['A', 'B', 'C']}
+        currentIntrusionText={stage.intrusionTexts[0]}
         detectorUsedThisStage={false}
         detectorAvailable
         evidenceEntries={[]}
@@ -46,6 +51,7 @@ describe('StageScreen', () => {
     expect(html).toContain('data-resource="hearts"')
     expect(html).toContain('disabled=""')
     expect(html).not.toContain(UI_STRINGS.detectorAction)
+    expect(html).toContain(UI_STRINGS.stageDialogueSkip)
   })
 
   it('layers dialogue inside the image before controls', () => {
@@ -56,6 +62,8 @@ describe('StageScreen', () => {
         keyFragments={0}
         detectorUses={2}
         currentVoiceLineId="s1-v1"
+        currentChoiceIds={['A', 'B', 'C']}
+        currentIntrusionText={story.stages[0].intrusionTexts[0]}
         detectorUsedThisStage={false}
         detectorAvailable
         evidenceEntries={[]}
@@ -81,6 +89,7 @@ describe('StageScreen', () => {
     expect(textPosition).toBeLessThan(controlsPosition)
     expect(html).toContain('stage-hotspot')
     expect(html).toContain(UI_STRINGS.stageExploreHint)
+    expect(html).not.toContain('EVIDENCE COMPLETE')
   })
 
   it('orders narration before voice and choices', () => {
@@ -125,6 +134,23 @@ describe('StageScreen', () => {
   it('locks choices during detector animation and restores them after', () => {
     expect(areStageChoicesEnabled('choice', true)).toBe(false)
     expect(areStageChoicesEnabled('choice', false)).toBe(true)
+  })
+
+  it('shows one memory intrusion only after every stage object is discovered', () => {
+    expect(shouldShowMemoryIntrusion(2, 3, false)).toBe(false)
+    expect(shouldShowMemoryIntrusion(3, 3, false)).toBe(true)
+    expect(shouldShowMemoryIntrusion(3, 3, true)).toBe(false)
+  })
+
+  it('keeps the decision panel hidden until the memory intrusion is closed', () => {
+    expect(isStageDecisionReady(true, false, false, true)).toBe(false)
+    expect(isStageDecisionReady(true, false, false, false)).toBe(true)
+  })
+
+  it('highlights only the correct choice after using the detector', () => {
+    expect(isDetectorRevealedCorrectChoice(false, true)).toBe(false)
+    expect(isDetectorRevealedCorrectChoice(true, false)).toBe(false)
+    expect(isDetectorRevealedCorrectChoice(true, true)).toBe(true)
   })
 
   it('locks every choice after the first selection and ignores duplicates', () => {

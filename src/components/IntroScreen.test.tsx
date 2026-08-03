@@ -42,6 +42,7 @@ describe('IntroScreen flow', () => {
 
     expect(html).toContain('data-screen="P-01"')
     expect(html).toContain(story.intro.imageUrl)
+    expect(html).toContain(UI_STRINGS.stageDialogueSkip)
     expect(html).not.toContain(UI_STRINGS.enterStageOne)
   })
 })

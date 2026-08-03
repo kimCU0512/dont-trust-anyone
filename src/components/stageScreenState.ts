@@ -76,6 +76,39 @@ export function areStageChoicesEnabled(
   return textStep === 'choice' && !detectorAnimating && !inputLocked
 }
 
+export function shouldShowMemoryIntrusion(
+  discoveredObjectCount: number,
+  totalObjectCount: number,
+  intrusionSeen: boolean,
+): boolean {
+  return (
+    !intrusionSeen &&
+    totalObjectCount > 0 &&
+    discoveredObjectCount >= totalObjectCount
+  )
+}
+
+export function isStageDecisionReady(
+  investigationComplete: boolean,
+  hasActiveObject: boolean,
+  hasSelection: boolean,
+  sceneIntruding: boolean,
+): boolean {
+  return (
+    investigationComplete &&
+    !hasActiveObject &&
+    !hasSelection &&
+    !sceneIntruding
+  )
+}
+
+export function isDetectorRevealedCorrectChoice(
+  detectorUsedThisStage: boolean,
+  isCorrect: boolean,
+): boolean {
+  return detectorUsedThisStage && isCorrect
+}
+
 export function getDetectorDisabledReason({
   textStep,
   hearts,

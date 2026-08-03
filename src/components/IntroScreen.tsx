@@ -23,6 +23,7 @@ export function IntroScreen({ onContinue }: IntroScreenProps) {
   const isTutorialVisible = step !== 'narration'
   const isReady = canEnterFirstStage(step)
   const advance = () => setStep((currentStep) => advanceIntroStep(currentStep))
+  const skipDialogue = () => setStep('ready')
 
   return (
     <section className="screen screen--intro" data-screen="P-01">
@@ -58,6 +59,16 @@ export function IntroScreen({ onContinue }: IntroScreenProps) {
           <span>LOCKED</span>
           <h1>{UI_STRINGS.introHeading}</h1>
         </div>
+        {!isReady && (
+          <button
+            type="button"
+            className="stage-dialogue-skip intro-dialogue-skip"
+            onClick={skipDialogue}
+          >
+            <span>SKIP</span>
+            {UI_STRINGS.stageDialogueSkip}
+          </button>
+        )}
         <div className="intro-overlay">
           {isTutorialVisible && (
             <aside className="intro-tutorial" aria-label="탐지기 기호 범례">

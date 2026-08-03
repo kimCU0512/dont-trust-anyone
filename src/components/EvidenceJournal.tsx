@@ -93,7 +93,6 @@ export function EvidenceJournal({
                       <p>{entry.clue}</p>
                     </div>
                   </div>
-                  <p className="evidence-log__inference">{entry.deduction}</p>
                 </li>
               ))}
           </ol>
