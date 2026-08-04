@@ -12,7 +12,7 @@ import type {
   EvidenceEntry,
   StageId,
 } from '../types'
-import { DetectorResult } from './DetectorResult'
+import { DetectorResult, DetectorScanning } from './DetectorResult'
 import { BgmControl } from './BgmControl'
 import { EvidenceJournal } from './EvidenceJournal'
 import { Hud } from './Hud'
@@ -453,7 +453,13 @@ export function StageScreen({
           <div
             className={`stage-controls${decisionReady ? ' stage-controls--decision' : ' stage-controls--investigation'}`}
           >
-            {decisionReady && detectorAnimationResult !== null ? (
+            {decisionReady &&
+            detectorAnimating &&
+            detectorAnimationResult === null ? (
+              <div className="stage-detector-panel">
+                <DetectorScanning />
+              </div>
+            ) : decisionReady && detectorAnimationResult !== null ? (
               <div className="stage-detector-panel">
                 <DetectorResult
                   key={detectorAnimationResult}

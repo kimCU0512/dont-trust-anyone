@@ -13,10 +13,36 @@ interface DetectorResultProps {
   onComplete: () => void
 }
 
-export function DetectorResult({
-  result,
-  onComplete,
-}: DetectorResultProps) {
+export function DetectorScanning() {
+  return (
+    <div
+      className="detector-result detector-result--scanning"
+      role="status"
+      aria-label={UI_STRINGS.detectorScanning}
+    >
+      <div className="detector-result__header">
+        <span>{UI_STRINGS.detectorScanning}</span>
+        <span className="detector-result__status-light" aria-hidden="true" />
+      </div>
+      <div
+        className="detector-result__display detector-result__display--scanning"
+        aria-hidden="true"
+      >
+        {Array.from({ length: 7 }, (_, index) => (
+          <span key={index} />
+        ))}
+      </div>
+      <div
+        className="detector-result__meter detector-result__meter--scanning"
+        aria-hidden="true"
+      >
+        <span />
+      </div>
+    </div>
+  )
+}
+
+export function DetectorResult({ result, onComplete }: DetectorResultProps) {
   const [visibleCharacters, setVisibleCharacters] = useState(0)
   const completionCalledRef = useRef(false)
   const onCompleteRef = useRef(onComplete)
@@ -32,9 +58,7 @@ export function DetectorResult({
     if (!isComplete) {
       const delay = animation.delays[visibleCharacters] ?? 200
       const timer = window.setTimeout(() => {
-        setVisibleCharacters((count) =>
-          Math.min(count + 1, characters.length),
-        )
+        setVisibleCharacters((count) => Math.min(count + 1, characters.length))
       }, delay)
 
       return () => window.clearTimeout(timer)
@@ -50,12 +74,7 @@ export function DetectorResult({
     }, RESULT_HOLD_MS)
 
     return () => window.clearTimeout(timer)
-  }, [
-    animation.delays,
-    characters.length,
-    isComplete,
-    visibleCharacters,
-  ])
+  }, [animation.delays, characters.length, isComplete, visibleCharacters])
 
   const visibleSymbol = getVisibleDetectorSymbol(result, visibleCharacters)
 

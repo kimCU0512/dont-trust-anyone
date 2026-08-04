@@ -1128,7 +1128,7 @@ button {
 .hud {
   width: 100%;
   display: grid;
-  grid-template-columns: 1.35fr 1fr 1fr;
+  grid-template-columns: 1.35fr 1fr 1fr auto;
   border: 1px solid rgb(210 210 202 / 18%);
   background: rgb(6 6 6 / 86%);
 }
@@ -1191,9 +1191,11 @@ button {
 }
 
 .hud__restart {
-  margin-left: 6px;
-  padding: 5px 8px;
-  border: 1px solid rgb(201 64 56 / 45%);
+  min-width: 72px;
+  min-height: 52px;
+  padding: 5px 10px;
+  border: 0;
+  border-left: 1px solid rgb(201 64 56 / 45%);
   background: rgb(201 64 56 / 8%);
   color: #aaa49b;
   font: inherit;
@@ -2005,6 +2007,32 @@ button {
   animation: detector-character-in 0.18s ease-out both;
 }
 
+.detector-result__display--scanning {
+  gap: 7px;
+}
+
+.detector-result__display--scanning span {
+  width: 4px;
+  height: 12px;
+  background: #b84740;
+  box-shadow: 0 0 8px rgb(201 64 56 / 45%);
+  animation: detector-scan-wave 0.72s ease-in-out infinite alternate;
+}
+
+.detector-result__display--scanning span:nth-child(2),
+.detector-result__display--scanning span:nth-child(6) {
+  animation-delay: 90ms;
+}
+
+.detector-result__display--scanning span:nth-child(3),
+.detector-result__display--scanning span:nth-child(5) {
+  animation-delay: 180ms;
+}
+
+.detector-result__display--scanning span:nth-child(4) {
+  animation-delay: 270ms;
+}
+
 .detector-result--lie .detector-result__display {
   color: #d9584f;
 }
@@ -2027,6 +2055,11 @@ button {
   background: #c94038;
   box-shadow: 0 0 8px rgb(201 64 56 / 70%);
   transition: width 0.1s linear;
+}
+
+.detector-result__meter--scanning span {
+  width: 34%;
+  animation: detector-scan-meter 1.1s ease-in-out infinite alternate;
 }
 
 .visually-hidden {
@@ -2062,6 +2095,28 @@ button {
   to {
     opacity: 0.35;
     box-shadow: 0 0 3px #c94038;
+  }
+}
+
+@keyframes detector-scan-wave {
+  from {
+    height: 8px;
+    opacity: 0.42;
+  }
+
+  to {
+    height: 42px;
+    opacity: 1;
+  }
+}
+
+@keyframes detector-scan-meter {
+  from {
+    transform: translateX(-105%);
+  }
+
+  to {
+    transform: translateX(295%);
   }
 }
 
@@ -2556,7 +2611,14 @@ button {
   }
 
   .hud {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1.2fr 1fr 1fr auto;
+  }
+
+  .hud__restart {
+    min-width: 58px;
+    min-height: 64px;
+    padding: 5px;
+    font-size: 0.5rem;
   }
 
   .hud__resource {

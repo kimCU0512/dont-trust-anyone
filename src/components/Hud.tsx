@@ -75,14 +75,14 @@ export function Hud({
           ⌁
         </span>
         <strong>{detectorUses}</strong>
-        <button
-          className={'hud__restart'}
-          type={'button'}
-          onClick={() => setRestartConfirmationOpen(true)}
-        >
-          {UI_STRINGS.hudRestart}
-        </button>
       </div>
+      <button
+        className={'hud__restart'}
+        type={'button'}
+        onClick={() => setRestartConfirmationOpen(true)}
+      >
+        {UI_STRINGS.hudRestart}
+      </button>
       {restartConfirmationOpen && (
         <div className={'restart-confirmation'} role={'presentation'}>
           <div

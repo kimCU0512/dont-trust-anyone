@@ -1,10 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import {
-  DETECTOR_LIE_SYMBOL,
-  DETECTOR_TRUTH_SYMBOL,
-} from '../constants'
-import { DetectorResult } from './DetectorResult'
+import { DETECTOR_LIE_SYMBOL, DETECTOR_TRUTH_SYMBOL } from '../constants'
+import { DetectorResult, DetectorScanning } from './DetectorResult'
 import {
   getDetectorAnimation,
   getVisibleDetectorSymbol,
@@ -40,5 +37,13 @@ describe('DetectorResult', () => {
 
     expect(truthHtml).toContain('data-result="truth"')
     expect(lieHtml).toContain('data-result="lie"')
+  })
+
+  it('renders a neutral scanning panel before the result is known', () => {
+    const html = renderToStaticMarkup(<DetectorScanning />)
+
+    expect(html).toContain('detector-result--scanning')
+    expect(html).toContain('음성 파형 분석 중')
+    expect(html).not.toContain('data-result=')
   })
 })
