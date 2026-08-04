@@ -50,6 +50,11 @@ export const UI_STRINGS = {
   hudHearts: '하트',
   hudKeyFragments: '열쇠조각',
   hudDetectorUses: '탐지기',
+  hudRestart: '다시하기',
+  restartConfirmMessage:
+    '진행사항을 모두 잃어버리게 됩니다. 그래도 다시 시작하시겠습니까?',
+  confirmYes: '예',
+  confirmNo: '아니오',
   stageImageAltSuffix: '의 현재 모습',
   stageNarrationComplete: '주변을 확인했다',
   stageVoiceReady: '목소리를 판단하세요',

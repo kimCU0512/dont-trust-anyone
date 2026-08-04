@@ -21,6 +21,11 @@ export interface SfxAudio {
   loop: boolean
   volume: number
   currentTime: number
+  addEventListener: (
+    type: 'ended' | 'error',
+    listener: () => void,
+    options?: { once: boolean },
+  ) => void
   play: () => Promise<void> | void
 }
 
@@ -41,23 +46,35 @@ export class SfxManager {
     this.volume = Math.min(1, Math.max(0, volume))
   }
 
-  play(id: SfxId): void {
+  play(id: SfxId, onEnded?: () => void): void {
     if (!this.enabled || this.volume === 0 || typeof window === 'undefined') {
+      onEnded?.()
       return
     }
 
     try {
       const audio = this.audioFactory(resolveAssetUrl(SFX_SOURCES[id]))
+      let completed = false
+      const complete = () => {
+        if (completed) {
+          return
+        }
+        completed = true
+        onEnded?.()
+      }
       audio.loop = false
       audio.volume = this.volume
       audio.currentTime = 0
+      audio.addEventListener('ended', complete, { once: true })
+      audio.addEventListener('error', complete, { once: true })
       const result = audio.play()
 
       if (result && 'catch' in result) {
-        void result.catch(() => undefined)
+        void result.catch(complete)
       }
     } catch {
       // Missing files or unsupported audio must never block interaction.
+      onEnded?.()
     }
   }
 }

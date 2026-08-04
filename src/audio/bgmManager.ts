@@ -11,7 +11,19 @@ export interface BgmAudio {
   volume: number
   play: () => Promise<void> | void
   pause: () => void
+  addEventListener?: (
+    type: 'ended',
+    listener: () => void,
+    options?: { once: boolean },
+  ) => void
 }
+
+export const MAIN_BGM_SOURCES = [
+  '/images/audio/bgm/main/125651__dariachic__eerie-ambience-wine-glasses.wav',
+  '/images/audio/bgm/main/219418__medude113__mysterious-sound.wav',
+  '/images/audio/bgm/main/262952__casonika__ice.wav',
+  '/images/audio/bgm/main/709894__freqwincy__gate-squeek-eerie-metal-scrape.wav',
+] as const
 
 type AudioFactory = (source: string) => BgmAudio
 
@@ -26,6 +38,9 @@ function createBrowserAudio(source: string): BgmAudio {
 }
 
 export function getBgmSource(trackId: string): string {
+  if (trackId === 'main') {
+    return resolveAssetUrl(MAIN_BGM_SOURCES[0])
+  }
   if (trackId === 'bad_E') {
     return resolveAssetUrl(
       '/images/audio/bgm/bad_E/dragon-studio-spooky-transition-401719.mp3',
@@ -89,14 +104,6 @@ export class BgmManager {
     }
 
     if (trackId === this.currentTrackId && this.audio) {
-      const currentAudio = this.audio
-
-      this.fadeTo(0, () => {
-        if (this.enabled && this.unlocked && this.desiredTrackId === trackId) {
-          this.safePlay(currentAudio)
-          this.fadeTo(this.volume)
-        }
-      })
       return
     }
 
@@ -147,16 +154,34 @@ export class BgmManager {
     this.currentTrackId = null
   }
 
-  private startTrack(trackId: string): void {
+  private startTrack(trackId: string, playlistIndex = 0): void {
     this.cancelFade()
     this.audio?.pause()
 
-    const audio = this.audioFactory(getBgmSource(trackId))
-    audio.loop = trackId !== 'bad_E'
+    const source =
+      trackId === 'main'
+        ? resolveAssetUrl(MAIN_BGM_SOURCES[playlistIndex])
+        : getBgmSource(trackId)
+    const audio = this.audioFactory(source)
+    audio.loop = trackId !== 'bad_E' && trackId !== 'main'
     audio.preload = 'auto'
     audio.volume = 0
     this.audio = audio
     this.currentTrackId = trackId
+    if (trackId === 'main') {
+      audio.addEventListener?.(
+        'ended',
+        () => {
+          if (this.enabled && this.unlocked && this.desiredTrackId === 'main') {
+            this.startTrack(
+              'main',
+              (playlistIndex + 1) % MAIN_BGM_SOURCES.length,
+            )
+          }
+        },
+        { once: true },
+      )
+    }
     this.safePlay(audio)
     this.fadeTo(this.volume)
   }

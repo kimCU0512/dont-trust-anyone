@@ -32,7 +32,7 @@ interface GameScreenProps {
   sfxVolume: number
   onToggleSfx: () => void
   onSfxVolumeChange: (volume: number) => void
-  onPlaySfx?: (id: SfxId) => void
+  onPlaySfx?: (id: SfxId, onEnded?: () => void) => void
   onDiscoverEvidence: (entry: EvidenceEntry) => void
   onRestart: () => void
   onReturnToTitle: () => void
@@ -90,6 +90,7 @@ export function GameScreen({
           onUseDetector={onUseDetector}
           onSelectChoice={onSelectChoice}
           onDiscoverEvidence={onDiscoverEvidence}
+          onRestart={onRestart}
         />
       )
     case 'reset':
@@ -120,14 +121,20 @@ function App() {
 
   const startGameWithBgm = () => {
     setEvidenceEntries([])
-    sfx.play('start')
-    bgm.unlock(story.intro.bgmTrack, 'intro')
+    sfx.play('start', () => {
+      bgm.unlock(story.intro.bgmTrack, 'intro')
+    })
     startGame()
   }
 
   const restartWithEmptyJournal = () => {
     setEvidenceEntries([])
     restartGame()
+  }
+
+  const continueIntroWithMovingSfx = () => {
+    sfx.play('moving')
+    completeIntro()
   }
 
   const returnToTitleWithEmptyJournal = () => {
@@ -152,7 +159,7 @@ function App() {
       <GameScreen
         state={state}
         onStart={startGameWithBgm}
-        onContinueIntro={completeIntro}
+        onContinueIntro={continueIntroWithMovingSfx}
         detectorAvailable={canUseDetector}
         evidenceEntries={evidenceEntries}
         bgmEnabled={bgm.isEnabled}

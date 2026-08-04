@@ -51,10 +51,11 @@ interface StageScreenProps {
   sfxVolume: number
   onToggleSfx: () => void
   onSfxVolumeChange: (volume: number) => void
-  onPlaySfx?: (id: SfxId) => void
+  onPlaySfx?: (id: SfxId, onEnded?: () => void) => void
   onUseDetector: () => DetectorResultType | null
   onSelectChoice: (choiceId: string) => void
   onDiscoverEvidence: (entry: EvidenceEntry) => void
+  onRestart?: () => void
 }
 
 export function StageScreen({
@@ -74,12 +75,13 @@ export function StageScreen({
   sfxVolume,
   onToggleSfx,
   onSfxVolumeChange,
-  onPlaySfx = () => undefined,
+  onPlaySfx = (_id, onEnded) => onEnded?.(),
   onToggleBgm,
   onBgmVolumeChange,
   onUseDetector,
   onSelectChoice,
   onDiscoverEvidence,
+  onRestart,
 }: StageScreenProps) {
   const stage = story.stages.find((candidate) => candidate.id === stageId)
 
@@ -94,7 +96,9 @@ export function StageScreen({
     .map((choiceId) =>
       stage.choices.find((candidate) => candidate.id === choiceId),
     )
-    .filter((choice): choice is (typeof stage.choices)[number] => Boolean(choice))
+    .filter((choice): choice is (typeof stage.choices)[number] =>
+      Boolean(choice),
+    )
   const [textStep, setTextStep] = useState<StageTextStep>('narration')
   const [imageUrl, setImageUrl] = useState<string | null>(
     resolveAssetUrl(stage.imageUrl),
@@ -132,9 +136,7 @@ export function StageScreen({
     sceneIntruding,
   )
   const choicesEnabled =
-    baseChoicesEnabled &&
-    decisionReady &&
-    detectorAnimationResult === null
+    baseChoicesEnabled && decisionReady && detectorAnimationResult === null
   const activeObject = stage.objects.find(
     (object) => object.id === activeObjectId,
   )
@@ -200,9 +202,10 @@ export function StageScreen({
     const result = onUseDetector()
 
     if (result) {
-      onPlaySfx('detector')
-      setDetectorAnimationResult(result)
       setDetectorAnimating(true)
+      onPlaySfx('detector', () => {
+        setDetectorAnimationResult(result)
+      })
     }
   }
 
@@ -299,6 +302,7 @@ export function StageScreen({
         hearts={hearts}
         keyFragments={keyFragments}
         detectorUses={detectorUses}
+        onRestart={onRestart}
       />
 
       <div className="stage-workspace">
@@ -327,7 +331,7 @@ export function StageScreen({
             )}
             <span className="stage-scene__shade" aria-hidden="true" />
             <div
-              className="stage-hotspots"
+              className={`stage-hotspots${activeObject ? ' stage-hotspots--inspection-open' : ''}`}
               aria-label={UI_STRINGS.stageExploreHint}
             >
               {stage.objects.map((object, index) => {
@@ -430,7 +434,6 @@ export function StageScreen({
                       onComplete={advanceText}
                     />
                   )}
-
                 </>
               )}
             </div>
@@ -465,10 +468,7 @@ export function StageScreen({
                   aria-expanded="true"
                   onClick={handleUseDetector}
                 >
-                  <span
-                    className="stage-detector__signal"
-                    aria-hidden="true"
-                  >
+                  <span className="stage-detector__signal" aria-hidden="true">
                     ×
                   </span>
                   <span>
@@ -479,9 +479,7 @@ export function StageScreen({
               </div>
             ) : decisionReady ? (
               <div className="stage-choices">
-                <p className="stage-decision__label">
-                  목소리를 판단하라
-                </p>
+                <p className="stage-decision__label">목소리를 판단하라</p>
                 {stageChoices.map((choice, index) => (
                   <button
                     className={`stage-choice${
@@ -513,19 +511,12 @@ export function StageScreen({
                   aria-expanded="false"
                   onClick={handleUseDetector}
                 >
-                  <span
-                    className="stage-detector__signal"
-                    aria-hidden="true"
-                  >
+                  <span className="stage-detector__signal" aria-hidden="true">
                     ⌁
                   </span>
                   <span>
-                    <strong>
-                      {UI_STRINGS.detectorAction}
-                    </strong>
-                    <small>
-                      {UI_STRINGS.detectorCost}
-                    </small>
+                    <strong>{UI_STRINGS.detectorAction}</strong>
+                    <small>{UI_STRINGS.detectorCost}</small>
                   </span>
                 </button>
               </div>

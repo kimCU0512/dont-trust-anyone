@@ -1,11 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { BgmAudio } from './bgmManager'
-import { BgmManager, getBgmSource } from './bgmManager'
+import { BgmManager, getBgmSource, MAIN_BGM_SOURCES } from './bgmManager'
 
 interface FakeAudio extends BgmAudio {
   source: string
   play: ReturnType<typeof vi.fn>
   pause: ReturnType<typeof vi.fn>
+  endedListeners: Array<() => void>
 }
 
 function createAudioHarness(rejectPlay = false) {
@@ -20,6 +21,10 @@ function createAudioHarness(rejectPlay = false) {
         rejectPlay ? Promise.reject(new Error('missing')) : Promise.resolve(),
       ),
       pause: vi.fn(),
+      endedListeners: [],
+      addEventListener: vi.fn((_type, listener) => {
+        audio.endedListeners.push(listener)
+      }),
     }
     audios.push(audio)
     return audio
@@ -56,7 +61,20 @@ describe('BgmManager', () => {
     expect(audios[0].loop).toBe(true)
   })
 
-  it('fades between story tracks and on same-track scene changes', () => {
+  it('plays the bad-ending track only once', () => {
+    const { audios, audioFactory } = createAudioHarness()
+    const manager = new BgmManager({
+      audioFactory,
+      fadeDurationMs: 0,
+    })
+
+    manager.unlock('bad_E', 'reset')
+
+    expect(audios[0].play).toHaveBeenCalledOnce()
+    expect(audios[0].loop).toBe(false)
+  })
+
+  it('keeps playing continuously across scenes that use the same track', () => {
     vi.useFakeTimers()
     const { audios, audioFactory } = createAudioHarness()
     const manager = new BgmManager({
@@ -71,7 +89,7 @@ describe('BgmManager', () => {
     vi.advanceTimersByTime(200)
 
     expect(audios).toHaveLength(1)
-    expect(audios[0].play).toHaveBeenCalledTimes(2)
+    expect(audios[0].play).toHaveBeenCalledOnce()
 
     manager.setScene('finale', 'stage-5')
     vi.advanceTimersByTime(200)
@@ -79,6 +97,21 @@ describe('BgmManager', () => {
     expect(audios[0].pause).toHaveBeenCalled()
     expect(audios[1].source).toBe(getBgmSource('finale'))
     expect(audios[1].play).toHaveBeenCalledOnce()
+  })
+
+  it('plays all four main tracks in order and loops back to the first', () => {
+    const { audios, audioFactory } = createAudioHarness()
+    const manager = new BgmManager({ audioFactory, fadeDurationMs: 0 })
+
+    manager.unlock('main', 'intro')
+
+    for (let index = 0; index < MAIN_BGM_SOURCES.length; index += 1) {
+      expect(audios[index].source).toBe(MAIN_BGM_SOURCES[index])
+      expect(audios[index].loop).toBe(false)
+      audios[index].endedListeners[0]()
+    }
+
+    expect(audios[MAIN_BGM_SOURCES.length].source).toBe(MAIN_BGM_SOURCES[0])
   })
 
   it('mutes globally and safely resumes the current track', () => {

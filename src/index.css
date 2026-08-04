@@ -1190,6 +1190,75 @@ button {
   font-size: 1.25rem;
 }
 
+.hud__restart {
+  margin-left: 6px;
+  padding: 5px 8px;
+  border: 1px solid rgb(201 64 56 / 45%);
+  background: rgb(201 64 56 / 8%);
+  color: #aaa49b;
+  font: inherit;
+  font-size: 0.56rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+.hud__restart:hover,
+.hud__restart:focus-visible {
+  border-color: rgb(201 64 56 / 85%);
+  color: #eee9df;
+}
+
+.restart-confirmation {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgb(0 0 0 / 78%);
+}
+
+.restart-confirmation__box {
+  width: min(420px, 100%);
+  padding: 24px;
+  border: 1px solid rgb(201 64 56 / 55%);
+  background: #0b0b0a;
+  box-shadow: 0 18px 60px rgb(0 0 0 / 70%);
+  color: #d8d5ce;
+  text-align: center;
+}
+
+.restart-confirmation__box p {
+  margin: 0;
+  line-height: 1.7;
+}
+
+.restart-confirmation__actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.restart-confirmation__actions button {
+  min-width: 76px;
+  padding: 8px 14px;
+  border: 1px solid rgb(210 210 202 / 28%);
+  background: #151513;
+  color: #cbc7be;
+  cursor: pointer;
+}
+
+.restart-confirmation__actions button:first-child {
+  border-color: rgb(201 64 56 / 70%);
+}
+
+.restart-confirmation__actions button:hover,
+.restart-confirmation__actions button:focus-visible {
+  background: #25221f;
+  color: #fff;
+}
+
 .stage-heading {
   width: 100%;
   display: flex;
@@ -1431,6 +1500,10 @@ button {
   inset: 0;
   z-index: 3;
   pointer-events: none;
+}
+
+.stage-hotspots--inspection-open {
+  z-index: 5;
 }
 
 .stage-hotspot {

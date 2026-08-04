@@ -11,7 +11,7 @@ export function useSfx() {
   return {
     isEnabled,
     volume,
-    play: (id: SfxId) => manager.play(id),
+    play: (id: SfxId, onEnded?: () => void) => manager.play(id, onEnded),
     toggle: () => {
       setIsEnabled((currentEnabled) => {
         const nextEnabled = !currentEnabled

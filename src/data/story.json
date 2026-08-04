@@ -1,7 +1,7 @@
 {
   "intro": {
     "imageUrl": "/images/objects/s1-classroom-door.png",
-    "bgmTrack": "intro",
+    "bgmTrack": "main",
     "narration": [
       "비를 피해 들어온 폐교. 녹슨 현관문이 등 뒤에서 저절로 잠겼다.",
       "교내 방송이 켜지고, 서로 다른 목소리들이 같은 이름으로 나를 부르기 시작했다.",
@@ -527,7 +527,7 @@
       "name": "되돌아온 복도",
       "imageUrl": "/images/stage5_hallway.png",
       "fallbackImageUrl": "/images/stage1_hallway.png",
-      "bgmTrack": "finale",
+      "bgmTrack": "main",
       "narration": [
         "처음의 복도지만 햇빛은 사라지고 덩굴과 검은 얼룩이 벽을 뒤덮었다.",
         "2-3 교실 문 아래 마지막 열쇠조각이 보인다. 출구 자물쇠에는 정확히 다섯 개의 홈이 있다."

@@ -23,7 +23,10 @@ export function getGameBgmScene(state: GameState): GameBgmScene {
       }
     }
     case 'reset':
-      return { sceneKey: 'reset', trackId: null }
+      return {
+        sceneKey: 'reset',
+        trackId: story.endings.bad.bgmTrack,
+      }
     case 'endingTrue':
       return {
         sceneKey: 'ending-true',

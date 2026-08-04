@@ -1,13 +1,11 @@
-import {
-  MAX_HEARTS,
-  MAX_KEY_FRAGMENTS,
-  UI_STRINGS,
-} from '../constants'
+import { useState } from 'react'
+import { MAX_HEARTS, MAX_KEY_FRAGMENTS, UI_STRINGS } from '../constants'
 
 interface HudProps {
   hearts: number
   keyFragments: number
   detectorUses: number
+  onRestart?: () => void
 }
 
 function HeartMeter({ hearts }: Pick<HudProps, 'hearts'>) {
@@ -25,7 +23,19 @@ function HeartMeter({ hearts }: Pick<HudProps, 'hearts'>) {
   )
 }
 
-export function Hud({ hearts, keyFragments, detectorUses }: HudProps) {
+export function Hud({
+  hearts,
+  keyFragments,
+  detectorUses,
+  onRestart = () => undefined,
+}: HudProps) {
+  const [restartConfirmationOpen, setRestartConfirmationOpen] = useState(false)
+
+  const confirmRestart = () => {
+    setRestartConfirmationOpen(false)
+    onRestart()
+  }
+
   return (
     <header className="hud" aria-label={UI_STRINGS.hudLabel}>
       <div
@@ -65,7 +75,39 @@ export function Hud({ hearts, keyFragments, detectorUses }: HudProps) {
           ⌁
         </span>
         <strong>{detectorUses}</strong>
+        <button
+          className={'hud__restart'}
+          type={'button'}
+          onClick={() => setRestartConfirmationOpen(true)}
+        >
+          {UI_STRINGS.hudRestart}
+        </button>
       </div>
+      {restartConfirmationOpen && (
+        <div className={'restart-confirmation'} role={'presentation'}>
+          <div
+            className={'restart-confirmation__box'}
+            role={'alertdialog'}
+            aria-modal={true}
+            aria-labelledby={'restart-confirmation-title'}
+          >
+            <p id={'restart-confirmation-title'}>
+              {UI_STRINGS.restartConfirmMessage}
+            </p>
+            <div className={'restart-confirmation__actions'}>
+              <button type={'button'} onClick={confirmRestart} autoFocus>
+                {UI_STRINGS.confirmYes}
+              </button>
+              <button
+                type={'button'}
+                onClick={() => setRestartConfirmationOpen(false)}
+              >
+                {UI_STRINGS.confirmNo}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   )
 }
