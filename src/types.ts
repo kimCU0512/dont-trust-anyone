@@ -12,6 +12,7 @@ export interface GameState {
   detectorUses: number
   currentVoiceLineId: string
   currentChoiceIds: string[]
+  wrongChoiceIds: string[]
   currentIntrusionText: string
   detectorUsedThisStage: boolean
   textCursor: number

@@ -41,6 +41,11 @@ export function getBgmSource(trackId: string): string {
   if (trackId === 'main') {
     return resolveAssetUrl(MAIN_BGM_SOURCES[0])
   }
+  if (trackId === 'true_E') {
+    return resolveAssetUrl(
+      '/images/audio/bgm/true_E/807746__inesmorais__som-da-natureza-e-de-carros-sound-of-nature-and-cars.wav',
+    )
+  }
   if (trackId === 'bad_E') {
     return resolveAssetUrl(
       '/images/audio/bgm/bad_E/dragon-studio-spooky-transition-401719.mp3',

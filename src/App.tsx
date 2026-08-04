@@ -67,13 +67,14 @@ export function GameScreen({
     case 'stage':
       return (
         <StageScreen
-          key={state.stageId}
+          key={`${state.stageId}-${state.wrongChoiceIds.join('-')}`}
           stageId={state.stageId}
           hearts={state.hearts}
           keyFragments={state.keyFragments}
           detectorUses={state.detectorUses}
           currentVoiceLineId={state.currentVoiceLineId}
           currentChoiceIds={state.currentChoiceIds}
+          wrongChoiceIds={state.wrongChoiceIds}
           currentIntrusionText={state.currentIntrusionText}
           detectorUsedThisStage={state.detectorUsedThisStage}
           detectorAvailable={detectorAvailable}

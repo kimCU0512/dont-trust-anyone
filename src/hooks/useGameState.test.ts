@@ -40,6 +40,7 @@ describe('useGameState reducer', () => {
       detectorUses: INITIAL_DETECTOR_USES,
       currentVoiceLineId: '',
       currentChoiceIds: [],
+      wrongChoiceIds: [],
       currentIntrusionText: '',
       detectorUsedThisStage: false,
       textCursor: 0,
@@ -90,7 +91,10 @@ describe('useGameState reducer', () => {
   it('randomly selects one memory intrusion variant for the stage', () => {
     const firstReducer = createGameReducer(storyData, () => 0)
     const lastReducer = createGameReducer(storyData, () => 0.999)
-    const introState = { ...createInitialGameState(), gamePhase: 'intro' as const }
+    const introState = {
+      ...createInitialGameState(),
+      gamePhase: 'intro' as const,
+    }
 
     const firstResult = firstReducer(introState, { type: 'COMPLETE_INTRO' })
     const lastResult = lastReducer(introState, { type: 'COMPLETE_INTRO' })
@@ -134,19 +138,36 @@ describe('useGameState reducer', () => {
     })
   })
 
-  it('removes a heart and advances after a wrong choice', () => {
+  it('removes a heart, stays on the stage, and locks a wrong choice', () => {
     const reducer = createGameReducer(storyData, () => 0)
-    const result = reducer(stageState(), {
+    const initialState = stageState()
+    const result = reducer(initialState, {
       type: 'SELECT_CHOICE',
       choiceId: 'B',
     })
 
     expect(result).toMatchObject({
       gamePhase: 'stage',
-      stageId: 2,
+      stageId: 1,
       hearts: INITIAL_HEARTS - 1,
       keyFragments: 0,
+      currentVoiceLineId: initialState.currentVoiceLineId,
+      currentChoiceIds: initialState.currentChoiceIds,
+      wrongChoiceIds: ['B'],
+      detectorUsedThisStage: false,
     })
+  })
+
+  it('ignores a previously failed choice without losing another heart', () => {
+    const reducer = createGameReducer(storyData, () => 0)
+    const retryState = stageState({
+      hearts: INITIAL_HEARTS - 1,
+      wrongChoiceIds: ['B'],
+    })
+
+    expect(reducer(retryState, { type: 'SELECT_CHOICE', choiceId: 'B' })).toBe(
+      retryState,
+    )
   })
 
   it('goes to reset when a wrong choice consumes the last heart', () => {
@@ -216,7 +237,7 @@ describe('useGameState reducer', () => {
     })
   })
 
-  it('fully resets resources and draws a new line when restarting', () => {
+  it('fully resets to the title screen when restarting', () => {
     const reducer = createGameReducer(storyData, () => 0.999)
     const result = reducer(
       stageState({
@@ -229,15 +250,8 @@ describe('useGameState reducer', () => {
       { type: 'RESTART_GAME' },
     )
 
-    expect(result).toMatchObject({
-      ...createInitialGameState(),
-      gamePhase: 'stage',
-      currentVoiceLineId: 's1-v8',
-      currentChoiceIds: expect.any(Array),
-      currentIntrusionText: expect.any(String),
-    })
+    expect(result).toEqual(createInitialGameState())
   })
-
   it('returns to a fully reset title state from an ending', () => {
     const reducer = createGameReducer(storyData)
     const result = reducer(

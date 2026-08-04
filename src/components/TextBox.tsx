@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { TEXT_TYPING_INTERVAL_MS, UI_STRINGS } from '../constants'
 import {
   advanceText,
@@ -32,6 +32,7 @@ export function TextBox({
 }: TextBoxProps) {
   const [state, setState] = useState<TextBoxState>(createTextBoxState)
   const completionCalledRef = useRef(false)
+  const textBoxRef = useRef<HTMLButtonElement>(null)
   const paragraphKey = paragraphs.join('\u0000')
   const currentParagraph = paragraphs[state.paragraphIndex] ?? ''
   const currentCharacters = getParagraphCharacters(currentParagraph)
@@ -50,9 +51,7 @@ export function TextBox({
     }
 
     const timer = window.setTimeout(() => {
-      setState((currentState) =>
-        revealNextCharacter(currentState, paragraphs),
-      )
+      setState((currentState) => revealNextCharacter(currentState, paragraphs))
     }, typingIntervalMs)
 
     return () => window.clearTimeout(timer)
@@ -63,7 +62,7 @@ export function TextBox({
     typingIntervalMs,
   ])
 
-  const handleAdvance = () => {
+  const handleAdvance = useCallback(() => {
     if (isComplete) {
       if (!completionCalledRef.current) {
         completionCalledRef.current = true
@@ -73,7 +72,38 @@ export function TextBox({
     }
 
     setState((currentState) => advanceText(currentState, paragraphs))
-  }
+  }, [isComplete, onComplete, paragraphs])
+
+  useEffect(() => {
+    const advanceOnSpace = (event: KeyboardEvent) => {
+      if (
+        event.code !== 'Space' ||
+        event.repeat ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey
+      ) {
+        return
+      }
+
+      const target = event.target
+      if (target instanceof HTMLElement) {
+        const interactiveTarget = target.closest(
+          'button, a, input, textarea, select, [contenteditable="true"]',
+        )
+
+        if (interactiveTarget && interactiveTarget !== textBoxRef.current) {
+          return
+        }
+      }
+
+      event.preventDefault()
+      handleAdvance()
+    }
+
+    window.addEventListener('keydown', advanceOnSpace)
+    return () => window.removeEventListener('keydown', advanceOnSpace)
+  }, [handleAdvance])
 
   const visibleText = currentCharacters
     .slice(0, state.visibleCharacters)
@@ -81,6 +111,7 @@ export function TextBox({
 
   return (
     <button
+      ref={textBoxRef}
       className={`text-box text-box--${speaker}`}
       type="button"
       onClick={handleAdvance}

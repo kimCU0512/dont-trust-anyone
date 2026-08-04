@@ -39,6 +39,7 @@ interface StageScreenProps {
   detectorUses: number
   currentVoiceLineId: string
   currentChoiceIds: string[]
+  wrongChoiceIds: string[]
   currentIntrusionText: string
   detectorUsedThisStage: boolean
   detectorAvailable: boolean
@@ -65,6 +66,7 @@ export function StageScreen({
   detectorUses,
   currentVoiceLineId,
   currentChoiceIds,
+  wrongChoiceIds,
   currentIntrusionText,
   detectorUsedThisStage,
   detectorAvailable,
@@ -210,6 +212,10 @@ export function StageScreen({
   }
 
   const handleSelectChoice = (choice: (typeof stage.choices)[number]) => {
+    if (wrongChoiceIds.includes(choice.id)) {
+      return
+    }
+
     if (choice.isCorrect) {
       onPlaySfx('correct')
     } else if (hearts > 0 && WRONG_CHOICE_HEART_COST > 0) {
@@ -284,7 +290,7 @@ export function StageScreen({
     }
 
     dispatchInteraction({ type: 'BEGIN_TRANSITION' })
-    if (stageId < 5) {
+    if (interaction.selection.isCorrect && stageId < 5) {
       onPlaySfx('moving')
     }
     transitionTimerRef.current = window.setTimeout(() => {
@@ -495,9 +501,20 @@ export function StageScreen({
                       )
                         ? ' stage-choice--detector-correct'
                         : ''
+                    }${
+                      wrongChoiceIds.includes(choice.id)
+                        ? ' stage-choice--locked'
+                        : ''
                     }`}
                     type="button"
-                    disabled={!choicesEnabled}
+                    disabled={
+                      !choicesEnabled || wrongChoiceIds.includes(choice.id)
+                    }
+                    title={
+                      wrongChoiceIds.includes(choice.id)
+                        ? UI_STRINGS.choiceAlreadyTried
+                        : undefined
+                    }
                     key={choice.id}
                     onClick={() => handleSelectChoice(choice)}
                   >
@@ -561,7 +578,9 @@ export function StageScreen({
       )}
       {interaction.exiting && (
         <p className="stage-transition-lock" role="status">
-          {UI_STRINGS.stageTransitioning}
+          {interaction.selection?.isCorrect
+            ? UI_STRINGS.stageTransitioning
+            : UI_STRINGS.stageRetrying}
         </p>
       )}
     </section>

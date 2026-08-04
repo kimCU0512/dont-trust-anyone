@@ -26,6 +26,7 @@ describe('StageScreen', () => {
         detectorUses={2}
         currentVoiceLineId="s1-v1"
         currentChoiceIds={['A', 'B', 'C']}
+        wrongChoiceIds={[]}
         currentIntrusionText={stage.intrusionTexts[0]}
         detectorUsedThisStage={false}
         detectorAvailable
@@ -63,6 +64,7 @@ describe('StageScreen', () => {
         detectorUses={2}
         currentVoiceLineId="s1-v1"
         currentChoiceIds={['A', 'B', 'C']}
+        wrongChoiceIds={[]}
         currentIntrusionText={story.stages[0].intrusionTexts[0]}
         detectorUsedThisStage={false}
         detectorAvailable

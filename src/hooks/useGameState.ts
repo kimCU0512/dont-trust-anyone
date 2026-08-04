@@ -52,6 +52,7 @@ export function createInitialGameState(): GameState {
     detectorUses: INITIAL_DETECTOR_USES,
     currentVoiceLineId: '',
     currentChoiceIds: [],
+    wrongChoiceIds: [],
     currentIntrusionText: '',
     detectorUsedThisStage: false,
     textCursor: 0,
@@ -100,9 +101,7 @@ export function getDetectorResult(
   state: GameState,
   data: StoryData,
 ): DetectorResult | null {
-  return state.detectorUsedThisStage
-    ? resolveDetectorResult(state, data)
-    : null
+  return state.detectorUsedThisStage ? resolveDetectorResult(state, data) : null
 }
 
 function pickVoiceLineId(stage: Stage, random: () => number): string {
@@ -173,6 +172,7 @@ function enterStage(
     stageId,
     currentVoiceLineId: pickVoiceLineId(stage, random),
     currentChoiceIds: pickStageChoiceIds(stage, random),
+    wrongChoiceIds: [],
     currentIntrusionText: pickIntrusionText(stage, random),
     detectorUsedThisStage: false,
     textCursor: 0,
@@ -220,7 +220,10 @@ export function createGameReducer(
           return state
         }
 
-        if (!state.currentChoiceIds.includes(choice.id)) {
+        if (
+          !state.currentChoiceIds.includes(choice.id) ||
+          state.wrongChoiceIds.includes(choice.id)
+        ) {
           return state
         }
 
@@ -231,12 +234,26 @@ export function createGameReducer(
           ? state.keyFragments + 1
           : state.keyFragments
 
+        const wrongChoiceIds = choice.isCorrect
+          ? state.wrongChoiceIds
+          : [...state.wrongChoiceIds, choice.id]
+
         if (hearts === 0) {
           return {
             ...state,
             gamePhase: 'reset',
             hearts,
             keyFragments,
+            wrongChoiceIds,
+          }
+        }
+
+        if (!choice.isCorrect) {
+          return {
+            ...state,
+            hearts,
+            wrongChoiceIds,
+            detectorUsedThisStage: false,
           }
         }
 
@@ -267,7 +284,7 @@ export function createGameReducer(
       }
 
       case 'RESTART_GAME':
-        return enterStage(createInitialGameState(), 1, data, random)
+        return createInitialGameState()
 
       case 'RETURN_TO_TITLE':
         return createInitialGameState()
@@ -297,8 +314,7 @@ export function useGameState(): UseGameStateResult {
       dispatch({ type: 'USE_DETECTOR' })
       return result
     },
-    selectChoice: (choiceId) =>
-      dispatch({ type: 'SELECT_CHOICE', choiceId }),
+    selectChoice: (choiceId) => dispatch({ type: 'SELECT_CHOICE', choiceId }),
     restartGame: () => dispatch({ type: 'RESTART_GAME' }),
     returnToTitle: () => dispatch({ type: 'RETURN_TO_TITLE' }),
   }

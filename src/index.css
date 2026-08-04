@@ -1128,7 +1128,7 @@ button {
 .hud {
   width: 100%;
   display: grid;
-  grid-template-columns: 1.35fr 1fr 1fr auto;
+  grid-template-columns: auto 1.35fr 1fr 1fr;
   border: 1px solid rgb(210 210 202 / 18%);
   background: rgb(6 6 6 / 86%);
 }
@@ -1191,17 +1191,24 @@ button {
 }
 
 .hud__restart {
-  min-width: 72px;
+  display: grid;
+  width: 52px;
   min-height: 52px;
-  padding: 5px 10px;
+  padding: 0;
+  place-items: center;
   border: 0;
-  border-left: 1px solid rgb(201 64 56 / 45%);
+  border-right: 1px solid rgb(201 64 56 / 45%);
   background: rgb(201 64 56 / 8%);
   color: #aaa49b;
-  font: inherit;
-  font-size: 0.56rem;
-  letter-spacing: 0.08em;
   cursor: pointer;
+}
+
+.hud__restart svg {
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
 }
 
 .hud__restart:hover,
@@ -1954,6 +1961,20 @@ button {
   opacity: 0.62;
 }
 
+.stage-choice--locked:disabled {
+  border-color: rgb(116 37 32 / 22%);
+  background: #050505;
+  box-shadow: inset 3px 0 rgb(116 37 32 / 38%);
+  color: #353532;
+  filter: grayscale(1);
+  opacity: 0.46;
+  text-decoration: line-through;
+}
+
+.stage-choice--locked:disabled span {
+  color: #522823;
+}
+
 .detector-result {
   width: 100%;
   min-height: 150px;
@@ -2611,14 +2632,12 @@ button {
   }
 
   .hud {
-    grid-template-columns: 1.2fr 1fr 1fr auto;
+    grid-template-columns: auto 1.2fr 1fr 1fr;
   }
 
   .hud__restart {
-    min-width: 58px;
+    width: 48px;
     min-height: 64px;
-    padding: 5px;
-    font-size: 0.5rem;
   }
 
   .hud__resource {

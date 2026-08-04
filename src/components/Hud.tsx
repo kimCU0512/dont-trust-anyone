@@ -38,6 +38,23 @@ export function Hud({
 
   return (
     <header className="hud" aria-label={UI_STRINGS.hudLabel}>
+      <button
+        className="hud__restart"
+        type="button"
+        aria-label={UI_STRINGS.hudRestart}
+        title={UI_STRINGS.hudRestart}
+        onClick={() => setRestartConfirmationOpen(true)}
+      >
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+        >
+          <path d="M20 11a8 8 0 1 0-2.34 5.66" />
+          <path d="M20 4v7h-7" />
+        </svg>
+      </button>
       <div
         className="hud__resource hud__resource--hearts"
         data-resource="hearts"
@@ -76,13 +93,7 @@ export function Hud({
         </span>
         <strong>{detectorUses}</strong>
       </div>
-      <button
-        className={'hud__restart'}
-        type={'button'}
-        onClick={() => setRestartConfirmationOpen(true)}
-      >
-        {UI_STRINGS.hudRestart}
-      </button>
+
       {restartConfirmationOpen && (
         <div className={'restart-confirmation'} role={'presentation'}>
           <div

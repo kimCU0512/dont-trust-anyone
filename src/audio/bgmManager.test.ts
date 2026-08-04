@@ -61,6 +61,22 @@ describe('BgmManager', () => {
     expect(audios[0].loop).toBe(true)
   })
 
+  it('plays the true-ending WAV on a loop', () => {
+    const { audios, audioFactory } = createAudioHarness()
+    const manager = new BgmManager({
+      audioFactory,
+      fadeDurationMs: 0,
+    })
+
+    manager.unlock('true_E', 'ending-true')
+
+    expect(audios[0].source).toBe(
+      '/images/audio/bgm/true_E/807746__inesmorais__som-da-natureza-e-de-carros-sound-of-nature-and-cars.wav',
+    )
+    expect(audios[0].play).toHaveBeenCalledOnce()
+    expect(audios[0].loop).toBe(true)
+  })
+
   it('plays the bad-ending track only once', () => {
     const { audios, audioFactory } = createAudioHarness()
     const manager = new BgmManager({
